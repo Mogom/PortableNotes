@@ -1,0 +1,13 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml:2:13-83
+INJECTED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml:2:13-83
+	package
+		INJECTED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml
+	xmlns:android
+		ADDED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml:2:23-81
+uses-sdk
+INJECTED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml reason: use-sdk injection requested
+INJECTED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml
+	android:minSdkVersion
+		INJECTED from /home/kelv/AndroidStudioProjects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest6782956586002584266.xml
