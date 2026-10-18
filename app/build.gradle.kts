@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.portablenotes"
-        minSdk = 28
+        minSdk = 28 // java.time requiere API 26+
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -53,4 +53,6 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    implementation("androidx.compose.material:material-icons-extended:1.7.5")
 }

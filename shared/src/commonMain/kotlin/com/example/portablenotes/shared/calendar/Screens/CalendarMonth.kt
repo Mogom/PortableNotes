@@ -1,4 +1,4 @@
-package com.example.portablenotes.shared.calendar
+package com.example.portablenotes.shared.calendar.Screens
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
