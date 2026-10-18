@@ -1,4 +1,4 @@
-package com.example.app
+package com.example.portablenotes
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
