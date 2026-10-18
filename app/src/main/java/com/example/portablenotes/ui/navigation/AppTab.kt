@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.portablenotes.ui.AppColors
 
-enum class AppTab(val label: String, val icon: ImageVector) {
-    Home("Inicio", Icons.Rounded.Home),
-    Events("Eventos", Icons.Rounded.DateRange),
-    Routines("Rutinas", Icons.Rounded.Refresh),
+enum class AppTab(val route: String, val label: String, val icon: ImageVector) {
+    Home("home", "Inicio", Icons.Rounded.Home),
+    Events("event", "Eventos", Icons.Rounded.DateRange),
+    Routines("routine", "Rutinas", Icons.Rounded.Refresh),
 }

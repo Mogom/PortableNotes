@@ -1,4 +1,4 @@
-package com.example.portablenotes.ui.home
+package com.example.portablenotes.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -14,6 +14,8 @@ import com.example.portablenotes.ui.AppColors
 import com.example.portablenotes.ui.navigation.AppTab
 import com.example.portablenotes.ui.navigation.AppBottomBar
 import com.example.portablenotes.ui.calendar.WeekCalendar
+import com.example.portablenotes.ui.home.DayEvent
+import com.example.portablenotes.ui.home.TodayEventsPanel
 import java.time.LocalDate
 
 /**
@@ -28,8 +30,6 @@ fun HomeScreen(
     eventsFor: (LocalDate) -> List<DayEvent>,
     modifier: Modifier = Modifier,
     userName: String = "Cristian",
-    selectedTab: AppTab = AppTab.Home,
-    onTabSelected: (AppTab) -> Unit = {},
 ) {
     var selectedDate by remember { mutableStateOf(today) }
     val events = remember(selectedDate) { eventsFor(selectedDate) }
@@ -68,15 +68,6 @@ fun HomeScreen(
                 modifier = Modifier.weight(1f),
             )
         }
-
-        AppBottomBar(
-            selected = selectedTab,
-            onSelect = onTabSelected,
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .navigationBarsPadding()
-                .padding(bottom = 16.dp),
-        )
     }
 }
 
