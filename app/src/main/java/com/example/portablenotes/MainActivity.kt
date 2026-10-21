@@ -2,6 +2,7 @@ package com.example.portablenotes
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
@@ -34,7 +35,10 @@ import java.time.LocalDate
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(android.graphics.Color.TRANSPARENT),
+        )
         setContent { App() }
     }
 }
@@ -115,6 +119,19 @@ fun App() {
                         contentAlignment = Alignment.Center,
                     ) {
                         Text("Rutinas (próximamente)", color = AppColors.TextSecondary)
+                    }
+                }
+                composable(
+                    AppTab.Tasks.route,
+                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }
+                ) {
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(AppColors.Background),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text("Tareas (próximamente)", color = AppColors.TextSecondary)
                     }
                 }
             }

@@ -31,4 +31,6 @@ enum class AppTab(val route: String, val label: String, val icon: ImageVector) {
     Home("home", "Inicio", Icons.Rounded.Home),
     Events("event", "Eventos", Icons.Rounded.DateRange),
     Routines("routine", "Rutinas", Icons.Rounded.Refresh),
+
+    Tasks("task", "Tareas", Icons.Rounded.Refresh),
 }

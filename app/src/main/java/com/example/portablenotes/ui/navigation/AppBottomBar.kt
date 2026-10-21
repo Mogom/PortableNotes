@@ -33,7 +33,9 @@ fun AppBottomBar(
     modifier: Modifier = Modifier,
 ) {
     Surface(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .background(AppColors.Background),
         shape = CircleShape,
         color = AppColors.Surface,
         shadowElevation = 14.dp,
