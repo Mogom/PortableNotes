@@ -113,7 +113,7 @@ fun TasksScreen(
                     }
                     Switch(
                         checked = state.treeMode,
-                        onCheckedChange = { state.setTreeMode(it) },
+                        onCheckedChange = { state.enableTreeMode(it) },
                         colors = SwitchDefaults.colors(
                             checkedThumbColor = AppColors.OnAccent,
                             checkedTrackColor = AppColors.Accent,

@@ -128,14 +128,7 @@ fun App() {
                     AppTab.Tasks.route,
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }
                 ) {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(AppColors.Background),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        TasksScreen(tasksState)
-                    }
+                    TasksScreen(tasksState)
                 }
             }
         }

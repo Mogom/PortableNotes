@@ -75,7 +75,7 @@ class TasksState(initial: List<Task> = emptyList(), initialTreeMode: Boolean = t
 
     // ---------- Acciones ----------
 
-    fun setTreeMode(enabled: Boolean) {
+    fun enableTreeMode(enabled: Boolean) {
         treeMode = enabled
         if (enabled) syncAll()   // al volver al árbol, los padres reflejan el estado de sus hijos
     }
