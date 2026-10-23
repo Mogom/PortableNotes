@@ -15,7 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.animation.*
-import androidx.compose.animation.core.tween
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -30,6 +29,9 @@ import com.example.portablenotes.ui.navigation.AppBottomBar
 import com.example.portablenotes.ui.navigation.AppTab
 import com.example.portablenotes.ui.screens.EventsScreen
 import com.example.portablenotes.ui.screens.HomeScreen
+import com.example.portablenotes.ui.screens.TasksScreen
+import com.example.portablenotes.ui.tasks.TasksState
+import com.example.portablenotes.ui.tasks.sampleTasks
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
@@ -50,6 +52,7 @@ fun App() {
     val eventsState = remember { EventsState(sampleEvents(today)) }   // compartido entre pantallas
     var tab by remember { mutableStateOf(AppTab.Home) }
     val navController = rememberNavController()
+    val tasksState = remember { TasksState(sampleTasks()) }
 
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
@@ -131,7 +134,7 @@ fun App() {
                             .background(AppColors.Background),
                         contentAlignment = Alignment.Center,
                     ) {
-                        Text("Tareas (próximamente)", color = AppColors.TextSecondary)
+                        TasksScreen(tasksState)
                     }
                 }
             }
