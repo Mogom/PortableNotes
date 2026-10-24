@@ -20,7 +20,7 @@ object AppColors {
 
     // --- Fondos ---
     val Background = RichBlack
-    val BackgroundTop = RichBlack            // pon Gunmetal aquí si quieres degradado hacia arriba
+    val BackgroundTop = RichBlack          // pon Gunmetal aquí si quieres degradado hacia arriba
     val Surface = Gunmetal                   // tarjetas, calendario, barra inferior
     val SurfaceMuted = Color(0xFF12333A)     // chips, botones circulares, pills (Gunmetal + 10 % gris)
     val Border = Color(0xFF1E4249)           // bordes finos de tarjetas

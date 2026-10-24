@@ -5,13 +5,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.animation.*
@@ -30,6 +27,9 @@ import com.example.portablenotes.ui.navigation.AppTab
 import com.example.portablenotes.ui.screens.EventsScreen
 import com.example.portablenotes.ui.screens.HomeScreen
 import com.example.portablenotes.ui.screens.TasksScreen
+import com.example.portablenotes.ui.screens.RoutinesScreen
+import com.example.portablenotes.ui.routines.RoutinesState
+import com.example.portablenotes.ui.routines.sampleRoutines
 import com.example.portablenotes.ui.tasks.TasksState
 import com.example.portablenotes.ui.tasks.sampleTasks
 import java.time.LocalDate
@@ -50,6 +50,7 @@ class MainActivity : ComponentActivity() {
 fun App() {
     val today = remember { LocalDate.now() }
     val eventsState = remember { EventsState(sampleEvents(today)) }   // compartido entre pantallas
+    val routinesState = remember { RoutinesState(sampleRoutines()) }
     var tab by remember { mutableStateOf(AppTab.Home) }
     val navController = rememberNavController()
     val tasksState = remember { TasksState(sampleTasks()) }
@@ -115,14 +116,10 @@ fun App() {
                     AppTab.Routines.route,
                     enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }
                 ) {
-                    Box(
-                        Modifier
-                            .fillMaxSize()
-                            .background(AppColors.Background),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text("Rutinas (próximamente)", color = AppColors.TextSecondary)
-                    }
+                   RoutinesScreen(
+                       state = routinesState,
+                       linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } }
+                   )
                 }
                 composable(
                     AppTab.Tasks.route,

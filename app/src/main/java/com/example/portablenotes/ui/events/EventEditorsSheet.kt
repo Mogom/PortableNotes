@@ -14,6 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.portablenotes.ui.AppColors
+import com.example.portablenotes.ui.routines.LocalRoutines
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -36,6 +37,8 @@ fun EventEditorSheet(
     var repeat by remember { mutableStateOf(event?.repeat ?: Repeat.None) }
     var type by remember { mutableStateOf(event?.type ?: EventType.Other) }
     var priority by remember { mutableStateOf(event?.priority ?: Priority.Medium) }
+    val routines = LocalRoutines.current
+    var routineId by remember { mutableStateOf(event?.routineId) }
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
 
@@ -101,6 +104,14 @@ fun EventEditorSheet(
                 Priority.entries.forEach { SelectChip(it.label, it == priority) { priority = it } }
             }
 
+            if (routines.isNotEmpty()) {
+                SectionLabel("Rutina anclada (opcional)")
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    SelectChip("Ninguna", routineId == null) { routineId = null }
+                    routines.forEach { r -> SelectChip(r.name, r.id == routineId) { routineId = r.id } }
+                }
+            }
+
             Spacer(Modifier.height(4.dp))
 
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -124,6 +135,7 @@ fun EventEditorSheet(
                                 priority = priority,
                                 notes = notes.trim(),
                                 done = if (repeat == Repeat.None) event?.done ?: false else false,
+                                routineId = routineId,
                             )
                         )
                     },

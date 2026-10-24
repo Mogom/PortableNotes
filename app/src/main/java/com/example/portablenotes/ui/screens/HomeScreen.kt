@@ -11,8 +11,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.portablenotes.ui.AppColors
-import com.example.portablenotes.ui.navigation.AppTab
-import com.example.portablenotes.ui.navigation.AppBottomBar
 import com.example.portablenotes.ui.calendar.WeekCalendar
 import com.example.portablenotes.ui.home.DayEvent
 import com.example.portablenotes.ui.home.TodayEventsPanel
@@ -40,7 +38,7 @@ fun HomeScreen(
             .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))
     ) {
         val calendarHeight = maxHeight * 0.30f   // 👈 30 % de la pantalla
-        val barSpace = 104.dp                    // espacio reservado para la barra flotante
+        val barSpace = 100.dp                    // espacio reservado para la barra flotante
 
         Column(
             modifier = Modifier

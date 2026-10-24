@@ -41,6 +41,7 @@ data class Event(
     val priority: Priority = Priority.Medium,
     val notes: String = "",
     val done: Boolean = false,    // solo aplica si no se repite
+    val routineId: String? = null, // rutina anclada (opcional)
 ) {
     fun occursOn(day: LocalDate): Boolean {
         if (day.isBefore(date)) return false

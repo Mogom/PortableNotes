@@ -21,6 +21,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.portablenotes.ui.AppColors
+import com.example.portablenotes.ui.routines.LocalRoutines
+import com.example.portablenotes.ui.routines.Routine
+import com.example.portablenotes.ui.routines.iconFor
 import java.time.LocalDate
 
 /** Hoja con la información completa de los eventos de un día (o de un evento concreto). */
@@ -123,6 +126,10 @@ private fun DetailCard(
             }
             if (event.notes.isNotBlank()) InfoRow("Notas") { ValueText(event.notes) }
 
+            // Rutina anclada: se ve al abrir la descripción del evento
+            val routine = LocalRoutines.current.firstOrNull { it.id == event.routineId }
+            if (routine != null) AnchoredRoutine(routine)
+
             Spacer(Modifier.height(2.dp))
 
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -166,4 +173,35 @@ private fun InfoRow(label: String, content: @Composable () -> Unit) {
 @Composable
 private fun ValueText(text: String) {
     Text(text, fontSize = 14.sp, color = AppColors.TextPrimary, fontWeight = FontWeight.Medium)
+}
+
+@Composable
+private fun AnchoredRoutine(routine: Routine) {
+    Surface(
+        shape = RoundedCornerShape(18.dp),
+        color = AppColors.SurfaceMuted,
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier
+                        .size(36.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(AppColors.Accent.copy(alpha = 0.16f)),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(iconFor(routine.iconKey), contentDescription = null, tint = AppColors.Accent, modifier = Modifier.size(20.dp))
+                }
+                Spacer(Modifier.width(10.dp))
+                Column {
+                    Text(routine.name, fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
+                    Text("Rutina · ${routine.category.label}", fontSize = 12.sp, color = AppColors.TextSecondary)
+                }
+            }
+            if (routine.description.isNotBlank()) {
+                Text(routine.description, fontSize = 13.sp, color = AppColors.TextPrimary)
+            }
+        }
+    }
 }
