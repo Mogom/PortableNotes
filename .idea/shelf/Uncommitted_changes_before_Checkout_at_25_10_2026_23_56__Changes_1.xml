@@ -1,0 +1,74 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1" date="1792990589836" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 25/10/2026 23:56 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/classpath-snapshot/shrunk-classpath-snapshot.bin" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/classpath-snapshot/shrunk-classpath-snapshot.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/shrunk-classpath-snapshot.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab.keystream.len" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab.keystream.len" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/lookups.tab.keystream.len" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/intermediates/runtime_library_classes_dir/androidMain/bundleLibRuntimeToDirAndroidMain/com/example/portablenotes/shared/calendar/Screens/CalendarMonth.class" />
+    <option name="AFTER_PATH" value="shared/build/intermediates/runtime_library_classes_dir/androidMain/bundleLibRuntimeToDirAndroidMain/com/example/portablenotes/shared/calendar/Screens/CalendarMonth.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/CalendarMonth.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab.keystream" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab.keystream" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/lookups.tab.keystream" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/last-build.bin" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/last-build.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/last-build.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab_i" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab_i" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/lookups.tab_i" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/jvm/kotlin/proto.tab.values.at" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/proto.tab.values.at" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/intermediates/runtime_library_classes_dir/androidMain/bundleLibRuntimeToDirAndroidMain/com/example/portablenotes/shared/calendar/Home.class" />
+    <option name="AFTER_PATH" value="shared/build/intermediates/runtime_library_classes_dir/androidMain/bundleLibRuntimeToDirAndroidMain/com/example/portablenotes/shared/calendar/Home.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/Home.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/inputs/source-to-output.tab" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/inputs/source-to-output.tab" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/source-to-output.tab" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/lookups/lookups.tab" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/lookups.tab" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/inputs/source-to-output.tab.values.at" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/inputs/source-to-output.tab.values.at" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/source-to-output.tab.values.at" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/jvm/kotlin/proto.tab" />
+    <option name="AFTER_PATH" value="shared/build/kotlin/compileAndroidMain/cacheable/caches-jvm/jvm/kotlin/proto.tab" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/proto.tab" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/intermediates/compile_library_classes_jar/androidMain/bundleAndroidMainClassesToCompileJar/classes.jar" />
+    <option name="AFTER_PATH" value="shared/build/intermediates/compile_library_classes_jar/androidMain/bundleAndroidMainClassesToCompileJar/classes.jar" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/classes.jar" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="shared/build/classes/kotlin/android/main/com/example/portablenotes/shared/calendar/Screens/CalendarMonth$Companion.class" />
+    <option name="AFTER_PATH" value="shared/build/classes/kotlin/android/main/com/example/portablenotes/shared/calendar/Screens/CalendarMonth$Companion.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_25_10_2026_23_56_[Changes]1/CalendarMonth$Companion.class" />
+  </binary>
+</changelist>
