@@ -1,0 +1,92 @@
+package com.portablenotes.data.remote
+
+import com.portablenotes.domain.models.Event
+import com.portablenotes.domain.models.EventType
+import com.portablenotes.domain.models.Priority
+import com.portablenotes.domain.models.Repeat
+import com.portablenotes.domain.ui.routines.Routine
+import com.portablenotes.domain.ui.routines.RoutineCategory
+import com.portablenotes.domain.ui.tasks.Task
+import com.google.firebase.firestore.DocumentSnapshot
+import java.time.LocalDate
+import java.time.LocalTime
+
+/*
+ * Firestore no entiende LocalDate / LocalTime ni enums de Kotlin, así que se guardan como texto:
+ *   fecha → "2026-10-24"   hora → "09:00"   enums → su name ("High", "Weekly"...)
+ * El id del documento ES el id del modelo, así que no se duplica dentro del documento.
+ */
+
+private inline fun <reified E : Enum<E>> enumOr(name: String?, default: E): E =
+    enumValues<E>().firstOrNull { it.name == name } ?: default
+
+// ---------------- Eventos ----------------
+
+fun Event.toFirestore(): Map<String, Any?> = mapOf(
+    "title" to title,
+    "date" to date.toString(),
+    "time" to time.toString(),
+    "repeat" to repeat.name,
+    "type" to type.name,
+    "priority" to priority.name,
+    "notes" to notes,
+    "done" to done,
+    "routineId" to routineId,
+)
+
+fun DocumentSnapshot.toEvent(): Event? = runCatching {
+    Event(
+        id = id,
+        title = getString("title") ?: "",
+        date = LocalDate.parse(getString("date")),
+        time = LocalTime.parse(getString("time")),
+        repeat = enumOr(getString("repeat"), Repeat.None),
+        type = enumOr(getString("type"), EventType.Other),
+        priority = enumOr(getString("priority"), Priority.Medium),
+        notes = getString("notes") ?: "",
+        done = getBoolean("done") ?: false,
+        routineId = getString("routineId"),
+    )
+}.getOrNull()
+
+// ---------------- Tareas ----------------
+
+fun Task.toFirestore(): Map<String, Any?> = mapOf(
+    "title" to title,
+    "parentId" to parentId,
+    "done" to done,
+    "expanded" to expanded,
+    "createdAt" to createdAt,
+)
+
+fun DocumentSnapshot.toTask(): Task? = runCatching {
+    Task(
+        id = id,
+        title = getString("title") ?: "",
+        parentId = getString("parentId"),
+        done = getBoolean("done") ?: false,
+        expanded = getBoolean("expanded") ?: true,
+        createdAt = getLong("createdAt") ?: 0L,
+    )
+}.getOrNull()
+
+// ---------------- Rutinas ----------------
+
+fun Routine.toFirestore(): Map<String, Any?> = mapOf(
+    "name" to name,
+    "description" to description,
+    "category" to category.name,
+    "iconKey" to iconKey,
+    "createdAt" to createdAt,
+)
+
+fun DocumentSnapshot.toRoutine(): Routine? = runCatching {
+    Routine(
+        id = id,
+        name = getString("name") ?: "",
+        description = getString("description") ?: "",
+        category = enumOr(getString("category"), RoutineCategory.Daily),
+        iconKey = getString("iconKey") ?: "star",
+        createdAt = getLong("createdAt") ?: 0L,
+    )
+}.getOrNull()

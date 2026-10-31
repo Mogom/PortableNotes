@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "576466062528",
+    "project_id": "portablenotes",
+    "storage_bucket": "portablenotes.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:576466062528:android:ec43eb8f5b2d2a836ff125",
+        "android_client_info": {
+          "package_name": "com.portablenotes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "576466062528-eo8klk0gs0095v0eosa1nq34d2c6hgpg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9Ur2MtqJhZEbey5_W_zLK0NxHPpTRuRY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "576466062528-eo8klk0gs0095v0eosa1nq34d2c6hgpg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
