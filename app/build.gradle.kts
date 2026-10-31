@@ -72,6 +72,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:<versión>")
     implementation("androidx.credentials:credentials:<versión>")
     implementation("androidx.credentials:credentials-play-services-auth:<versión>")
-    implementation("com.google.android.libraries.identity.googleid:googleid:<versión>")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
 //    ksp("androidx.room:room-compiler:2.6.1")       // procesador de anotaciones
 }
