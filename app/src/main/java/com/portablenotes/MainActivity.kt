@@ -14,6 +14,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.NavHost
@@ -60,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
 private val slideLeft: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
     { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }
-
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun App() {
     val today = remember { LocalDate.now() }
@@ -172,7 +173,7 @@ fun App() {
                             errorMessage = authUi.errorMessage,
                         )
                     }
-                    // ⚠ Supuse parámetros análogos a LoginScreen; ajústalos a tus firmas reales.
+                    // parámetros análogos a LoginScreen; ajústalos a tus firmas reales.
                     composable(AuthRoutes.Register, enterTransition = slideLeft) {
                         RegisterScreen(
                             onRegister = { name, email, password -> authVm.register(email, password, name) },

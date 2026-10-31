@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -305,6 +306,7 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun DoneCheck(done: Boolean, onClick: () -> Unit) {
     Box(

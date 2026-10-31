@@ -8,6 +8,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.AppColors
@@ -69,6 +70,7 @@ fun HomeScreen(
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Greeting(name: String) {
     Column(Modifier.padding(horizontal = 4.dp)) {
