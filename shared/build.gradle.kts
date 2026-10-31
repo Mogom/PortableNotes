@@ -5,7 +5,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.example.portablenotes.shared"
+        namespace = "com.portablenotes.app"
         compileSdk = 37
         minSdk = 28
         withHostTest {
