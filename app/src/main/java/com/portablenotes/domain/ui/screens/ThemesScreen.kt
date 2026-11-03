@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -43,6 +42,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.components.DangerRed
+import com.portablenotes.domain.ui.components.contentBottomPadding
+import com.portablenotes.domain.ui.components.screenInsets
 import com.portablenotes.domain.ui.components.PillChip
 import com.portablenotes.domain.ui.components.RoundIconButton
 import com.portablenotes.domain.ui.components.SectionLabel
@@ -233,9 +234,9 @@ private fun ScreenColumn(modifier: Modifier, content: @Composable () -> Unit) {
                 .widthIn(max = 640.dp)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
+                .screenInsets()
                 .padding(horizontal = 18.dp)
-                .padding(top = 12.dp, bottom = 110.dp),
+                .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) { content() }
     }

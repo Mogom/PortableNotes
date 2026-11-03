@@ -10,6 +10,7 @@ import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -53,23 +54,28 @@ fun AppBottomBar(
 ) {
     val t = AppTheme.tokens
     var m = modifier.fillMaxWidth().height(66.dp)
+    val withName = t.style.barra == EstiloBarra.CON_NOMBRE
     if (!t.dark) m = m.dropShadow(CircleShape, Shadow(radius = 30.dp, color = Color(0x1A14141E), offset = DpOffset(0.dp, 10.dp)))
     m = m.clip(CircleShape).background(t.surf)
     if (t.style.tarjeta == EstiloTarjeta.BORDE) m = m.border(1.5.dp, t.border, CircleShape)
 
-    Row(
-        m.padding(horizontal = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AppTab.entries.forEach { tab ->
-            BarItem(tab, tab == selected, t.style.barra == EstiloBarra.CON_NOMBRE) { onSelect(tab) }
+    BoxWithConstraints(m.padding(horizontal = 8.dp), contentAlignment = Alignment.Center) {
+        // En teléfonos angostos (< 360 dp de barra) "Con nombre" no cabe con 6 pestañas: los ítems se compactan
+        val compact = maxWidth < 360.dp
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AppTab.entries.forEach { tab ->
+                BarItem(tab, tab == selected, withName, compact) { onSelect(tab) }
+            }
         }
     }
 }
 
 @Composable
-private fun BarItem(tab: AppTab, isSelected: Boolean, withName: Boolean, onClick: () -> Unit) {
+private fun BarItem(tab: AppTab, isSelected: Boolean, withName: Boolean, compact: Boolean, onClick: () -> Unit) {
     val t = AppTheme.tokens
     val bg by animateColorAsState(if (isSelected) t.accent else Color.Transparent, tween(180), label = "navBg")
     val fg by animateColorAsState(if (isSelected) t.onAccent else t.muted, tween(180), label = "navFg")
@@ -78,11 +84,11 @@ private fun BarItem(tab: AppTab, isSelected: Boolean, withName: Boolean, onClick
     Row(
         Modifier
             .height(48.dp)
-            .widthIn(min = 46.dp)
+            .widthIn(min = if (compact) 40.dp else 46.dp)
             .clip(CircleShape)
             .background(bg)
             .selectable(selected = isSelected, role = Role.Tab, onClick = onClick)
-            .padding(horizontal = if (expanded) 16.dp else 0.dp),
+            .padding(horizontal = if (expanded) (if (compact) 10.dp else 16.dp) else 0.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
     ) {

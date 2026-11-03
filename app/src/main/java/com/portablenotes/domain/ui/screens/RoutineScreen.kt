@@ -21,6 +21,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.components.AddSquareButton
+import com.portablenotes.domain.ui.components.Breakpoints
+import com.portablenotes.domain.ui.components.contentBottomPadding
+import com.portablenotes.domain.ui.components.gridColumns
+import com.portablenotes.domain.ui.components.screenInsets
 import com.portablenotes.domain.ui.components.CheckDot
 import com.portablenotes.domain.ui.components.EmptyBox
 import com.portablenotes.domain.ui.components.PillChip
@@ -58,16 +62,21 @@ fun RoutinesScreen(
     val visible = if (filter == null) all else all.filter { it.category == filter }
     val (doneToday, total) = state.progressOn(today)
 
-    Box(modifier.fillMaxSize().background(t.bg)) {
+    BoxWithConstraints(modifier.fillMaxSize().background(t.bg)) {
+        val wide = maxWidth >= Breakpoints.Medium
+        val columns = gridColumns(minOf(maxWidth, Breakpoints.MaxContent))
+        val side = if (wide) 28.dp else 18.dp
         Column(
             Modifier
+                .align(Alignment.TopCenter)
+                .widthIn(max = Breakpoints.MaxContent)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
-                .padding(top = 12.dp, bottom = 110.dp),
+                .screenInsets()
+                .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Row(Modifier.fillMaxWidth().padding(horizontal = 22.dp), verticalAlignment = Alignment.CenterVertically) {
+            Row(Modifier.fillMaxWidth().padding(horizontal = side + 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     TitleText("Rutinas", 28.sp)
                     UiText(
@@ -80,20 +89,20 @@ fun RoutinesScreen(
 
             // Filtro por categoría
             Row(
-                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 18.dp),
+                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = side),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 CategoryChip("Todas", filter == null) { filter = null }
                 RoutineCategory.entries.forEach { c -> CategoryChip(c.label, filter == c) { filter = c } }
             }
 
-            Column(Modifier.padding(horizontal = 18.dp)) {
+            Column(Modifier.padding(horizontal = side)) {
                 if (visible.isEmpty()) {
                     EmptyBox(if (all.isEmpty()) "Toca + para crear una rutina" else "Sin rutinas en esta categoría")
                 } else {
-                    // Grilla de 2 columnas (dentro de un scroll, por eso no se usa LazyVerticalGrid)
+                    // Grilla de 2 columnas (3–4 en tablet); va dentro de un scroll, por eso no es LazyVerticalGrid
                     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        visible.chunked(2).forEach { pair ->
+                        visible.chunked(columns).forEach { pair ->
                             Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.height(IntrinsicSize.Max)) {
                                 pair.forEach { r ->
                                     RoutineCard(
@@ -105,7 +114,7 @@ fun RoutinesScreen(
                                         modifier = Modifier.weight(1f).fillMaxHeight(),
                                     )
                                 }
-                                if (pair.size == 1) Spacer(Modifier.weight(1f))
+                                repeat(columns - pair.size) { Spacer(Modifier.weight(1f)) }
                             }
                         }
                     }

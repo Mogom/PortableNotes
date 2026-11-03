@@ -116,14 +116,6 @@ private fun firstNameOf(user: FirebaseUser?): String {
     return user?.email?.substringBefore('@').orEmpty()
 }
 
-/** Listas simples (Rutinas, Tareas): en pantallas anchas se centran con un ancho máximo cómodo de leer. */
-@Composable
-private fun CenteredContent(maxWidth: Dp = 720.dp, content: @Composable () -> Unit) {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-        Box(Modifier.widthIn(max = maxWidth).fillMaxHeight()) { content() }
-    }
-}
-
 // ---------- Transiciones de navegación (rápidas: ~200 ms) ----------
 private const val NAV_MS = 220
 private const val FADE_MS = 140
@@ -432,15 +424,13 @@ fun App() {
                         )
                     }
                     composable(AppTab.Routines.route) {
-                        CenteredContent {
-                            RoutinesScreen(
+                        RoutinesScreen(
                                 state = routinesState,
                                 linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } },
                             )
-                        }
                     }
                     composable(AppTab.Tasks.route) {
-                        CenteredContent { TasksScreen(tasksState) }
+                        TasksScreen(tasksState)
                     }
                     composable(AppTab.Themes.route) {
                         ThemesScreen(

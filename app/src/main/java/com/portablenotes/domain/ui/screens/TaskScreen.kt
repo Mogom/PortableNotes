@@ -23,6 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.components.AddSquareButton
+import com.portablenotes.domain.ui.components.Breakpoints
+import com.portablenotes.domain.ui.components.contentBottomPadding
+import com.portablenotes.domain.ui.components.screenInsets
 import com.portablenotes.domain.ui.components.CheckDot
 import com.portablenotes.domain.ui.components.EmptyBox
 import com.portablenotes.domain.ui.components.ProgressBar
@@ -57,21 +60,14 @@ fun TasksScreen(
     val (done, total) = state.progress()
     val pct = if (total == 0) 0 else (done * 100 / total)
 
-    Box(modifier.fillMaxSize().background(t.bg)) {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp)
-                .padding(top = 12.dp, bottom = 110.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
-        ) {
-            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                TitleText("Tareas", 28.sp, Modifier.weight(1f))
-                AddSquareButton("Nueva tarea") { dialog = TaskDialog.Add(null) }
-            }
-
+    val header: @Composable () -> Unit = {
+        Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+            TitleText("Tareas", 28.sp, Modifier.weight(1f))
+            AddSquareButton("Nueva tarea") { dialog = TaskDialog.Add(null) }
+        }
+    }
+    val summary: @Composable () -> Unit = {
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
             // Progreso
             Column(
                 Modifier.fillMaxWidth().clip(t.cardShape).background(t.accent).padding(horizontal = 20.dp, vertical = 18.dp),
@@ -86,29 +82,55 @@ fun TasksScreen(
                 }
                 ProgressBar(pct / 100f, track = t.onSoft, fill = t.onAccent, height = 10.dp)
             }
-
             SwitchCard(
                 title = "Organizar en árbol",
                 subtitle = if (state.treeMode) "Con subtareas y jerarquía" else "Lista simple con check",
                 checked = state.treeMode,
                 onChange = { state.enableTreeMode(it) },
             )
-
-            if (rows.isEmpty()) {
-                EmptyBox("Todo en orden. Toca + para crear tu primera tarea")
-            } else {
-                Column(Modifier.fillMaxWidth().styledCard(t).padding(vertical = 6.dp)) {
-                    rows.forEach { row ->
-                        TaskItem(
-                            row = row,
-                            treeMode = state.treeMode,
-                            onToggleDone = { state.toggleDone(row.task.id) },
-                            onToggleExpanded = { state.toggleExpanded(row.task.id) },
-                            onEdit = { dialog = TaskDialog.Edit(row.task) },
-                            onAddChild = { dialog = TaskDialog.Add(row.task.id) },
-                        )
-                    }
+        }
+    }
+    val list: @Composable () -> Unit = {
+        if (rows.isEmpty()) {
+            EmptyBox("Todo en orden. Toca + para crear tu primera tarea")
+        } else {
+            Column(Modifier.fillMaxWidth().styledCard(t).padding(vertical = 6.dp)) {
+                rows.forEach { row ->
+                    TaskItem(
+                        row = row,
+                        treeMode = state.treeMode,
+                        onToggleDone = { state.toggleDone(row.task.id) },
+                        onToggleExpanded = { state.toggleExpanded(row.task.id) },
+                        onEdit = { dialog = TaskDialog.Edit(row.task) },
+                        onAddChild = { dialog = TaskDialog.Add(row.task.id) },
+                    )
                 }
+            }
+        }
+    }
+
+    BoxWithConstraints(modifier.fillMaxSize().background(t.bg)) {
+        val wide = maxWidth >= Breakpoints.Medium
+        Column(
+            Modifier
+                .align(Alignment.TopCenter)
+                .widthIn(max = Breakpoints.MaxContent)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+                .screenInsets()
+                .padding(horizontal = if (wide) 28.dp else 18.dp)
+                .padding(top = 12.dp, bottom = contentBottomPadding()),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            header()
+            if (wide) {
+                Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                    Box(Modifier.weight(0.85f)) { summary() }
+                    Box(Modifier.weight(1.15f)) { list() }
+                }
+            } else {
+                summary()
+                list()
             }
         }
     }

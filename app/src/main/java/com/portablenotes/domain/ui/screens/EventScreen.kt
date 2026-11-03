@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
@@ -40,6 +40,10 @@ import com.portablenotes.domain.models.events.daysWithEvents
 import com.portablenotes.domain.models.events.hhmm
 import com.portablenotes.domain.models.events.on
 import com.portablenotes.domain.ui.components.AppFab
+import com.portablenotes.domain.ui.components.Breakpoints
+import com.portablenotes.domain.ui.components.barClearance
+import com.portablenotes.domain.ui.components.contentBottomPadding
+import com.portablenotes.domain.ui.components.screenInsets
 import com.portablenotes.domain.ui.components.EmptyBox
 import com.portablenotes.domain.ui.components.TitleText
 import com.portablenotes.domain.ui.components.UiText
@@ -74,53 +78,66 @@ fun EventsScreen(
     val dots = remember(month, events) { events.daysWithEvents(month) }
     val dayEvents = remember(selectedDate, events) { events.on(selectedDate) }
 
-    Box(modifier.fillMaxSize().background(t.bg)) {
+    val calendar: @Composable () -> Unit = {
+        Column(
+            Modifier.fillMaxWidth().styledCard(t).padding(start = 10.dp, end = 10.dp, top = 14.dp, bottom = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Row(Modifier.fillMaxWidth()) {
+                WeekInitials.forEach {
+                    UiText(it, 12.sp, FontWeight.ExtraBold, t.muted, Modifier.weight(1f), style = androidx.compose.ui.text.TextStyle(textAlign = TextAlign.Center))
+                }
+            }
+            monthCells(month).chunked(7).forEach { week ->
+                Row(Modifier.fillMaxWidth()) {
+                    week.forEach { d ->
+                        Box(Modifier.weight(1f).height(45.dp), contentAlignment = Alignment.Center) {
+                            if (d != null) DayCell(d, today, selectedDate, d in dots) { onSelectDate(d) }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    val dayList: @Composable () -> Unit = {
+        Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
+            TitleText(selectedDate.dayTitle(today), 19.sp, Modifier.padding(horizontal = 4.dp))
+            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                if (dayEvents.isEmpty()) EmptyBox("Sin eventos", Modifier.clickable { onCreate(selectedDate) })
+                dayEvents.forEachIndexed { i, e -> EventRow(e, alt = i % 2 == 1) { onEventClick(e) } }
+            }
+        }
+    }
+
+    BoxWithConstraints(modifier.fillMaxSize().background(t.bg)) {
+        val wide = maxWidth >= Breakpoints.Medium
         Column(
             Modifier
                 .align(Alignment.TopCenter)
-                .widthIn(max = 720.dp)
+                .widthIn(max = Breakpoints.MaxContent)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp)
-                .padding(top = 12.dp, bottom = 110.dp),
+                .screenInsets()
+                .padding(horizontal = if (wide) 28.dp else 18.dp)
+                .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 TitleText("Eventos", 28.sp, Modifier.weight(1f))
                 MonthPill(month, { onChangeMonth(month.minusMonths(1)) }, { onChangeMonth(month.plusMonths(1)) })
             }
-
-            // Calendario
-            Column(
-                Modifier.fillMaxWidth().styledCard(t).padding(start = 10.dp, end = 10.dp, top = 14.dp, bottom = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Row(Modifier.fillMaxWidth()) {
-                    WeekInitials.forEach {
-                        UiText(it, 12.sp, FontWeight.ExtraBold, t.muted, Modifier.weight(1f), style = androidx.compose.ui.text.TextStyle(textAlign = TextAlign.Center))
-                    }
+            if (wide) {
+                Row(horizontalArrangement = Arrangement.spacedBy(20.dp)) {
+                    Box(Modifier.weight(1.1f)) { calendar() }
+                    Box(Modifier.weight(1f)) { dayList() }
                 }
-                monthCells(month).chunked(7).forEach { week ->
-                    Row(Modifier.fillMaxWidth()) {
-                        week.forEach { d ->
-                            Box(Modifier.weight(1f).height(45.dp), contentAlignment = Alignment.Center) {
-                                if (d != null) DayCell(d, today, selectedDate, d in dots) { onSelectDate(d) }
-                            }
-                        }
-                    }
-                }
-            }
-
-            TitleText(selectedDate.dayTitle(today), 19.sp, Modifier.padding(horizontal = 4.dp))
-
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                if (dayEvents.isEmpty()) EmptyBox("Sin eventos", Modifier.clickable { onCreate(selectedDate) })
-                dayEvents.forEachIndexed { i, e -> EventRow(e, alt = i % 2 == 1) { onEventClick(e) } }
+            } else {
+                calendar()
+                dayList()
             }
         }
 
-        AppFab("Nuevo evento", { onCreate(selectedDate) }, Modifier.align(Alignment.BottomEnd).padding(end = 22.dp, bottom = 24.dp))
+        AppFab("Nuevo evento", { onCreate(selectedDate) }, Modifier.align(Alignment.BottomEnd).padding(end = 22.dp, bottom = barClearance()))
     }
 }
 

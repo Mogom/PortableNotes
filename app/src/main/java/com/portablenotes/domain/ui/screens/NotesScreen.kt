@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.components.AppFab
+import com.portablenotes.domain.ui.components.Breakpoints
+import com.portablenotes.domain.ui.components.barClearance
+import com.portablenotes.domain.ui.components.contentBottomPadding
+import com.portablenotes.domain.ui.components.gridColumns
+import com.portablenotes.domain.ui.components.screenInsets
 import com.portablenotes.domain.ui.components.DangerRed
 import com.portablenotes.domain.ui.components.EmptyBox
 import com.portablenotes.domain.ui.components.PrimaryButton
@@ -73,16 +79,18 @@ fun NotesScreen(
     val q = query.trim()
     val visible = if (q.isEmpty()) notes else notes.filter { it.title.contains(q, true) || it.body.contains(q, true) }
 
-    Box(modifier.fillMaxSize().background(t.bg)) {
+    BoxWithConstraints(modifier.fillMaxSize().background(t.bg)) {
+        val wide = maxWidth >= Breakpoints.Medium
+        val columns = gridColumns(minOf(maxWidth, Breakpoints.MaxContent))
         Column(
             Modifier
                 .align(Alignment.TopCenter)
-                .widthIn(max = 720.dp)
+                .widthIn(max = Breakpoints.MaxContent)
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .statusBarsPadding()
-                .padding(horizontal = 18.dp)
-                .padding(top = 12.dp, bottom = 110.dp),
+                .screenInsets()
+                .padding(horizontal = if (wide) 28.dp else 18.dp)
+                .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.Bottom) {
@@ -116,18 +124,18 @@ fun NotesScreen(
             if (visible.isEmpty()) {
                 EmptyBox(if (notes.isEmpty()) "Aún no tienes notas. Toca + para crear una" else "No hay notas con ese texto")
             } else {
-                // Masonry de 2 columnas: las notas se reparten alternando izquierda / derecha
+                // Masonry: 2 columnas en teléfono, 3–4 en tablet; las notas se reparten en orden
                 Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-                    listOf(0, 1).forEach { col ->
+                    (0 until columns).forEach { col ->
                         Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                            visible.forEachIndexed { i, n -> if (i % 2 == col) NoteCard(n, i) { onNoteClick(n) } }
+                            visible.forEachIndexed { i, n -> if (i % columns == col) NoteCard(n, i) { onNoteClick(n) } }
                         }
                     }
                 }
             }
         }
 
-        AppFab("Nueva nota", onCreate, Modifier.align(Alignment.BottomEnd).padding(end = 22.dp, bottom = 24.dp))
+        AppFab("Nueva nota", onCreate, Modifier.align(Alignment.BottomEnd).padding(end = 22.dp, bottom = barClearance()))
     }
 }
 
