@@ -4,6 +4,7 @@ import com.portablenotes.domain.models.events.Event
 import com.portablenotes.domain.models.events.EventType
 import com.portablenotes.domain.models.events.Priority
 import com.portablenotes.domain.models.events.Repeat
+import com.portablenotes.domain.ui.notes.Note
 import com.portablenotes.domain.ui.routines.Routine
 import com.portablenotes.domain.ui.routines.RoutineCategory
 import com.portablenotes.domain.ui.tasks.Task
@@ -89,6 +90,23 @@ fun DocumentSnapshot.toTask(): Task? = runCatching {
     )
 }.getOrNull()
 
+// ---------------- Notas ----------------
+
+fun Note.toFirestore(): Map<String, Any?> = mapOf(
+    "title" to title,
+    "body" to body,
+    "updatedAt" to updatedAt,
+)
+
+fun DocumentSnapshot.toNote(): Note? = runCatching {
+    Note(
+        id = id,
+        title = getString("title") ?: "",
+        body = getString("body") ?: "",
+        updatedAt = getLong("updatedAt") ?: 0L,
+    )
+}.getOrNull()
+
 // ---------------- Rutinas ----------------
 
 fun Routine.toFirestore(): Map<String, Any?> = mapOf(
@@ -97,6 +115,7 @@ fun Routine.toFirestore(): Map<String, Any?> = mapOf(
     "category" to category.name,
     "iconKey" to iconKey,
     "createdAt" to createdAt,
+    "completedDates" to completedDates,
 )
 
 fun DocumentSnapshot.toRoutine(): Routine? = runCatching {
@@ -107,5 +126,6 @@ fun DocumentSnapshot.toRoutine(): Routine? = runCatching {
         category = enumOr(getString("category"), RoutineCategory.Daily),
         iconKey = getString("iconKey") ?: "star",
         createdAt = getLong("createdAt") ?: 0L,
+        completedDates = (get("completedDates") as? List<*>)?.filterIsInstance<String>() ?: emptyList(),
     )
 }.getOrNull()

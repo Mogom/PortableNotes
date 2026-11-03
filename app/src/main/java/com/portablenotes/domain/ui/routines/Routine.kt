@@ -77,7 +77,20 @@ data class Routine(
     /** Automático según la categoría; solo "Personalizada" permite elegirlo. */
     val iconKey: String = category.defaultIconKey,
     val createdAt: Long = 0L,
-)
+    /** Días en que se marcó como hecha (formato ISO yyyy-MM-dd). */
+    val completedDates: List<String> = emptyList(),
+) {
+    fun isDoneOn(day: java.time.LocalDate): Boolean = day.toString() in completedDates
+
+    /** Días seguidos hechos, contando hasta hoy (o hasta ayer si hoy aún no se ha hecho). */
+    fun streak(today: java.time.LocalDate = java.time.LocalDate.now()): Int {
+        val days = completedDates.toSet()
+        var d = if (today.toString() in days) today else today.minusDays(1)
+        var n = 0
+        while (d.toString() in days) { n++; d = d.minusDays(1) }
+        return n
+    }
+}
 
 class RoutinesState(initial: List<Routine> = emptyList()) {
     val routines = mutableStateListOf<Routine>().apply { addAll(initial) }
@@ -93,6 +106,21 @@ class RoutinesState(initial: List<Routine> = emptyList()) {
     fun delete(id: String) {
         routines.removeAll { it.id == id }
     }
+
+    /** Marca o desmarca la rutina como hecha en [day]. */
+    fun toggleDone(id: String, day: java.time.LocalDate = java.time.LocalDate.now()) {
+        val i = routines.indexOfFirst { it.id == id }
+        if (i < 0) return
+        val r = routines[i]
+        val key = day.toString()
+        routines[i] = r.copy(
+            completedDates = if (key in r.completedDates) r.completedDates - key else r.completedDates + key
+        )
+    }
+
+    /** (hechas hoy, total). */
+    fun progressOn(day: java.time.LocalDate = java.time.LocalDate.now()): Pair<Int, Int> =
+        routines.count { it.isDoneOn(day) } to routines.size
 }
 
 /**

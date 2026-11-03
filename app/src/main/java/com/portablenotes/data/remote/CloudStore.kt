@@ -2,6 +2,7 @@ package com.portablenotes.data.remote
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.ui.notes.Note
 import com.portablenotes.domain.ui.routines.Routine
 import com.portablenotes.domain.ui.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +18,7 @@ import kotlinx.coroutines.tasks.await
  *   users/{uid}/events/{eventId}
  *   users/{uid}/tasks/{taskId}
  *   users/{uid}/routines/{routineId}
+ *   users/{uid}/notes/{noteId}
  */
 class CloudStore {
     private val auth = FirebaseAuth.getInstance()
@@ -40,6 +42,7 @@ class CloudStore {
         events: SnapshotStateList<Event>,
         tasks: SnapshotStateList<Task>,
         routines: SnapshotStateList<Routine>,
+        notes: SnapshotStateList<Note>,
     ) {
         val user = db.collection("users").document(uid)   // antes: ensureSignedIn()
 
@@ -61,6 +64,13 @@ class CloudStore {
             query = routinesCol.orderBy("createdAt", Query.Direction.ASCENDING),
             idOf = { it.id }, toMap = { it.toFirestore() }, fromDoc = { it.toRoutine() },
         ).also { it.start(scope, routines); syncs += it }
+
+        val notesCol = user.collection("notes")
+        FirestoreSync(
+            collection = notesCol,
+            query = notesCol.orderBy("updatedAt", Query.Direction.DESCENDING),
+            idOf = { it.id }, toMap = { it.toFirestore() }, fromDoc = { it.toNote() },
+        ).also { it.start(scope, notes); syncs += it }
     }
 
     fun stop() {

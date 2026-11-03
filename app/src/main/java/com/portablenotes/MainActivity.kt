@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,12 +39,27 @@ import com.portablenotes.domain.models.auth.AuthViewModel
 import com.portablenotes.domain.models.auth.GoogleAuthClient
 import com.portablenotes.data.remote.CloudStore                       // ← ajusta al paquete donde lo pusiste
 import com.portablenotes.domain.models.events.EventsViewModel
-import com.portablenotes.domain.models.events.Priority
-import com.portablenotes.domain.models.events.hhmm
-import com.portablenotes.domain.ui.AppColors
-import com.portablenotes.domain.ui.AppTheme
-import com.portablenotes.domain.ui.home.DayEvent
-import com.portablenotes.domain.ui.home.computeMetrics
+import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.models.events.on
+import com.portablenotes.domain.ui.components.CalendarViewModel
+import com.portablenotes.domain.ui.events.EventDetailSheet
+import com.portablenotes.domain.ui.events.EventEditorSheet
+import com.portablenotes.domain.ui.navigation.AppRoutes
+import com.portablenotes.domain.ui.notes.Note
+import com.portablenotes.domain.ui.notes.NotesState
+import com.portablenotes.domain.ui.screens.CreateChooserSheet
+import com.portablenotes.domain.ui.screens.HomeSummary
+import com.portablenotes.domain.ui.screens.NoteEditorSheet
+import com.portablenotes.domain.ui.screens.NotesScreen
+import com.portablenotes.domain.ui.screens.StyleScreen
+import com.portablenotes.domain.ui.screens.ThemesScreen
+import com.portablenotes.domain.ui.theme.AppTheme
+import com.portablenotes.domain.ui.theme.StyleViewModel
+import android.app.Activity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import com.portablenotes.domain.ui.navigation.AppBottomBar
 import com.portablenotes.domain.ui.navigation.AppTab
 import com.portablenotes.domain.ui.navigation.AuthRoutes
@@ -56,7 +70,6 @@ import com.portablenotes.domain.ui.screens.EventsScreen
 import com.portablenotes.domain.ui.screens.ForgotPasswordScreen
 import com.portablenotes.domain.ui.screens.HomeScreen
 import com.portablenotes.domain.ui.screens.NotificationSettingsSheet
-import com.portablenotes.domain.ui.events.icon
 import com.portablenotes.domain.ui.screens.PermissionsScreen
 import com.portablenotes.domain.ui.screens.LoginScreen
 import com.portablenotes.domain.ui.screens.RegisterScreen
@@ -80,8 +93,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
-            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
         )
         NotificationChannels.ensure(this)
         MotivationScheduler.sync(this)          // mensajes motivadores (2 al día)
@@ -166,14 +179,21 @@ fun App() {
     val eventsState = remember { EventsViewModel() }
     val routinesState = remember { RoutinesState() }
     val tasksState = remember { TasksState() }
+    val notesState = remember { NotesState() }
     val cloud = remember { CloudStore() }
+
+    // ----- Estilo (Temas / Estilo) y día seleccionado compartido Inicio / Eventos -----
+    val styleVm: StyleViewModel = viewModel()
+    val style by styleVm.style.collectAsState()
+    val calendarVm: CalendarViewModel = viewModel()
 
     // ----- Navegación -----
     val navController = rememberNavController()
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
-    val showBottomBar = AppTab.entries.any { it.route == currentRoute }   // oculta la barra en Login/Registro
-    val selectedTab = AppTab.entries.find { it.route == currentRoute } ?: AppTab.Home
+    val showBottomBar = AppTab.entries.any { it.route == currentRoute } || currentRoute == AppRoutes.Style   // oculta la barra en Login/Registro
+    val selectedTab = if (currentRoute == AppRoutes.Style) AppTab.Themes
+        else AppTab.entries.find { it.route == currentRoute } ?: AppTab.Home
     val startDestination = remember {
         when {
             !NotificationPrefs.permissionsShown(context) -> OnboardingRoutes.Permissions   // primer arranque
@@ -198,7 +218,7 @@ fun App() {
     LaunchedEffect(uid) {
         val id = uid ?: return@LaunchedEffect
         try {
-            cloud.start(id, this, eventsState.events, tasksState.tasks, routinesState.routines)
+            cloud.start(id, this, eventsState.events, tasksState.tasks, routinesState.routines, notesState.notes)
             awaitCancellation()
         } catch (e: CancellationException) {
             throw e
@@ -209,6 +229,7 @@ fun App() {
             eventsState.events.clear()
             tasksState.tasks.clear()
             routinesState.routines.clear()
+            notesState.notes.clear()
         }
     }
 
@@ -253,6 +274,15 @@ fun App() {
     }
 
     var showNotificationSettings by remember { mutableStateOf(false) }
+    var sheet by remember { mutableStateOf<Sheet?>(null) }
+
+    val signOut: () -> Unit = {
+        showNotificationSettings = false
+        scope.launch {
+            GoogleAuthClient.clearState(context)
+            authVm.signOut()          // uid pasa a null: la app vuelve sola al Login y limpia los datos locales
+        }
+    }
 
     // Nombre de pila de la cuenta (el que se escribió al registrarse o el de Google)
     var userName by remember(uid) { mutableStateOf(firstNameOf(FirebaseAuth.getInstance().currentUser)) }
@@ -266,41 +296,23 @@ fun App() {
         } catch (_: Exception) { /* sin conexión: se queda con el nombre local */ }
     }
 
-    AppTheme {
+    AppTheme(style) {
+        StatusBarIcons(AppTheme.tokens.dark)
         if (showNotificationSettings) {
             NotificationSettingsSheet(
                 onDismiss = { showNotificationSettings = false },
                 accountEmail = FirebaseAuth.getInstance().currentUser?.email,
-                onSignOut = {
-                    showNotificationSettings = false
-                    scope.launch {
-                        GoogleAuthClient.clearState(context)
-                        authVm.signOut()          // uid pasa a null: la app vuelve sola al Login y limpia los datos locales
-                    }
-                },
+                onSignOut = signOut,
             )
         }
         CompositionLocalProvider(LocalRoutines provides routinesState.routines.toList()) {
-            Scaffold(
-                containerColor = AppColors.Background,
-                bottomBar = {
-                    if (showBottomBar) {
-                        // En tablets la barra no se estira a todo el ancho: queda centrada y compacta
-                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                            AppBottomBar(
-                                selected = selectedTab,
-                                onSelect = navigateToTab,
-                                modifier = Modifier.padding(horizontal = 12.dp).widthIn(max = 560.dp),
-                            )
-                        }
-                    }
-                },
-            ) { innerPadding ->
+            // La barra flota sobre el contenido (cada pantalla deja 110 dp libres abajo)
+            Box(Modifier.fillMaxSize().background(AppTheme.tokens.bg)) {
                 NavHost(
                     navController = navController,
                     startDestination = startDestination,
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .fillMaxSize()
                         .pointerInput(currentRoute) {
                             // Solo en las 4 secciones principales (no en Login/Registro/Permisos).
                             // Los hijos que ya consumen el arrastre horizontal (listas de chips, etc.) tienen prioridad.
@@ -382,31 +394,42 @@ fun App() {
 
                     // ---------- App ----------
                     composable(AppTab.Home.route) {
+                        val (tDone, tTotal) = tasksState.progress()
+                        val (rDone, rTotal) = routinesState.progressOn(today)
                         HomeScreen(
                             today = today,
-                            onOpenSettings = { showNotificationSettings = true },
                             userName = userName,
-                            metrics = computeMetrics(eventsState.events.toList(), tasksState.tasks.toList()),
-                            eventsFor = { date ->
-                                eventsState.occurrencesOn(date).map {
-                                    DayEvent(
-                                        id = it.id,
-                                        title = it.title,
-                                        time = it.time.hhmm(),
-                                        place = it.type.label,
-                                        icon = it.type.icon,
-                                        tint = when (it.priority) {
-                                            Priority.High -> AppColors.Tint2
-                                            Priority.Medium -> AppColors.Tint1
-                                            Priority.Low -> AppColors.Tint3
-                                        },
-                                    )
-                                }
-                            },
+                            selectedDate = calendarVm.selectedDate,
+                            onSelectDate = calendarVm::select,
+                            eventsOn = { eventsState.occurrencesOn(it) },
+                            summary = HomeSummary(tDone, tTotal, rDone, rTotal, notesState.notes.size),
+                            onEventClick = { e -> sheet = Sheet.EventDetail(calendarVm.selectedDate, e.id) },
+                            onOpenMonth = { navigateToTab(AppTab.Events) },
+                            onOpenTasks = { navigateToTab(AppTab.Tasks) },
+                            onOpenRoutines = { navigateToTab(AppTab.Routines) },
+                            onOpenNotes = { navigateToTab(AppTab.Notes) },
+                            onOpenAccount = { showNotificationSettings = true },
+                            onCreate = { sheet = Sheet.CreateChooser },
                         )
                     }
                     composable(AppTab.Events.route) {
-                        EventsScreen(eventsState, today = today)
+                        EventsScreen(
+                            events = eventsState.events.toList(),
+                            today = today,
+                            month = calendarVm.visibleMonth,
+                            selectedDate = calendarVm.selectedDate,
+                            onSelectDate = calendarVm::select,
+                            onChangeMonth = calendarVm::showMonth,
+                            onEventClick = { e -> sheet = Sheet.EventDetail(calendarVm.selectedDate, e.id) },
+                            onCreate = { d -> sheet = Sheet.EventEditor(null, d) },
+                        )
+                    }
+                    composable(AppTab.Notes.route) {
+                        NotesScreen(
+                            notes = notesState.recent(),
+                            onNoteClick = { sheet = Sheet.NoteEditor(it) },
+                            onCreate = { sheet = Sheet.NoteEditor(null) },
+                        )
                     }
                     composable(AppTab.Routines.route) {
                         CenteredContent {
@@ -419,8 +442,89 @@ fun App() {
                     composable(AppTab.Tasks.route) {
                         CenteredContent { TasksScreen(tasksState) }
                     }
+                    composable(AppTab.Themes.route) {
+                        ThemesScreen(
+                            onChange = styleVm::update,
+                            onOpenStyle = { navController.navigate(AppRoutes.Style) { launchSingleTop = true } },
+                        )
+                    }
+                    composable(AppRoutes.Style) {
+                        StyleScreen(
+                            onChange = styleVm::update,
+                            onReset = styleVm::reset,
+                            onBack = { navController.popBackStack() },
+                            onOpenNotifications = { showNotificationSettings = true },
+                            onSignOut = signOut,
+                        )
+                    }
+                }
+
+                if (showBottomBar) {
+                    // Pastilla flotante: 14 dp a los lados y 18 dp abajo; en tablets queda centrada y compacta
+                    AppBottomBar(
+                        selected = selectedTab,
+                        onSelect = navigateToTab,
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .navigationBarsPadding()
+                            .padding(start = 14.dp, end = 14.dp, bottom = 18.dp)
+                            .widthIn(max = 560.dp),
+                    )
                 }
             }
+
+            // ---------- Hojas ----------
+            when (val s = sheet) {
+                is Sheet.EventDetail -> EventDetailSheet(
+                    date = s.date,
+                    events = eventsState.events.toList().on(s.date).filter { it.id == s.eventId },
+                    onDismiss = { sheet = null },
+                    onToggleDone = { eventsState.toggleDone(it.id) },
+                    onEdit = { sheet = Sheet.EventEditor(it, s.date) },
+                    onDelete = { eventsState.delete(it.id) },
+                )
+                is Sheet.EventEditor -> EventEditorSheet(
+                    event = s.event,
+                    initialDate = s.date,
+                    onSave = { eventsState.upsert(it); sheet = null },
+                    onDismiss = { sheet = null },
+                    existingEvents = eventsState.events.toList(),
+                )
+                is Sheet.NoteEditor -> NoteEditorSheet(
+                    note = s.note,
+                    onSave = { notesState.upsert(it); sheet = null },
+                    onDelete = { notesState.delete(it.id); sheet = null },
+                    onDismiss = { sheet = null },
+                )
+                Sheet.CreateChooser -> CreateChooserSheet(
+                    onNewNote = { sheet = Sheet.NoteEditor(null) },
+                    onNewEvent = { sheet = Sheet.EventEditor(null, calendarVm.selectedDate) },
+                    onDismiss = { sheet = null },
+                )
+                null -> Unit
+            }
+        }
+    }
+}
+
+/** Hojas que se abren desde varias pantallas. */
+private sealed interface Sheet {
+    data class EventDetail(val date: LocalDate, val eventId: String) : Sheet
+    data class EventEditor(val event: Event?, val date: LocalDate) : Sheet
+    data class NoteEditor(val note: Note?) : Sheet
+    data object CreateChooser : Sheet
+}
+
+/** Iconos de la barra de estado y de navegación: claros en fondos oscuros, oscuros en claros. */
+@Composable
+private fun StatusBarIcons(darkBackground: Boolean) {
+    val view = LocalView.current
+    if (view.isInEditMode) return
+    SideEffect {
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
+        WindowCompat.getInsetsController(window, view).apply {
+            isAppearanceLightStatusBars = !darkBackground
+            isAppearanceLightNavigationBars = !darkBackground
         }
     }
 }

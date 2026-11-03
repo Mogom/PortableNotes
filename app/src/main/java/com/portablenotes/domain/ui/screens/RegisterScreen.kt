@@ -1,13 +1,26 @@
 package com.portablenotes.domain.ui.screens
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,27 +28,27 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.portablenotes.domain.ui.AppColors
-import com.portablenotes.domain.ui.auth.AuthErrorMessage
-import com.portablenotes.domain.ui.auth.AuthLayout
-import com.portablenotes.domain.ui.auth.AuthPrimaryButton
-import com.portablenotes.domain.ui.auth.AuthTextField
 import com.portablenotes.domain.models.auth.AuthValidation
-import com.portablenotes.domain.ui.auth.GoogleSignInButton
-import com.portablenotes.domain.ui.auth.OrDivider
+import com.portablenotes.domain.ui.components.DangerRed
+import com.portablenotes.domain.ui.components.FormField
+import com.portablenotes.domain.ui.components.GoogleButton
+import com.portablenotes.domain.ui.components.PrimaryButton
+import com.portablenotes.domain.ui.components.RoundIconButton
+import com.portablenotes.domain.ui.components.TitleText
+import com.portablenotes.domain.ui.components.UiText
+import com.portablenotes.domain.ui.theme.AppTheme
 
-/**
- * Pantalla de registro (nombre, correo, contraseña y confirmación, o Google).
- * Igual que el login: solo dibuja y delega la lógica en los callbacks.
- */
+/** Registro 5a: bloque de color con botón volver, formulario y Google. Solo dibuja; la lógica va en AuthViewModel. */
 @Composable
 fun RegisterScreen(
     onRegister: (name: String, email: String, password: String) -> Unit,
@@ -45,6 +58,7 @@ fun RegisterScreen(
     isLoading: Boolean = false,
     errorMessage: String? = null,
 ) {
+    val t = AppTheme.tokens
     var name by rememberSaveable { mutableStateOf("") }
     var email by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
@@ -69,88 +83,77 @@ fun RegisterScreen(
         }
     }
 
-    AuthLayout(
-        title = "Crea tu cuenta",
-        subtitle = "Organiza tus eventos, rutinas y tareas en un solo lugar",
-        modifier = modifier,
-    ) {
-        AuthTextField(
-            value = name,
-            onValueChange = { name = it },
-            label = "Nombre",
-            imeAction = ImeAction.Next,
-            onImeAction = { focus.moveFocus(FocusDirection.Down) },
-            errorText = nameError,
-            enabled = !isLoading,
-        )
-        Spacer(Modifier.height(4.dp))
-        AuthTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = "Correo electrónico",
-            keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next,
-            onImeAction = { focus.moveFocus(FocusDirection.Down) },
-            errorText = emailError,
-            enabled = !isLoading,
-        )
-        Spacer(Modifier.height(4.dp))
-        AuthTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = "Contraseña",
-            isPassword = true,
-            imeAction = ImeAction.Next,
-            onImeAction = { focus.moveFocus(FocusDirection.Down) },
-            errorText = passwordError,
-            enabled = !isLoading,
-        )
-        Spacer(Modifier.height(4.dp))
-        AuthTextField(
-            value = confirm,
-            onValueChange = { confirm = it },
-            label = "Confirmar contraseña",
-            isPassword = true,
-            imeAction = ImeAction.Done,
-            onImeAction = ::submit,
-            errorText = confirmError,
-            enabled = !isLoading,
-        )
+    val next = KeyboardActions(onNext = { focus.moveFocus(FocusDirection.Down) })
 
-        Spacer(Modifier.height(12.dp))
-        AuthErrorMessage(errorMessage)
-        AuthPrimaryButton(text = "Crear cuenta", onClick = ::submit, isLoading = isLoading)
-
-        Spacer(Modifier.height(20.dp))
-        OrDivider()
-        Spacer(Modifier.height(20.dp))
-
-        GoogleSignInButton(onClick = onGoogleSignIn, enabled = !isLoading)
-
-        Spacer(Modifier.height(24.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
+    AuthScaffold(modifier) {
+        Box(
+            Modifier
+                .padding(horizontal = 14.dp)
+                .padding(top = 4.dp)
+                .fillMaxWidth()
+                .height(150.dp)
+                .clip(t.cardShape)
+                .background(t.accent)
+                .padding(horizontal = 18.dp, vertical = 16.dp),
         ) {
-            Text("¿Ya tienes cuenta?", fontSize = 14.sp, color = AppColors.TextSecondary)
-            TextButton(
-                onClick = onGoToLogin,
-                enabled = !isLoading,
-                colors = ButtonDefaults.textButtonColors(contentColor = AppColors.Accent),
+            RoundIconButton(Icons.AutoMirrored.Rounded.KeyboardArrowLeft, "Volver", t.onSoft, t.onAccent, onGoToLogin)
+            // Mini tarjeta de tareas decorativa
+            Column(
+                Modifier.align(Alignment.TopEnd).offset((-4).dp, 6.dp).size(96.dp).rotate(8f)
+                    .clip(t.smallShape).background(Color.White).padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(7.dp),
             ) {
-                Text("Inicia sesión", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                DecoRow(filled = true, width = 44)
+                DecoRow(filled = false, width = 36)
+                DecoRow(filled = false, width = 50)
             }
+            Box(
+                Modifier.align(Alignment.TopEnd).offset((-86).dp, 58.dp).size(46.dp).rotate(-10f)
+                    .clip(t.cellShape).background(t.accent2)
+            )
+            TitleText("notas", 20.sp, Modifier.align(Alignment.BottomStart), color = t.onAccent)
+        }
+
+        Column(
+            Modifier.padding(horizontal = 24.dp).padding(top = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+        ) {
+            Column(Modifier.padding(bottom = 4.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                TitleText("Crea tu cuenta", 30.sp)
+                UiText("Organiza tus eventos, rutinas y tareas en un solo lugar", 15.sp, FontWeight.Medium, t.muted)
+            }
+            FormField(name, { name = it }, "Nombre", Icons.Outlined.Person, height = 52.dp, errorText = nameError, enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next), keyboardActions = next)
+            FormField(email, { email = it }, "Correo electrónico", Icons.Outlined.Mail, height = 52.dp, errorText = emailError, enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email, imeAction = ImeAction.Next), keyboardActions = next)
+            FormField(password, { password = it }, "Contraseña", Icons.Outlined.Lock, height = 52.dp, isPassword = true, errorText = passwordError, enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next), keyboardActions = next)
+            FormField(confirm, { confirm = it }, "Confirmar contraseña", Icons.Outlined.Lock, height = 52.dp, isPassword = true, errorText = confirmError, enabled = !isLoading,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(onDone = { submit() }))
+            if (errorMessage != null) UiText(errorMessage, 13.sp, FontWeight.SemiBold, DangerRed)
+            Spacer(Modifier.height(4.dp))
+            PrimaryButton("Crear cuenta", ::submit, loading = isLoading)
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                Box(Modifier.weight(1f).height(1.dp).background(t.border))
+                UiText("o", 13.sp, FontWeight.SemiBold, t.muted)
+                Box(Modifier.weight(1f).height(1.dp).background(t.border))
+            }
+            GoogleButton(onGoogleSignIn, enabled = !isLoading)
+            SwitchAuthLink("¿Ya tienes cuenta? ", "Inicia sesión", onGoToLogin)
+            Spacer(Modifier.height(16.dp))
         }
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
-private fun RegisterScreenPreview() {
-    RegisterScreen(
-        onRegister = { _, _, _ -> },
-        onGoogleSignIn = {},
-        onGoToLogin = {},
-    )
+private fun DecoRow(filled: Boolean, width: Int) {
+    val t = AppTheme.tokens
+    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Box(
+            Modifier.size(12.dp).clip(CircleShape)
+                .then(if (filled) Modifier.background(t.accent) else Modifier.border(2.dp, Color(0xFFD6D4CE), CircleShape))
+        )
+        Box(Modifier.width(width.dp).height(6.dp).clip(CircleShape).background(Color(0xFFECEBE8)))
+    }
 }
