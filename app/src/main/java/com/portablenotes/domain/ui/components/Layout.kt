@@ -26,6 +26,7 @@ fun barClearance(): Dp = 100.dp + WindowInsets.navigationBars.asPaddingValues().
 fun contentBottomPadding(): Dp = barClearance() + 16.dp
 
 /** Barra de estado arriba y, en horizontal, el recorte de cámara a los lados. */
+@Composable
 fun Modifier.screenInsets(): Modifier =
     statusBarsPadding().windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
 

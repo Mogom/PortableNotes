@@ -71,8 +71,8 @@ fun RoutinesScreen(
                 .align(Alignment.TopCenter)
                 .widthIn(max = Breakpoints.MaxContent)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .screenInsets()
+                .verticalScroll(rememberScrollState())
                 .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {

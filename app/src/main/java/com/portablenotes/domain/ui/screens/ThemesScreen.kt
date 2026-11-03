@@ -233,8 +233,8 @@ private fun ScreenColumn(modifier: Modifier, content: @Composable () -> Unit) {
                 .align(Alignment.TopCenter)
                 .widthIn(max = 640.dp)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .screenInsets()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 18.dp)
                 .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(16.dp),

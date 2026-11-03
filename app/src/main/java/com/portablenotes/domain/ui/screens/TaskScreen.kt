@@ -116,8 +116,8 @@ fun TasksScreen(
                 .align(Alignment.TopCenter)
                 .widthIn(max = Breakpoints.MaxContent)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .screenInsets()
+                .verticalScroll(rememberScrollState())
                 .padding(horizontal = if (wide) 28.dp else 18.dp)
                 .padding(top = 12.dp, bottom = contentBottomPadding()),
             verticalArrangement = Arrangement.spacedBy(14.dp),
