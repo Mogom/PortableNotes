@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Firebase (no subir al repositorio público)
+app/google-services.json

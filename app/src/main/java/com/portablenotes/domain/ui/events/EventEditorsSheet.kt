@@ -1,4 +1,8 @@
+<<<<<<<< HEAD:app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt
+package com.portablenotes.domain.ui.calendar.events
+========
 package com.portablenotes.domain.ui.events
+>>>>>>>> c00f8606e9150b1206a788461636c275e5a41540:app/src/main/java/com/portablenotes/domain/ui/events/EventEditorsSheet.kt
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable

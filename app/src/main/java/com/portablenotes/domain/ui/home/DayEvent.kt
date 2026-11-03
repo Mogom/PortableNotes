@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.AppColors
@@ -36,7 +37,7 @@ data class DayEvent(
 fun TodayEventsPanel(
     events: List<DayEvent>,
     modifier: Modifier = Modifier,
-    bottomPadding: androidx.compose.ui.unit.Dp = 0.dp, // espacio para la barra inferior flotante
+    bottomPadding: Dp = 0.dp, // espacio para la barra inferior flotante
 ) {
     Column(modifier) {
         Row(

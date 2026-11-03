@@ -1,0 +1,616 @@
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\r\n    alias(libs.plugins.android.application)\r\n    alias(libs.plugins.kotlin.compose)\r\n\r\n    id(\"com.google.gms.google-services\")\r\n}\r\n\r\nandroid {\r\n    namespace = \"com.example.portablenotes\"\r\n    compileSdk {\r\n        version = release(37)\r\n    }\r\n\r\n    defaultConfig {\r\n        applicationId = \"com.example.portablenotes\"\r\n        minSdk = 28 // java.time requiere API 26+\r\n        targetSdk = 37\r\n        versionCode = 1\r\n        versionName = \"1.0\"\r\n\r\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\r\n    }\r\n\r\n    buildTypes {\r\n        release {\r\n            optimization {\r\n                enable = true\r\n                packageScope = setOf(\"androidx.**\", \"kotlin.**\", \"kotlinx.**\")\r\n            }\r\n        }\r\n    }\r\n    compileOptions {\r\n        sourceCompatibility = JavaVersion.VERSION_11\r\n        targetCompatibility = JavaVersion.VERSION_11\r\n    }\r\n    buildFeatures {\r\n        compose = true\r\n    }\r\n}\r\n\r\ndependencies {\r\n    implementation(platform(libs.androidx.compose.bom))\r\n    implementation(libs.androidx.activity.compose)\r\n    implementation(libs.androidx.compose.material3)\r\n    implementation(libs.androidx.compose.ui)\r\n    implementation(libs.androidx.compose.ui.graphics)\r\n    implementation(libs.androidx.compose.ui.tooling.preview)\r\n    implementation(libs.androidx.core.ktx)\r\n    implementation(libs.androidx.lifecycle.runtime.ktx)\r\n    implementation(project(\":shared\"))\r\n    testImplementation(libs.junit)\r\n    androidTestImplementation(platform(libs.androidx.compose.bom))\r\n    androidTestImplementation(libs.androidx.compose.ui.test.junit4)\r\n    androidTestImplementation(libs.androidx.espresso.core)\r\n    androidTestImplementation(libs.androidx.junit)\r\n    debugImplementation(libs.androidx.compose.ui.test.manifest)\r\n    debugImplementation(libs.androidx.compose.ui.tooling)\r\n\r\n    implementation(\"androidx.compose.material:material-icons-extended:1.7.5\")\r\n    implementation(\"androidx.navigation:navigation-compose:2.8.5\")\r\n    implementation(\"androidx.compose.material:material-icons-extended\")\r\n    implementation(platform(\"com.google.firebase:firebase-bom:35.1.0\"))\r\n    implementation(\"com.google.firebase:firebase-analytics\")\r\n    implementation(\"com.google.firebase:firebase-auth\")\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/build.gradle.kts	(date 1792989865529)
+@@ -56,10 +56,17 @@
+     debugImplementation(libs.androidx.compose.ui.test.manifest)
+     debugImplementation(libs.androidx.compose.ui.tooling)
+ 
++
+     implementation("androidx.compose.material:material-icons-extended:1.7.5")
+     implementation("androidx.navigation:navigation-compose:2.8.5")
+     implementation("androidx.compose.material:material-icons-extended")
+     implementation(platform("com.google.firebase:firebase-bom:35.1.0"))
+     implementation("com.google.firebase:firebase-analytics")
+     implementation("com.google.firebase:firebase-auth")
++
++
++    implementation("com.google.firebase:firebase-firestore")
++    implementation("androidx.credentials:credentials:1.3.0")
++    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
++    implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
+ }
+\ No newline at end of file
+Index: gradle.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Project-wide Gradle settings.\r\n# IDE (e.g. Android Studio) users:\r\n# Gradle settings configured through the IDE *will override*\r\n# any settings specified in this file.\r\n# For more details on how to configure your build environment visit\r\n# http://www.gradle.org/docs/current/userguide/build_environment.html\r\n# Specifies the JVM arguments used for the daemon process.\r\n# The setting is particularly useful for tweaking memory settings.\r\norg.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8\r\n# When configured, Gradle will run in incubating parallel mode.\r\n# This option should only be used with decoupled projects. For more details, visit\r\n# https://developer.android.com/r/tools/gradle-multi-project-decoupled-projects\r\n# org.gradle.parallel=true\r\n# When enabled, the Configuration Cache allows Gradle to skip the configuration\r\n# phase entirely if nothing that affects the build configuration (such as build scripts)\r\n# has changed. Additionally, Gradle applies performance optimizations to task execution.\r\norg.gradle.configuration-cache=false\r\n# Kotlin code style for this project: \"official\" or \"obsolete\":\r\nkotlin.code.style=official\r\norg.gradle.java.home=/usr/lib/jvm/java-27-openjdk
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle.properties b/gradle.properties
+--- a/gradle.properties	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/gradle.properties	(date 1792981386728)
+@@ -17,4 +17,4 @@
+ org.gradle.configuration-cache=false
+ # Kotlin code style for this project: "official" or "obsolete":
+ kotlin.code.style=official
+-org.gradle.java.home=/usr/lib/jvm/java-27-openjdk
+\ No newline at end of file
++# org.gradle.java.home=/usr/lib/jvm/java-27-openjdk  (ruta de Linux, no válida en Windows)
+\ No newline at end of file
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ /dev/null	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
+@@ -1,18 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="app">
+-        <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2026-10-17T00:15:50.829865890Z">
+-          <Target type="DEFAULT_BOOT">
+-            <handle>
+-              <DeviceId pluginId="Wireless" identifier="serviceName=adb-ZY32MG56GR-weH6Xj" />
+-            </handle>
+-          </Target>
+-        </DropdownSelection>
+-        <DialogSelection />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: shared/build/outputs/logs/manifest-merger-main-report.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>-- Merging decision tree log ---\r\nmanifest\r\nADDED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:13-83\r\nINJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:13-83\r\n\tpackage\r\n\t\tINJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml\r\n\txmlns:android\r\n\t\tADDED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:23-81\r\nuses-sdk\r\nINJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml reason: use-sdk injection requested\r\nINJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml\r\n\tandroid:minSdkVersion\r\n\t\tINJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/shared/build/outputs/logs/manifest-merger-main-report.txt b/shared/build/outputs/logs/manifest-merger-main-report.txt
+--- a/shared/build/outputs/logs/manifest-merger-main-report.txt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/shared/build/outputs/logs/manifest-merger-main-report.txt	(date 1792989243157)
+@@ -1,13 +1,13 @@
+ -- Merging decision tree log ---
+ manifest
+-ADDED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:13-83
+-INJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:13-83
++ADDED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml:2:13-83
++INJECTED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml:2:13-83
+ 	package
+-		INJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml
++		INJECTED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml
+ 	xmlns:android
+-		ADDED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml:2:23-81
++		ADDED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml:2:23-81
+ uses-sdk
+-INJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml reason: use-sdk injection requested
+-INJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml
++INJECTED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml reason: use-sdk injection requested
++INJECTED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml
+ 	android:minSdkVersion
+-		INJECTED from /home/linuxgod/Projects/PortableNotes/shared/build/intermediates/tmp/ProcessLibraryManifest/tempAndroidManifest18429610076040316947.xml
++		INJECTED from C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\build\intermediates\tmp\ProcessLibraryManifest\tempAndroidManifest13967722793277451373.xml
+Index: shared/build/intermediates/incremental/mergeAndroidMainJniLibFolders/merger.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<merger version=\"3\"><dataSet config=\"androidMain\" ignore_pattern=\"!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~\"><source path=\"/home/linuxgod/Projects/PortableNotes/shared/src/androidMain/jniLibs\"/></dataSet></merger>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/shared/build/intermediates/incremental/mergeAndroidMainJniLibFolders/merger.xml b/shared/build/intermediates/incremental/mergeAndroidMainJniLibFolders/merger.xml
+--- a/shared/build/intermediates/incremental/mergeAndroidMainJniLibFolders/merger.xml	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/shared/build/intermediates/incremental/mergeAndroidMainJniLibFolders/merger.xml	(date 1792989243008)
+@@ -1,2 +1,2 @@
+ <?xml version="1.0" encoding="utf-8"?>
+-<merger version="3"><dataSet config="androidMain" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="/home/linuxgod/Projects/PortableNotes/shared/src/androidMain/jniLibs"/></dataSet></merger>
+\ No newline at end of file
++<merger version="3"><dataSet config="androidMain" ignore_pattern="!.svn:!.git:!.ds_store:!*.scc:.*:&lt;dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"><source path="C:\Users\kevin\OneDrive\Documentos\Uni\Moviles\PortableNotes\shared\src\androidMain\jniLibs"/></dataSet></merger>
+\ No newline at end of file
+Index: gradle/libs.versions.toml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>[versions]\r\nagp = \"9.4.1\"\r\ncoreKtx = \"1.19.1\"\r\njunit = \"4.13.2\"\r\njunitVersion = \"1.3.0\"\r\nespressoCore = \"3.7.0\"\r\nlifecycleRuntimeKtx = \"2.11.0\"\r\nactivityCompose = \"1.13.0\"\r\nkotlin = \"2.2.10\"\r\ncomposeBom = \"2026.02.01\"\r\nkotlinxDatetime = \"0.7.1\"\r\n\r\n[libraries]\r\nandroidx-core-ktx = { group = \"androidx.core\", name = \"core-ktx\", version.ref = \"coreKtx\" }\r\njunit = { group = \"junit\", name = \"junit\", version.ref = \"junit\" }\r\nandroidx-junit = { group = \"androidx.test.ext\", name = \"junit\", version.ref = \"junitVersion\" }\r\nandroidx-espresso-core = { group = \"androidx.test.espresso\", name = \"espresso-core\", version.ref = \"espressoCore\" }\r\nandroidx-lifecycle-runtime-ktx = { group = \"androidx.lifecycle\", name = \"lifecycle-runtime-ktx\", version.ref = \"lifecycleRuntimeKtx\" }\r\nandroidx-activity-compose = { group = \"androidx.activity\", name = \"activity-compose\", version.ref = \"activityCompose\" }\r\nandroidx-compose-bom = { group = \"androidx.compose\", name = \"compose-bom\", version.ref = \"composeBom\" }\r\nandroidx-compose-ui = { group = \"androidx.compose.ui\", name = \"ui\" }\r\nandroidx-compose-ui-graphics = { group = \"androidx.compose.ui\", name = \"ui-graphics\" }\r\nandroidx-compose-ui-tooling = { group = \"androidx.compose.ui\", name = \"ui-tooling\" }\r\nandroidx-compose-ui-tooling-preview = { group = \"androidx.compose.ui\", name = \"ui-tooling-preview\" }\r\nandroidx-compose-ui-test-manifest = { group = \"androidx.compose.ui\", name = \"ui-test-manifest\" }\r\nandroidx-compose-ui-test-junit4 = { group = \"androidx.compose.ui\", name = \"ui-test-junit4\" }\r\nandroidx-compose-material3 = { group = \"androidx.compose.material3\", name = \"material3\" }\r\nkotlinx-datetime = { group = \"org.jetbrains.kotlinx\", name = \"kotlinx-datetime\", version.ref = \"kotlinxDatetime\" }\r\n\r\n[plugins]\r\nandroid-application = { id = \"com.android.application\", version.ref = \"agp\" }\r\nandroid-kotlin-multiplatform-library = { id = \"com.android.kotlin.multiplatform.library\", version.ref = \"agp\" }\r\nkotlin-compose = { id = \"org.jetbrains.kotlin.plugin.compose\", version.ref = \"kotlin\" }\r\nkotlin-multiplatform = { id = \"org.jetbrains.kotlin.multiplatform\", version.ref = \"kotlin\" }\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml
+--- a/gradle/libs.versions.toml	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/gradle/libs.versions.toml	(date 1792989004617)
+@@ -6,7 +6,7 @@
+ espressoCore = "3.7.0"
+ lifecycleRuntimeKtx = "2.11.0"
+ activityCompose = "1.13.0"
+-kotlin = "2.2.10"
++kotlin = "2.4.0"
+ composeBom = "2026.02.01"
+ kotlinxDatetime = "0.7.1"
+ 
+Index: app/google-services.json
+===================================================================
+diff --git a/app/google-services.json b/app/google-services.json
+new file mode 100644
+--- /dev/null	(date 1792989674146)
++++ b/app/google-services.json	(date 1792989674146)
+@@ -0,0 +1,47 @@
++{
++  "project_info": {
++    "project_number": "1097092017348",
++    "project_id": "portablenotes-21d3a",
++    "storage_bucket": "portablenotes-21d3a.firebasestorage.app"
++  },
++  "client": [
++    {
++      "client_info": {
++        "mobilesdk_app_id": "1:1097092017348:android:22a3237c48263d4f566d91",
++        "android_client_info": {
++          "package_name": "com.example.portablenotes"
++        }
++      },
++      "oauth_client": [
++        {
++          "client_id": "1097092017348-bgao6g1294m9fpr3vk6fa64b4tl7qd10.apps.googleusercontent.com",
++          "client_type": 1,
++          "android_info": {
++            "package_name": "com.example.portablenotes",
++            "certificate_hash": "c527bd2d3d47af1cc63fbd57d05d46ed425615d5"
++          }
++        },
++        {
++          "client_id": "1097092017348-e18p0ce1trtg2klrkbtb38tbtislub3v.apps.googleusercontent.com",
++          "client_type": 3
++        }
++      ],
++      "api_key": [
++        {
++          "current_key": "AIzaSyCMNOyl1fubY5aYZU_PGBi3UepGtZOtiqg"
++        }
++      ],
++      "services": {
++        "appinvite_service": {
++          "other_platform_oauth_client": [
++            {
++              "client_id": "1097092017348-e18p0ce1trtg2klrkbtb38tbtislub3v.apps.googleusercontent.com",
++              "client_type": 3
++            }
++          ]
++        }
++      }
++    }
++  ],
++  "configuration_version": "1"
++}
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_25\" default=\"true\" project-jdk-name=\"jbr-25\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/.idea/misc.xml	(date 1792986403306)
+@@ -1,7 +1,6 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="jbr-25" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_26" default="true" project-jdk-name="openjdk-26" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
+Index: app/src/main/java/com/portablenotes/domain/ui/home/DayEvent.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.home\r\n\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.lazy.LazyColumn\r\nimport androidx.compose.foundation.lazy.items\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.rounded.Notifications\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.Surface\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextOverflow\r\nimport androidx.compose.ui.unit.Dp\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\n\r\ndata class DayEvent(\r\n    val id: String,\r\n    val title: String,\r\n    val time: String,\r\n    val place: String? = null,\r\n    val tint: Color = AppColors.Tint1,\r\n)\r\n\r\n/** \"Barra de notificaciones\" con los eventos del día seleccionado. */\r\n@Composable\r\nfun TodayEventsPanel(\r\n    events: List<DayEvent>,\r\n    modifier: Modifier = Modifier,\r\n    bottomPadding: Dp = 0.dp, // espacio para la barra inferior flotante\r\n) {\r\n    Column(modifier) {\r\n        Row(\r\n            modifier = Modifier.fillMaxWidth().padding(horizontal = 4.dp),\r\n            verticalAlignment = Alignment.CenterVertically,\r\n        ) {\r\n            Text(\r\n                text = \"Eventos de hoy\",\r\n                fontSize = 18.sp,\r\n                fontWeight = FontWeight.SemiBold,\r\n                color = AppColors.TextPrimary,\r\n                modifier = Modifier.weight(1f),\r\n            )\r\n            Box(\r\n                Modifier\r\n                    .clip(CircleShape)\r\n                    .background(AppColors.Accent)\r\n                    .padding(horizontal = 10.dp, vertical = 3.dp)\r\n            ) {\r\n                Text(events.size.toString(), color = AppColors.OnAccent, fontSize = 12.sp, fontWeight = FontWeight.Medium)\r\n            }\r\n        }\r\n\r\n        Spacer(Modifier.height(12.dp))\r\n\r\n        if (events.isEmpty()) {\r\n            EmptyState(Modifier.fillMaxWidth().padding(top = 32.dp))\r\n        } else {\r\n            LazyColumn(\r\n                verticalArrangement = Arrangement.spacedBy(10.dp),\r\n                contentPadding = PaddingValues(bottom = bottomPadding),\r\n            ) {\r\n                items(events, key = { it.id }) { EventCard(it) }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun EventCard(event: DayEvent) {\r\n    Surface(\r\n        shape = RoundedCornerShape(22.dp),\r\n        color = AppColors.Surface,\r\n        shadowElevation = 1.dp,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n        modifier = Modifier.fillMaxWidth(),\r\n    ) {\r\n        Row(\r\n            modifier = Modifier.padding(12.dp),\r\n            verticalAlignment = Alignment.CenterVertically,\r\n        ) {\r\n            Box(\r\n                modifier = Modifier\r\n                    .size(44.dp)\r\n                    .clip(RoundedCornerShape(14.dp))\r\n                    .background(event.tint),\r\n                contentAlignment = Alignment.Center,\r\n            ) {\r\n                Icon(\r\n                    Icons.Rounded.Notifications,\r\n                    contentDescription = null,\r\n                    tint = AppColors.TextPrimary,\r\n                    modifier = Modifier.size(20.dp),\r\n                )\r\n            }\r\n            Spacer(Modifier.width(12.dp))\r\n            Column(Modifier.weight(1f)) {\r\n                Text(\r\n                    event.title,\r\n                    fontSize = 15.sp,\r\n                    fontWeight = FontWeight.Medium,\r\n                    color = AppColors.TextPrimary,\r\n                    maxLines = 1,\r\n                    overflow = TextOverflow.Ellipsis,\r\n                )\r\n                event.place?.let {\r\n                    Text(it, fontSize = 12.sp, color = AppColors.TextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)\r\n                }\r\n            }\r\n            Spacer(Modifier.width(8.dp))\r\n            Box(\r\n                Modifier\r\n                    .clip(CircleShape)\r\n                    .background(AppColors.SurfaceMuted)\r\n                    .padding(horizontal = 10.dp, vertical = 5.dp)\r\n            ) {\r\n                Text(event.time, fontSize = 12.sp, color = AppColors.TextPrimary, fontWeight = FontWeight.Medium)\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun EmptyState(modifier: Modifier = Modifier) {\r\n    Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {\r\n        Text(\"Todo despejado\", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n        Spacer(Modifier.height(4.dp))\r\n        Text(\"No tienes eventos programados\", fontSize = 13.sp, color = AppColors.TextSecondary)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/home/DayEvent.kt b/app/src/main/java/com/portablenotes/domain/ui/home/DayEvent.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/home/DayEvent.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/home/DayEvent.kt	(date 1792988888140)
+@@ -22,7 +22,7 @@
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
++import com.portablenotes.domain.ui.AppColors
+ 
+ data class DayEvent(
+     val id: String,
+Index: app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.calendar.events\r\n\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\nimport com.example.portablenotes.ui.routines.LocalRoutines\r\nimport java.time.Instant\r\nimport java.time.LocalDate\r\nimport java.time.LocalTime\r\nimport java.time.ZoneOffset\r\nimport java.util.UUID\r\n\r\n/** Crear (event == null) o editar un evento. Funciona igual para eventos que se repiten o no. */\r\n@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)\r\n@Composable\r\nfun EventEditorSheet(\r\n    event: Event?,\r\n    initialDate: LocalDate,\r\n    onSave: (Event) -> Unit,\r\n    onDismiss: () -> Unit,\r\n) {\r\n    var title by remember { mutableStateOf(event?.title ?: \"\") }\r\n    var notes by remember { mutableStateOf(event?.notes ?: \"\") }\r\n    var date by remember { mutableStateOf(event?.date ?: initialDate) }\r\n    var time by remember { mutableStateOf(event?.time ?: LocalTime.of(9, 0)) }\r\n    var repeat by remember { mutableStateOf(event?.repeat ?: Repeat.None) }\r\n    var type by remember { mutableStateOf(event?.type ?: EventType.Other) }\r\n    var priority by remember { mutableStateOf(event?.priority ?: Priority.Medium) }\r\n    val routines = LocalRoutines.current\r\n    var routineId by remember { mutableStateOf(event?.routineId) }\r\n    var showDate by remember { mutableStateOf(false) }\r\n    var showTime by remember { mutableStateOf(false) }\r\n\r\n    ModalBottomSheet(\r\n        onDismissRequest = onDismiss,\r\n        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),\r\n        containerColor = AppColors.Background,\r\n        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),\r\n    ) {\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxWidth()\r\n                .verticalScroll(rememberScrollState())\r\n                .navigationBarsPadding()\r\n                .imePadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(bottom = 20.dp),\r\n            verticalArrangement = Arrangement.spacedBy(14.dp),\r\n        ) {\r\n            Text(\r\n                if (event == null) \"Nuevo evento\" else \"Editar evento\",\r\n                fontSize = 20.sp,\r\n                fontWeight = FontWeight.SemiBold,\r\n                color = AppColors.TextPrimary,\r\n            )\r\n\r\n            OutlinedTextField(\r\n                value = title,\r\n                onValueChange = { title = it },\r\n                label = { Text(\"Título\") },\r\n                singleLine = true,\r\n                modifier = Modifier.fillMaxWidth(),\r\n                shape = RoundedCornerShape(16.dp),\r\n                colors = fieldColors(),\r\n            )\r\n            OutlinedTextField(\r\n                value = notes,\r\n                onValueChange = { notes = it },\r\n                label = { Text(\"Notas (opcional)\") },\r\n                minLines = 2,\r\n                modifier = Modifier.fillMaxWidth(),\r\n                shape = RoundedCornerShape(16.dp),\r\n                colors = fieldColors(),\r\n            )\r\n\r\n            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {\r\n                PickerField(\"Fecha\", date.prettyLong(), Modifier.weight(1.6f)) { showDate = true }\r\n                PickerField(\"Hora\", time.hhmm(), Modifier.weight(1f)) { showTime = true }\r\n            }\r\n\r\n            SectionLabel(\"Se repite\")\r\n            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                Repeat.entries.forEach { SelectChip(it.label, it == repeat) { repeat = it } }\r\n            }\r\n\r\n            SectionLabel(\"Tipo de evento\")\r\n            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                EventType.entries.forEach { SelectChip(it.label, it == type) { type = it } }\r\n            }\r\n\r\n            SectionLabel(\"Prioridad\")\r\n            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                Priority.entries.forEach { SelectChip(it.label, it == priority) { priority = it } }\r\n            }\r\n\r\n            if (routines.isNotEmpty()) {\r\n                SectionLabel(\"Rutina anclada (opcional)\")\r\n                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                    SelectChip(\"Ninguna\", routineId == null) { routineId = null }\r\n                    routines.forEach { r -> SelectChip(r.name, r.id == routineId) { routineId = r.id } }\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(4.dp))\r\n\r\n            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {\r\n                OutlinedButton(\r\n                    onClick = onDismiss,\r\n                    modifier = Modifier.weight(1f).height(48.dp),\r\n                    shape = CircleShape,\r\n                    border = BorderStroke(1.dp, AppColors.Border),\r\n                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AppColors.TextPrimary),\r\n                ) { Text(\"Cancelar\") }\r\n                Button(\r\n                    onClick = {\r\n                        onSave(\r\n                            Event(\r\n                                id = event?.id ?: UUID.randomUUID().toString(),\r\n                                title = title.trim(),\r\n                                date = date,\r\n                                time = time,\r\n                                repeat = repeat,\r\n                                type = type,\r\n                                priority = priority,\r\n                                notes = notes.trim(),\r\n                                done = if (repeat == Repeat.None) event?.done ?: false else false,\r\n                                routineId = routineId,\r\n                            )\r\n                        )\r\n                    },\r\n                    enabled = title.isNotBlank(),\r\n                    modifier = Modifier.weight(1f).height(48.dp),\r\n                    shape = CircleShape,\r\n                    colors = ButtonDefaults.buttonColors(\r\n                        containerColor = AppColors.Accent,\r\n                        contentColor = AppColors.OnAccent,\r\n                        disabledContainerColor = AppColors.SurfaceMuted,\r\n                        disabledContentColor = AppColors.TextSecondary,\r\n                    ),\r\n                ) { Text(\"Guardar\") }\r\n            }\r\n        }\r\n    }\r\n\r\n    if (showDate) {\r\n        val pickerState = rememberDatePickerState(\r\n            initialSelectedDateMillis = date.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()\r\n        )\r\n        DatePickerDialog(\r\n            onDismissRequest = { showDate = false },\r\n            confirmButton = {\r\n                TextButton(onClick = {\r\n                    pickerState.selectedDateMillis?.let {\r\n                        date = Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate()\r\n                    }\r\n                    showDate = false\r\n                }) { Text(\"Aceptar\", color = AppColors.TextPrimary) }\r\n            },\r\n            dismissButton = { TextButton(onClick = { showDate = false }) { Text(\"Cancelar\", color = AppColors.TextSecondary) } },\r\n        ) { DatePicker(state = pickerState) }\r\n    }\r\n\r\n    if (showTime) {\r\n        val timeState = rememberTimePickerState(initialHour = time.hour, initialMinute = time.minute, is24Hour = true)\r\n        AlertDialog(\r\n            onDismissRequest = { showTime = false },\r\n            confirmButton = {\r\n                TextButton(onClick = {\r\n                    time = LocalTime.of(timeState.hour, timeState.minute)\r\n                    showTime = false\r\n                }) { Text(\"Aceptar\", color = AppColors.TextPrimary) }\r\n            },\r\n            dismissButton = { TextButton(onClick = { showTime = false }) { Text(\"Cancelar\", color = AppColors.TextSecondary) } },\r\n            text = { TimePicker(state = timeState) },\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun fieldColors() = OutlinedTextFieldDefaults.colors(\r\n    focusedBorderColor = AppColors.Accent,\r\n    unfocusedBorderColor = AppColors.Border,\r\n    focusedLabelColor = AppColors.Accent,\r\n    cursorColor = AppColors.Accent,\r\n    focusedContainerColor = AppColors.Surface,\r\n    unfocusedContainerColor = AppColors.Surface,\r\n)\r\n\r\n@Composable\r\nprivate fun SectionLabel(text: String) {\r\n    Text(text, fontSize = 13.sp, color = AppColors.TextSecondary, fontWeight = FontWeight.Medium)\r\n}\r\n\r\n@Composable\r\nprivate fun PickerField(label: String, value: String, modifier: Modifier, onClick: () -> Unit) {\r\n    Surface(\r\n        modifier = modifier.clickable(onClick = onClick),\r\n        shape = RoundedCornerShape(16.dp),\r\n        color = AppColors.Surface,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n    ) {\r\n        Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {\r\n            Text(label, fontSize = 11.sp, color = AppColors.TextSecondary)\r\n            Text(value, fontSize = 14.sp, color = AppColors.TextPrimary, fontWeight = FontWeight.Medium, maxLines = 1)\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt b/app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt	(date 1792988888087)
+@@ -13,8 +13,8 @@
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
+-import com.example.portablenotes.ui.routines.LocalRoutines
++import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.routines.LocalRoutines
+ import java.time.Instant
+ import java.time.LocalDate
+ import java.time.LocalTime
+Index: app/src/main/java/com/portablenotes/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes\r\n\r\nimport android.graphics.Color\r\nimport android.os.Bundle\r\nimport androidx.activity.ComponentActivity\r\nimport androidx.activity.SystemBarStyle\r\nimport androidx.activity.compose.setContent\r\nimport androidx.activity.enableEdgeToEdge\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.animation.*\r\nimport androidx.navigation.compose.NavHost\r\nimport androidx.navigation.compose.composable\r\nimport androidx.navigation.compose.currentBackStackEntryAsState\r\nimport androidx.navigation.compose.rememberNavController\r\nimport com.portablenotes.domain.ui.AppColors\r\nimport com.portablenotes.domain.ui.calendar.events.EventsState\r\nimport com.portablenotes.domain.ui.calendar.events.Priority\r\nimport com.portablenotes.domain.ui.calendar.events.hhmm\r\nimport com.portablenotes.domain.ui.calendar.events.sampleEvents\r\nimport com.portablenotes.domain.ui.home.DayEvent\r\nimport com.portablenotes.domain.ui.navigation.AppBottomBar\r\nimport com.portablenotes.domain.ui.navigation.AppTab\r\nimport com.portablenotes.domain.ui.screens.EventsScreen\r\nimport com.portablenotes.domain.ui.screens.HomeScreen\r\nimport com.portablenotes.domain.ui.screens.TasksScreen\r\nimport com.portablenotes.domain.ui.screens.RoutinesScreen\r\nimport com.portablenotes.domain.ui.routines.RoutinesState\r\nimport com.portablenotes.domain.ui.routines.sampleRoutines\r\nimport com.portablenotes.domain.ui.tasks.TasksState\r\nimport com.portablenotes.domain.ui.tasks.sampleTasks\r\nimport java.time.LocalDate\r\n\r\nclass MainActivity : ComponentActivity() {\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n        enableEdgeToEdge(\r\n            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),\r\n            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),\r\n        )\r\n        setContent { App() }\r\n    }\r\n}\r\n\r\n@Preview\r\n@Composable\r\nfun App() {\r\n    val today = remember { LocalDate.now() }\r\n    val eventsState = remember {\r\n        EventsState(\r\n            sampleEvents(\r\n                today\r\n            )\r\n        )\r\n    }   // compartido entre pantallas\r\n    val routinesState = remember {\r\n        RoutinesState(\r\n            sampleRoutines()\r\n        )\r\n    }\r\n    var tab by remember { mutableStateOf(AppTab.Home) }\r\n    val navController = rememberNavController()\r\n    val tasksState = remember {\r\n        TasksState(\r\n            sampleTasks()\r\n        )\r\n    }\r\n\r\n    val backStackEntry by navController.currentBackStackEntryAsState()\r\n    val currentRoute = backStackEntry?.destination?.route\r\n    val selectedTab = AppTab.entries.find { it.route == currentRoute } ?: AppTab.Home\r\n\r\n    MaterialTheme {\r\n        Scaffold(\r\n            bottomBar = {\r\n                AppBottomBar(\r\n                    selected = selectedTab,\r\n                    onSelect = { tab ->\r\n                        if (tab.route != currentRoute) {\r\n                            navController.navigate(tab.route) {\r\n                                popUpTo(navController.graph.startDestinationId) { saveState = true }\r\n                                launchSingleTop = true\r\n                                restoreState = true\r\n                            }\r\n                        }\r\n                    },\r\n                )\r\n            }\r\n        ) { innerPadding ->\r\n            NavHost(\r\n                navController = navController,\r\n                startDestination = AppTab.Home.route,\r\n                modifier = Modifier.padding(innerPadding)\r\n            ) {\r\n                composable(\r\n                    AppTab.Home.route,\r\n                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }\r\n                ) {\r\n                    HomeScreen(\r\n                        today = today,\r\n                        eventsFor = { date ->\r\n                            eventsState.occurrencesOn(date).map {\r\n                                DayEvent(\r\n                                    id = it.id,\r\n                                    title = it.title,\r\n                                    time = it.time.hhmm(),\r\n                                    place = it.type.label,\r\n                                    tint = when (it.priority) {\r\n                                        Priority.High -> AppColors.Tint2\r\n                                        Priority.Medium -> AppColors.Tint1\r\n                                        Priority.Low -> AppColors.Tint3\r\n                                    },\r\n                                )\r\n                            }\r\n                        },\r\n                    )\r\n                }\r\n\r\n                composable(\r\n                    AppTab.Events.route,\r\n                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }\r\n                ) {\r\n                    EventsScreen(\r\n                        state = eventsState,\r\n                        today = today\r\n                    )\r\n                }\r\n\r\n                composable(\r\n                    AppTab.Routines.route,\r\n                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }\r\n                ) {\r\n                    RoutinesScreen(\r\n                        state = routinesState,\r\n                        linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } }\r\n                    )\r\n                }\r\n                composable(\r\n                    AppTab.Tasks.route,\r\n                    enterTransition = { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }\r\n                ) {\r\n                    TasksScreen(\r\n                        tasksState\r\n                    )\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Preview(showBackground = true, showSystemUi = true)\r\n@Composable\r\nprivate fun AppPreview() = App()
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/MainActivity.kt b/app/src/main/java/com/portablenotes/MainActivity.kt
+--- a/app/src/main/java/com/portablenotes/MainActivity.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/MainActivity.kt	(date 1792975869782)
+@@ -18,6 +18,10 @@
+ import androidx.navigation.compose.currentBackStackEntryAsState
+ import androidx.navigation.compose.rememberNavController
+ import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.navigation.AuthRoutes
++import com.portablenotes.domain.ui.screens.ForgotPasswordScreen
++import com.portablenotes.domain.ui.screens.LoginScreen
++import com.portablenotes.domain.ui.screens.RegisterScreen
+ import com.portablenotes.domain.ui.calendar.events.EventsState
+ import com.portablenotes.domain.ui.calendar.events.Priority
+ import com.portablenotes.domain.ui.calendar.events.hhmm
+@@ -74,26 +78,38 @@
+     val currentRoute = backStackEntry?.destination?.route
+     val selectedTab = AppTab.entries.find { it.route == currentRoute } ?: AppTab.Home
+ 
++    // La barra inferior solo se muestra dentro de la app, no en login / registro
++    val showBottomBar = currentRoute != null && currentRoute !in AuthRoutes.all
++
++    // TEMPORAL: mientras no exista Firebase, "iniciar sesión" solo navega al inicio.
++    val goHome: () -> Unit = {
++        navController.navigate(AppTab.Home.route) {
++            popUpTo(AuthRoutes.Login) { inclusive = true }
++        }
++    }
++
+     MaterialTheme {
+         Scaffold(
+             bottomBar = {
+-                AppBottomBar(
+-                    selected = selectedTab,
+-                    onSelect = { tab ->
+-                        if (tab.route != currentRoute) {
+-                            navController.navigate(tab.route) {
+-                                popUpTo(navController.graph.startDestinationId) { saveState = true }
+-                                launchSingleTop = true
+-                                restoreState = true
+-                            }
+-                        }
+-                    },
+-                )
++                if (showBottomBar) {
++                    AppBottomBar(
++                        selected = selectedTab,
++                        onSelect = { tab ->
++                            if (tab.route != currentRoute) {
++                                navController.navigate(tab.route) {
++                                    popUpTo(AppTab.Home.route) { saveState = true }
++                                    launchSingleTop = true
++                                    restoreState = true
++                                }
++                            }
++                        },
++                    )
++                }
+             }
+         ) { innerPadding ->
+             NavHost(
+                 navController = navController,
+-                startDestination = AppTab.Home.route,
++                startDestination = AuthRoutes.Login,
+                 modifier = Modifier.padding(innerPadding)
+             ) {
+                 composable(
+@@ -147,6 +163,31 @@
+                         tasksState
+                     )
+                 }
++
++                // ---------- Autenticación ----------
++                composable(AuthRoutes.Login) {
++                    LoginScreen(
++                        onLogin = { _, _ -> goHome() },          // TODO(Firebase): signInWithEmail
++                        onGoogleSignIn = { goHome() },           // TODO(Firebase): signInWithGoogle
++                        onForgotPassword = { navController.navigate(AuthRoutes.ForgotPassword) },
++                        onGoToRegister = { navController.navigate(AuthRoutes.Register) },
++                    )
++                }
++                composable(AuthRoutes.Register) {
++                    RegisterScreen(
++                        onRegister = { _, _, _ -> goHome() },    // TODO(Firebase): createUser
++                        onGoogleSignIn = { goHome() },           // TODO(Firebase): signInWithGoogle
++                        onGoToLogin = { navController.popBackStack() },
++                    )
++                }
++                composable(AuthRoutes.ForgotPassword) {
++                    var emailSent by remember { mutableStateOf(false) }
++                    ForgotPasswordScreen(
++                        onSendResetLink = { emailSent = true },  // TODO(Firebase): sendPasswordResetEmail
++                        onBackToLogin = { navController.popBackStack() },
++                        emailSent = emailSent,
++                    )
++                }
+             }
+         }
+     }
+Index: app/src/main/java/com/portablenotes/domain/ui/screens/EventScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.screens\r\n\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.border\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.lazy.LazyColumn\r\nimport androidx.compose.foundation.lazy.LazyListState\r\nimport androidx.compose.foundation.lazy.items\r\nimport androidx.compose.foundation.lazy.rememberLazyListState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.rounded.Add\r\nimport androidx.compose.material.icons.rounded.Check\r\nimport androidx.compose.material.icons.rounded.Refresh\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.Surface\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.alpha\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Brush\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextDecoration\r\nimport androidx.compose.ui.text.style.TextOverflow\r\nimport androidx.compose.ui.unit.Dp\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\nimport com.example.portablenotes.ui.calendar.MonthCalendar\r\nimport com.example.portablenotes.ui.events.daysWithEvents\r\nimport com.example.portablenotes.ui.events.hhmm\r\nimport com.example.portablenotes.ui.events.on\r\nimport com.example.portablenotes.ui.events.prettyLong\r\nimport java.time.LocalDate\r\nimport java.time.YearMonth\r\n\r\nsealed interface EditorRequest {\r\n    data class New(val date: LocalDate) : EditorRequest\r\n    data class Edit(val event: com.example.portablenotes.ui.events.Event) : EditorRequest\r\n}\r\n\r\nprivate data class DetailRequest(val date: LocalDate, val eventId: String?)\r\n\r\nprivate sealed interface ListRow {\r\n    data class Header(val date: LocalDate) : ListRow\r\n    data class Item(val event: com.example.portablenotes.ui.events.Event, val date: LocalDate) : ListRow\r\n}\r\n\r\nprivate fun buildRows(month: YearMonth, all: List<com.example.portablenotes.ui.events.Event>): List<ListRow> = buildList {\r\n    for (d in 1..month.lengthOfMonth()) {\r\n        val date = month.atDay(d)\r\n        val evs = all.on(date)          // ya ordenados por hora\r\n        if (evs.isNotEmpty()) {\r\n            add(ListRow.Header(date))\r\n            evs.forEach { add(ListRow.Item(it, date)) }\r\n        }\r\n    }\r\n}\r\n\r\n/**\r\n * Pantalla de eventos:\r\n *  - Calendario mensual = 50 % de la altura de la pantalla.\r\n *  - Debajo, eventos del mes agrupados por fecha y ordenados por hora.\r\n *  - Tocar un día con punto abre su detalle; \"+\" crea un evento.\r\n */\r\n@Composable\r\nfun EventsScreen(\r\n    state: com.example.portablenotes.ui.events.EventsState,\r\n    today: LocalDate,\r\n    modifier: Modifier = Modifier\r\n) {\r\n    var month by remember { mutableStateOf(YearMonth.from(today)) }\r\n    var selected by remember { mutableStateOf(today) }\r\n    var detail by remember { mutableStateOf<DetailRequest?>(null) }\r\n    var editor by remember { mutableStateOf<EditorRequest?>(null) }\r\n\r\n    val all = state.events.toList()\r\n    val dots = remember(month, all) { all.daysWithEvents(month) }\r\n    val rows = remember(month, all) { buildRows(month, all) }\r\n    val listState = rememberLazyListState()\r\n\r\n    // Al elegir un día, la lista se desplaza hasta su fecha\r\n    LaunchedEffect(selected, rows) {\r\n        val index = rows.indexOfFirst { it is ListRow.Header && it.date == selected }\r\n        if (index >= 0) listState.animateScrollToItem(index)\r\n    }\r\n\r\n    fun goTo(target: YearMonth) {\r\n        month = target\r\n        selected = if (target == YearMonth.from(today)) today else target.atDay(1)\r\n    }\r\n\r\n    BoxWithConstraints(\r\n        modifier = modifier\r\n            .fillMaxSize()\r\n            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))\r\n    ) {\r\n        val calendarHeight = maxHeight * 0.50f   // \uD83D\uDC48 50 % de la pantalla\r\n        val barSpace = 104.dp\r\n\r\n        Column(\r\n            Modifier\r\n                .fillMaxSize()\r\n                .statusBarsPadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(top = 12.dp)\r\n        ) {\r\n            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {\r\n                Column(Modifier.weight(1f)) {\r\n                    Text(\"Eventos\", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)\r\n                }\r\n                Box(\r\n                    Modifier\r\n                        .size(42.dp)\r\n                        .clip(CircleShape)\r\n                        .background(AppColors.Accent)\r\n                        .clickable { editor = EditorRequest.New(selected) },\r\n                    contentAlignment = Alignment.Center,\r\n                ) {\r\n                    Icon(Icons.Rounded.Add, \"Nuevo evento\", tint = AppColors.OnAccent, modifier = Modifier.size(22.dp))\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(12.dp))\r\n\r\n            MonthCalendar(\r\n                month = month,\r\n                selected = selected,\r\n                today = today,\r\n                daysWithEvents = dots,\r\n                onPrevMonth = { goTo(month.minusMonths(1)) },\r\n                onNextMonth = { goTo(month.plusMonths(1)) },\r\n                onDayClick = { d ->\r\n                    selected = d\r\n                    if (d in dots) detail = DetailRequest(d, null)\r\n                },\r\n                modifier = Modifier.fillMaxWidth().height(calendarHeight),\r\n            )\r\n\r\n            Spacer(Modifier.height(16.dp))\r\n\r\n            EventsList(\r\n                rows = rows,\r\n                selected = selected,\r\n                today = today,\r\n                listState = listState,\r\n                bottomPadding = barSpace,\r\n                onEventClick = { e, d -> detail = DetailRequest(d, e.id) },\r\n                onToggleDone = { state.toggleDone(it.id) },\r\n                modifier = Modifier.weight(1f),\r\n            )\r\n        }\r\n    }\r\n\r\n    // ----- Hojas -----\r\n    detail?.let { req ->\r\n        val evs = all.on(req.date).filter { req.eventId == null || it.id == req.eventId }\r\n        _root_ide_package_.com.example.portablenotes.ui.events.EventDetailSheet(\r\n            date = req.date,\r\n            events = evs,\r\n            onDismiss = { detail = null },\r\n            onToggleDone = { state.toggleDone(it.id) },\r\n            onEdit = { detail = null; editor = EditorRequest.Edit(it) },\r\n            onDelete = { state.delete(it.id) },\r\n        )\r\n    }\r\n\r\n    editor?.let { req ->\r\n        _root_ide_package_.com.example.portablenotes.ui.events.EventEditorSheet(\r\n            event = (req as? EditorRequest.Edit)?.event,\r\n            initialDate = (req as? EditorRequest.New)?.date ?: today,\r\n            onSave = { state.upsert(it); editor = null },\r\n            onDismiss = { editor = null },\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun EventsList(\r\n    rows: List<ListRow>,\r\n    selected: LocalDate,\r\n    today: LocalDate,\r\n    listState: LazyListState,\r\n    bottomPadding: Dp,\r\n    onEventClick: (com.example.portablenotes.ui.events.Event, LocalDate) -> Unit,\r\n    onToggleDone: (com.example.portablenotes.ui.events.Event) -> Unit,\r\n    modifier: Modifier = Modifier,\r\n) {\r\n    if (rows.isEmpty()) {\r\n        Column(modifier.fillMaxWidth().padding(top = 28.dp), horizontalAlignment = Alignment.CenterHorizontally) {\r\n            Text(\"Sin eventos este mes\", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n            Spacer(Modifier.height(4.dp))\r\n            Text(\"Toca + para crear uno\", fontSize = 13.sp, color = AppColors.TextSecondary)\r\n        }\r\n        return\r\n    }\r\n\r\n    LazyColumn(\r\n        state = listState,\r\n        modifier = modifier,\r\n        verticalArrangement = Arrangement.spacedBy(10.dp),\r\n        contentPadding = PaddingValues(bottom = bottomPadding),\r\n    ) {\r\n        items(\r\n            items = rows,\r\n            key = {\r\n                when (it) {\r\n                    is ListRow.Header -> \"h${it.date}\"\r\n                    is ListRow.Item -> \"e${it.event.id}_${it.date}\"\r\n                }\r\n            },\r\n        ) { row ->\r\n            when (row) {\r\n                is ListRow.Header -> DateHeader(row.date, isSelected = row.date == selected, isToday = row.date == today)\r\n                is ListRow.Item -> EventCard(\r\n                    event = row.event,\r\n                    onClick = { onEventClick(row.event, row.date) },\r\n                    onToggleDone = { onToggleDone(row.event) },\r\n                )\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun DateHeader(date: LocalDate, isSelected: Boolean, isToday: Boolean) {\r\n    Row(\r\n        Modifier.fillMaxWidth().padding(start = 4.dp, top = 6.dp),\r\n        verticalAlignment = Alignment.CenterVertically,\r\n    ) {\r\n        Text(\r\n            date.prettyLong(),\r\n            fontSize = 14.sp,\r\n            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,\r\n            color = if (isSelected) AppColors.TextPrimary else AppColors.TextSecondary,\r\n        )\r\n        if (isToday) {\r\n            Spacer(Modifier.width(8.dp))\r\n            Box(Modifier.clip(CircleShape).background(AppColors.Accent).padding(horizontal = 8.dp, vertical = 2.dp)) {\r\n                Text(\"Hoy\", fontSize = 10.sp, color = AppColors.OnAccent)\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun EventCard(event: com.example.portablenotes.ui.events.Event, onClick: () -> Unit, onToggleDone: () -> Unit) {\r\n    Surface(\r\n        onClick = onClick,\r\n        shape = RoundedCornerShape(22.dp),\r\n        color = AppColors.Surface,\r\n        shadowElevation = 1.dp,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n        modifier = Modifier.fillMaxWidth().alpha(if (event.done) 0.55f else 1f),\r\n    ) {\r\n        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {\r\n            if (event.repeat == _root_ide_package_.com.example.portablenotes.ui.events.Repeat.None) {\r\n                DoneCheck(done = event.done, onClick = onToggleDone)\r\n            } else {\r\n                // Los eventos recurrentes no se marcan como hechos\r\n                Box(\r\n                    Modifier.size(28.dp).clip(CircleShape).background(AppColors.SurfaceMuted),\r\n                    contentAlignment = Alignment.Center,\r\n                ) {\r\n                    Icon(Icons.Rounded.Refresh, \"Se repite\", tint = AppColors.TextSecondary, modifier = Modifier.size(16.dp))\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.width(12.dp))\r\n\r\n            Column(Modifier.weight(1f)) {\r\n                Text(\r\n                    event.title,\r\n                    fontSize = 15.sp,\r\n                    fontWeight = FontWeight.Medium,\r\n                    color = AppColors.TextPrimary,\r\n                    textDecoration = if (event.done) TextDecoration.LineThrough else null,\r\n                    maxLines = 1,\r\n                    overflow = TextOverflow.Ellipsis,\r\n                )\r\n                Text(\r\n                    if (event.repeat == _root_ide_package_.com.example.portablenotes.ui.events.Repeat.None) event.type.label else \"${event.type.label} · ${event.repeat.label}\",\r\n                    fontSize = 12.sp,\r\n                    color = AppColors.TextSecondary,\r\n                    maxLines = 1,\r\n                    overflow = TextOverflow.Ellipsis,\r\n                )\r\n            }\r\n\r\n            Spacer(Modifier.width(8.dp))\r\n\r\n            Column(horizontalAlignment = Alignment.End) {\r\n                Box(Modifier.clip(CircleShape).background(AppColors.SurfaceMuted).padding(horizontal = 10.dp, vertical = 4.dp)) {\r\n                    Text(event.time.hhmm(), fontSize = 12.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n                }\r\n                Spacer(Modifier.height(6.dp))\r\n                _root_ide_package_.com.example.portablenotes.ui.events.PriorityBars(event.priority)\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun DoneCheck(done: Boolean, onClick: () -> Unit) {\r\n    Box(\r\n        modifier = Modifier\r\n            .size(28.dp)\r\n            .clip(CircleShape)\r\n            .background(if (done) AppColors.Accent else AppColors.Surface)\r\n            .then(if (done) Modifier else border(1.5.dp, AppColors.TextSecondary, CircleShape))\r\n            .clickable(onClick = onClick),\r\n        contentAlignment = Alignment.Center,\r\n    ) {\r\n        if (done) Icon(Icons.Rounded.Check, \"Hecho\", tint = AppColors.OnAccent, modifier = Modifier.size(16.dp))\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/screens/EventScreen.kt b/app/src/main/java/com/portablenotes/domain/ui/screens/EventScreen.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/screens/EventScreen.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/screens/EventScreen.kt	(date 1792989344078)
+@@ -30,28 +30,28 @@
+ import androidx.compose.ui.unit.Dp
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
+-import com.example.portablenotes.ui.calendar.MonthCalendar
+-import com.example.portablenotes.ui.events.daysWithEvents
+-import com.example.portablenotes.ui.events.hhmm
+-import com.example.portablenotes.ui.events.on
+-import com.example.portablenotes.ui.events.prettyLong
++import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.calendar.MonthCalendar
++import com.portablenotes.domain.ui.calendar.events.daysWithEvents
++import com.portablenotes.domain.ui.calendar.events.hhmm
++import com.portablenotes.domain.ui.calendar.events.on
++import com.portablenotes.domain.ui.calendar.events.prettyLong
+ import java.time.LocalDate
+ import java.time.YearMonth
+ 
+ sealed interface EditorRequest {
+     data class New(val date: LocalDate) : EditorRequest
+-    data class Edit(val event: com.example.portablenotes.ui.events.Event) : EditorRequest
++    data class Edit(val event: com.portablenotes.domain.ui.calendar.events.Event) : EditorRequest
+ }
+ 
+ private data class DetailRequest(val date: LocalDate, val eventId: String?)
+ 
+ private sealed interface ListRow {
+     data class Header(val date: LocalDate) : ListRow
+-    data class Item(val event: com.example.portablenotes.ui.events.Event, val date: LocalDate) : ListRow
++    data class Item(val event: com.portablenotes.domain.ui.calendar.events.Event, val date: LocalDate) : ListRow
+ }
+ 
+-private fun buildRows(month: YearMonth, all: List<com.example.portablenotes.ui.events.Event>): List<ListRow> = buildList {
++private fun buildRows(month: YearMonth, all: List<com.portablenotes.domain.ui.calendar.events.Event>): List<ListRow> = buildList {
+     for (d in 1..month.lengthOfMonth()) {
+         val date = month.atDay(d)
+         val evs = all.on(date)          // ya ordenados por hora
+@@ -70,7 +70,7 @@
+  */
+ @Composable
+ fun EventsScreen(
+-    state: com.example.portablenotes.ui.events.EventsState,
++    state: com.portablenotes.domain.ui.calendar.events.EventsState,
+     today: LocalDate,
+     modifier: Modifier = Modifier
+ ) {
+@@ -160,7 +160,7 @@
+     // ----- Hojas -----
+     detail?.let { req ->
+         val evs = all.on(req.date).filter { req.eventId == null || it.id == req.eventId }
+-        _root_ide_package_.com.example.portablenotes.ui.events.EventDetailSheet(
++        com.portablenotes.domain.ui.calendar.events.EventDetailSheet(
+             date = req.date,
+             events = evs,
+             onDismiss = { detail = null },
+@@ -171,7 +171,7 @@
+     }
+ 
+     editor?.let { req ->
+-        _root_ide_package_.com.example.portablenotes.ui.events.EventEditorSheet(
++        com.portablenotes.domain.ui.calendar.events.EventEditorSheet(
+             event = (req as? EditorRequest.Edit)?.event,
+             initialDate = (req as? EditorRequest.New)?.date ?: today,
+             onSave = { state.upsert(it); editor = null },
+@@ -187,8 +187,8 @@
+     today: LocalDate,
+     listState: LazyListState,
+     bottomPadding: Dp,
+-    onEventClick: (com.example.portablenotes.ui.events.Event, LocalDate) -> Unit,
+-    onToggleDone: (com.example.portablenotes.ui.events.Event) -> Unit,
++    onEventClick: (com.portablenotes.domain.ui.calendar.events.Event, LocalDate) -> Unit,
++    onToggleDone: (com.portablenotes.domain.ui.calendar.events.Event) -> Unit,
+     modifier: Modifier = Modifier,
+ ) {
+     if (rows.isEmpty()) {
+@@ -249,7 +249,7 @@
+ }
+ 
+ @Composable
+-private fun EventCard(event: com.example.portablenotes.ui.events.Event, onClick: () -> Unit, onToggleDone: () -> Unit) {
++private fun EventCard(event: com.portablenotes.domain.ui.calendar.events.Event, onClick: () -> Unit, onToggleDone: () -> Unit) {
+     Surface(
+         onClick = onClick,
+         shape = RoundedCornerShape(22.dp),
+@@ -259,7 +259,7 @@
+         modifier = Modifier.fillMaxWidth().alpha(if (event.done) 0.55f else 1f),
+     ) {
+         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+-            if (event.repeat == _root_ide_package_.com.example.portablenotes.ui.events.Repeat.None) {
++            if (event.repeat == com.portablenotes.domain.ui.calendar.events.Repeat.None) {
+                 DoneCheck(done = event.done, onClick = onToggleDone)
+             } else {
+                 // Los eventos recurrentes no se marcan como hechos
+@@ -284,7 +284,7 @@
+                     overflow = TextOverflow.Ellipsis,
+                 )
+                 Text(
+-                    if (event.repeat == _root_ide_package_.com.example.portablenotes.ui.events.Repeat.None) event.type.label else "${event.type.label} · ${event.repeat.label}",
++                    if (event.repeat == com.portablenotes.domain.ui.calendar.events.Repeat.None) event.type.label else "${event.type.label} · ${event.repeat.label}",
+                     fontSize = 12.sp,
+                     color = AppColors.TextSecondary,
+                     maxLines = 1,
+@@ -299,7 +299,7 @@
+                     Text(event.time.hhmm(), fontSize = 12.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
+                 }
+                 Spacer(Modifier.height(6.dp))
+-                _root_ide_package_.com.example.portablenotes.ui.events.PriorityBars(event.priority)
++                com.portablenotes.domain.ui.calendar.events.PriorityBars(event.priority)
+             }
+         }
+     }
+@@ -312,7 +312,7 @@
+             .size(28.dp)
+             .clip(CircleShape)
+             .background(if (done) AppColors.Accent else AppColors.Surface)
+-            .then(if (done) Modifier else border(1.5.dp, AppColors.TextSecondary, CircleShape))
++            .then(if (done) Modifier else Modifier.border(1.5.dp, AppColors.TextSecondary, CircleShape))
+             .clickable(onClick = onClick),
+         contentAlignment = Alignment.Center,
+     ) {
+Index: app/src/main/java/com/portablenotes/domain/ui/screens/RoutineScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.screens\r\n\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.horizontalScroll\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.lazy.grid.GridCells\r\nimport androidx.compose.foundation.lazy.grid.LazyVerticalGrid\r\nimport androidx.compose.foundation.rememberScrollState\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.foundation.verticalScroll\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.rounded.Add\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Brush\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextOverflow\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\nimport com.example.portablenotes.ui.routines.Routine\r\nimport com.example.portablenotes.ui.routines.RoutinesState\r\nimport com.example.portablenotes.ui.routines.RoutineCategory\r\nimport com.example.portablenotes.ui.routines.RoutineIcons\r\nimport com.example.portablenotes.ui.routines.iconFor\r\nimport java.util.UUID\r\n\r\nprivate sealed interface RoutineEditorRequest {\r\n    data object New : RoutineEditorRequest\r\n    data class Edit(val routine: Routine) : RoutineEditorRequest\r\n}\r\n\r\n@Composable\r\nfun RoutinesScreen(\r\n    state: RoutinesState,\r\n    modifier: Modifier = Modifier,\r\n    linkedEvents: (Routine) -> Int = { 0 },\r\n) {\r\n    var filter by remember { mutableStateOf<RoutineCategory?>(null) }\r\n    var editor by remember { mutableStateOf<RoutineEditorRequest?>(null) }\r\n\r\n    val all = state.routines.toList()\r\n    val visible = if (filter == null) all else all.filter { it.category == filter }\r\n\r\n    Box(\r\n        modifier = modifier\r\n            .fillMaxSize()\r\n            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))\r\n    ) {\r\n        Column(\r\n            Modifier\r\n                .fillMaxSize()\r\n                .statusBarsPadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(top = 12.dp)\r\n        ) {\r\n            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {\r\n                Column(Modifier.weight(1f)) {\r\n                    Text(\"Rutinas\", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)\r\n                    Text(\r\n                        if (all.isEmpty()) \"Crea tu primera rutina\" else \"${all.size} ${if (all.size == 1) \"rutina\" else \"rutinas\"}\",\r\n                        fontSize = 14.sp,\r\n                        color = AppColors.TextSecondary,\r\n                    )\r\n                }\r\n                Box(\r\n                    Modifier.size(42.dp).clip(CircleShape).background(AppColors.Accent)\r\n                        .clickable { editor = RoutineEditorRequest.New },\r\n                    contentAlignment = Alignment.Center,\r\n                ) {\r\n                    Icon(Icons.Rounded.Add, \"Nueva rutina\", tint = AppColors.OnAccent, modifier = Modifier.size(22.dp))\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(14.dp))\r\n\r\n            // Filtro por categoría\r\n            Row(\r\n                Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),\r\n                horizontalArrangement = Arrangement.spacedBy(8.dp),\r\n            ) {\r\n                Chip(\"Todas\", filter == null) { filter = null }\r\n                RoutineCategory.entries.forEach { c -> Chip(c.label, filter == c) { filter = c } }\r\n            }\r\n\r\n            Spacer(Modifier.height(14.dp))\r\n\r\n            if (visible.isEmpty()) {\r\n                Column(Modifier.fillMaxWidth().padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {\r\n                    Text(\"Sin rutinas aquí\", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n                    Spacer(Modifier.height(4.dp))\r\n                    Text(\"Toca + para crear una\", fontSize = 13.sp, color = AppColors.TextSecondary)\r\n                }\r\n            } else {\r\n                LazyVerticalGrid(\r\n                    columns = GridCells.Fixed(2),\r\n                    horizontalArrangement = Arrangement.spacedBy(10.dp),\r\n                    verticalArrangement = Arrangement.spacedBy(10.dp),\r\n                    contentPadding = PaddingValues(bottom = 104.dp),   // espacio para la barra inferior\r\n                ) {\r\n                    items(visible, key = { it.id }) { routine ->\r\n                        RoutineCard(\r\n                            routine = routine,\r\n                            linked = linkedEvents(routine),\r\n                            onClick = { editor = RoutineEditorRequest.Edit(routine) },\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    editor?.let { req ->\r\n        RoutineEditorSheet(\r\n            routine = (req as? RoutineEditorRequest.Edit)?.routine,\r\n            onSave = { state.upsert(it); editor = null },\r\n            onDelete = (req as? RoutineEditorRequest.Edit)?.let { e -> { state.delete(e.routine.id); editor = null } },\r\n            onDismiss = { editor = null },\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun RoutineCard(routine: Routine, linked: Int, onClick: () -> Unit) {\r\n    Surface(\r\n        onClick = onClick,\r\n        shape = RoundedCornerShape(22.dp),\r\n        color = AppColors.Surface,\r\n        shadowElevation = 1.dp,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n        modifier = Modifier.fillMaxWidth(),\r\n    ) {\r\n        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {\r\n            IconBadge(routine.iconKey, size = 42)\r\n            Spacer(Modifier.height(6.dp))\r\n            Text(\r\n                routine.name,\r\n                fontSize = 15.sp,\r\n                fontWeight = FontWeight.SemiBold,\r\n                color = AppColors.TextPrimary,\r\n                maxLines = 2,\r\n                overflow = TextOverflow.Ellipsis,\r\n            )\r\n            Text(routine.category.label, fontSize = 12.sp, color = AppColors.Accent)\r\n            if (routine.description.isNotBlank()) {\r\n                Text(\r\n                    routine.description,\r\n                    fontSize = 12.sp,\r\n                    color = AppColors.TextSecondary,\r\n                    maxLines = 2,\r\n                    overflow = TextOverflow.Ellipsis,\r\n                )\r\n            }\r\n            if (linked > 0) {\r\n                Spacer(Modifier.height(4.dp))\r\n                Box(Modifier.clip(CircleShape).background(AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {\r\n                    Text(\r\n                        \"$linked ${if (linked == 1) \"evento\" else \"eventos\"}\",\r\n                        fontSize = 11.sp,\r\n                        color = AppColors.TextPrimary,\r\n                    )\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun IconBadge(iconKey: String, size: Int) {\r\n    Box(\r\n        Modifier\r\n            .size(size.dp)\r\n            .clip(RoundedCornerShape((size / 3).dp))\r\n            .background(AppColors.Accent.copy(alpha = 0.16f)),\r\n        contentAlignment = Alignment.Center,\r\n    ) {\r\n        Icon(iconFor(iconKey), contentDescription = null, tint = AppColors.Accent, modifier = Modifier.size((size / 2).dp))\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {\r\n    Box(\r\n        modifier = Modifier\r\n            .clip(CircleShape)\r\n            .background(if (selected) AppColors.Accent else AppColors.SurfaceMuted)\r\n            .clickable(onClick = onClick)\r\n            .padding(horizontal = 14.dp, vertical = 8.dp),\r\n    ) {\r\n        Text(\r\n            label,\r\n            fontSize = 13.sp,\r\n            fontWeight = FontWeight.Medium,\r\n            color = if (selected) AppColors.OnAccent else AppColors.TextPrimary,\r\n        )\r\n    }\r\n}\r\n\r\n/** Crear o editar. Solo la categoría \"Personalizada\" deja elegir el ícono; las demás lo asignan solas. */\r\n@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)\r\n@Composable\r\nprivate fun RoutineEditorSheet(\r\n    routine: Routine?,\r\n    onSave: (Routine) -> Unit,\r\n    onDelete: (() -> Unit)?,\r\n    onDismiss: () -> Unit,\r\n) {\r\n    var name by remember { mutableStateOf(routine?.name ?: \"\") }\r\n    var description by remember { mutableStateOf(routine?.description ?: \"\") }\r\n    var category by remember { mutableStateOf(routine?.category ?: RoutineCategory.Daily) }\r\n    var customIcon by remember { mutableStateOf(if (routine?.category == RoutineCategory.Custom) routine.iconKey else \"star\") }\r\n\r\n    val fieldColors = OutlinedTextFieldDefaults.colors(\r\n        focusedBorderColor = AppColors.Accent,\r\n        unfocusedBorderColor = AppColors.Border,\r\n        focusedLabelColor = AppColors.Accent,\r\n        cursorColor = AppColors.Accent,\r\n        focusedContainerColor = AppColors.Surface,\r\n        unfocusedContainerColor = AppColors.Surface,\r\n        focusedTextColor = AppColors.TextPrimary,\r\n        unfocusedTextColor = AppColors.TextSecondary\r\n    )\r\n\r\n    ModalBottomSheet(\r\n        onDismissRequest = onDismiss,\r\n        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),\r\n        containerColor = AppColors.Background,\r\n        shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),\r\n    ) {\r\n        Column(\r\n            Modifier\r\n                .fillMaxWidth()\r\n                .verticalScroll(rememberScrollState())\r\n                .navigationBarsPadding()\r\n                .imePadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(bottom = 20.dp),\r\n            verticalArrangement = Arrangement.spacedBy(14.dp),\r\n        ) {\r\n            Text(\r\n                if (routine == null) \"Nueva rutina\" else \"Editar rutina\",\r\n                fontSize = 20.sp,\r\n                fontWeight = FontWeight.SemiBold,\r\n                color = AppColors.TextPrimary,\r\n            )\r\n\r\n            OutlinedTextField(\r\n                value = name,\r\n                onValueChange = { name = it },\r\n                label = { Text(\"Nombre\") },\r\n                singleLine = true,\r\n                modifier = Modifier.fillMaxWidth(),\r\n                shape = RoundedCornerShape(16.dp),\r\n                colors = fieldColors,\r\n            )\r\n            OutlinedTextField(\r\n                value = description,\r\n                onValueChange = { description = it },\r\n                label = { Text(\"Descripción\") },\r\n                minLines = 3,\r\n                modifier = Modifier.fillMaxWidth(),\r\n                shape = RoundedCornerShape(16.dp),\r\n                colors = fieldColors,\r\n            )\r\n\r\n            Text(\"Categoría\", fontSize = 13.sp, color = AppColors.TextSecondary, fontWeight = FontWeight.Medium)\r\n            FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                RoutineCategory.entries.forEach { c -> Chip(c.label, c == category) { category = c } }\r\n            }\r\n\r\n            if (category == RoutineCategory.Custom) {\r\n                Text(\"Ícono\", fontSize = 13.sp, color = AppColors.TextSecondary, fontWeight = FontWeight.Medium)\r\n                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {\r\n                    RoutineIcons.all.forEach { (key, vector) ->\r\n                        val selected = key == customIcon\r\n                        Box(\r\n                            Modifier\r\n                                .size(46.dp)\r\n                                .clip(RoundedCornerShape(14.dp))\r\n                                .background(if (selected) AppColors.Accent else AppColors.SurfaceMuted)\r\n                                .clickable { customIcon = key },\r\n                            contentAlignment = Alignment.Center,\r\n                        ) {\r\n                            Icon(vector, null, tint = if (selected) AppColors.OnAccent else AppColors.TextPrimary, modifier = Modifier.size(22.dp))\r\n                        }\r\n                    }\r\n                }\r\n            } else {\r\n                Row(verticalAlignment = Alignment.CenterVertically) {\r\n                    IconBadge(category.defaultIconKey, size = 40)\r\n                    Spacer(Modifier.width(10.dp))\r\n                    Text(\"Ícono asignado automáticamente\", fontSize = 13.sp, color = AppColors.TextSecondary)\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(4.dp))\r\n\r\n            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {\r\n                OutlinedButton(\r\n                    onClick = onDismiss,\r\n                    modifier = Modifier.weight(1f).height(48.dp),\r\n                    shape = CircleShape,\r\n                    border = BorderStroke(1.dp, AppColors.Border),\r\n                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AppColors.TextPrimary),\r\n                ) { Text(\"Cancelar\") }\r\n                Button(\r\n                    onClick = {\r\n                        onSave(\r\n                            Routine(\r\n                                id = routine?.id ?: UUID.randomUUID().toString(),\r\n                                name = name.trim(),\r\n                                description = description.trim(),\r\n                                category = category,\r\n                                iconKey = if (category == RoutineCategory.Custom) customIcon else category.defaultIconKey,\r\n                            )\r\n                        )\r\n                    },\r\n                    enabled = name.isNotBlank(),\r\n                    modifier = Modifier.weight(1f).height(48.dp),\r\n                    shape = CircleShape,\r\n                    colors = ButtonDefaults.buttonColors(\r\n                        containerColor = AppColors.Accent,\r\n                        contentColor = AppColors.OnAccent,\r\n                        disabledContainerColor = AppColors.SurfaceMuted,\r\n                        disabledContentColor = AppColors.TextSecondary,\r\n                    ),\r\n                ) { Text(\"Guardar\") }\r\n            }\r\n\r\n            if (onDelete != null) {\r\n                TextButton(onClick = onDelete, modifier = Modifier.fillMaxWidth()) {\r\n                    Text(\"Eliminar rutina\", color = AppColors.TextSecondary)\r\n                }\r\n            }\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/screens/RoutineScreen.kt b/app/src/main/java/com/portablenotes/domain/ui/screens/RoutineScreen.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/screens/RoutineScreen.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/screens/RoutineScreen.kt	(date 1792989005108)
+@@ -7,6 +7,7 @@
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.lazy.grid.GridCells
+ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
++import androidx.compose.foundation.lazy.grid.items
+ import androidx.compose.foundation.rememberScrollState
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+@@ -23,12 +24,12 @@
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
+-import com.example.portablenotes.ui.routines.Routine
+-import com.example.portablenotes.ui.routines.RoutinesState
+-import com.example.portablenotes.ui.routines.RoutineCategory
+-import com.example.portablenotes.ui.routines.RoutineIcons
+-import com.example.portablenotes.ui.routines.iconFor
++import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.routines.Routine
++import com.portablenotes.domain.ui.routines.RoutinesState
++import com.portablenotes.domain.ui.routines.RoutineCategory
++import com.portablenotes.domain.ui.routines.RoutineIcons
++import com.portablenotes.domain.ui.routines.iconFor
+ import java.util.UUID
+ 
+ private sealed interface RoutineEditorRequest {
+Index: app/src/main/java/com/portablenotes/domain/ui/screens/HomeScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.screens\r\n\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.Brush\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\nimport com.example.portablenotes.ui.calendar.WeekCalendar\r\nimport com.example.portablenotes.ui.home.DayEvent\r\nimport com.example.portablenotes.ui.home.TodayEventsPanel\r\nimport java.time.LocalDate\r\n\r\n/**\r\n * Pantalla principal.\r\n * - Calendario: 30 % de la altura disponible.\r\n * - Debajo: panel de eventos del día (scroll).\r\n * - Barra de navegación: componente aparte, flotando abajo.\r\n */\r\n@Composable\r\nfun HomeScreen(\r\n    today: LocalDate,\r\n    eventsFor: (LocalDate) -> List<DayEvent>,\r\n    modifier: Modifier = Modifier,\r\n    userName: String = \"Cristian\",\r\n) {\r\n    var selectedDate by remember { mutableStateOf(today) }\r\n    val events = remember(selectedDate) { eventsFor(selectedDate) }\r\n\r\n    BoxWithConstraints(\r\n        modifier = modifier\r\n            .fillMaxSize()\r\n            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))\r\n    ) {\r\n        val calendarHeight = maxHeight * 0.30f   // \uD83D\uDC48 30 % de la pantalla\r\n        val barSpace = 100.dp                    // espacio reservado para la barra flotante\r\n\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .statusBarsPadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(top = 12.dp)\r\n        ) {\r\n            Greeting(userName)\r\n            Spacer(Modifier.height(16.dp))\r\n\r\n            WeekCalendar(\r\n                selectedDate = selectedDate,\r\n                today = today,\r\n                eventsCount = events.size,\r\n                onDateSelected = { selectedDate = it },\r\n                modifier = Modifier.fillMaxWidth().height(calendarHeight),\r\n            )\r\n\r\n            Spacer(Modifier.height(20.dp))\r\n\r\n            TodayEventsPanel(\r\n                events = events,\r\n                bottomPadding = barSpace,\r\n                modifier = Modifier.weight(1f),\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun Greeting(name: String) {\r\n    Column(Modifier.padding(horizontal = 4.dp)) {\r\n        Text(\"Hola, $name\", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)\r\n        Text(\"Esto es lo que tienes hoy\", fontSize = 14.sp, color = AppColors.TextSecondary)\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/screens/HomeScreen.kt b/app/src/main/java/com/portablenotes/domain/ui/screens/HomeScreen.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/screens/HomeScreen.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/screens/HomeScreen.kt	(date 1792988888286)
+@@ -9,10 +9,10 @@
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
+-import com.example.portablenotes.ui.calendar.WeekCalendar
+-import com.example.portablenotes.ui.home.DayEvent
+-import com.example.portablenotes.ui.home.TodayEventsPanel
++import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.calendar.WeekCalendar
++import com.portablenotes.domain.ui.home.DayEvent
++import com.portablenotes.domain.ui.home.TodayEventsPanel
+ import java.time.LocalDate
+ 
+ /**
+Index: app/src/main/java/com/portablenotes/domain/ui/screens/TaskScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.screens\r\n\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.border\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.lazy.LazyColumn\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.foundation.shape.RoundedCornerShape\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.rounded.Add\r\nimport androidx.compose.material.icons.rounded.Check\r\nimport androidx.compose.material.icons.rounded.KeyboardArrowDown\r\nimport androidx.compose.material.icons.rounded.KeyboardArrowRight\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.*\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.alpha\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Brush\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.text.style.TextDecoration\r\nimport androidx.compose.ui.text.style.TextOverflow\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\nimport com.example.portablenotes.ui.tasks.TasksState\r\nimport com.example.portablenotes.ui.tasks.Task\r\nimport com.example.portablenotes.ui.tasks.TaskRow\r\n\r\nprivate const val MAX_DEPTH = 3   // niveles 0..3 (4 niveles de jerarquía)\r\n\r\nprivate sealed interface TaskDialog {\r\n    data class Add(val parentId: String?) : TaskDialog\r\n    data class Edit(val task: Task) : TaskDialog\r\n}\r\n\r\n/**\r\n * Pantalla de Tareas.\r\n *  - Interruptor \"Organizar en árbol\": con jerarquía de subtareas, o lista simple con check.\r\n *  - Tocar el título edita / elimina; \"+\" en una fila agrega una subtarea (solo en modo árbol).\r\n */\r\n@Composable\r\nfun TasksScreen(\r\n    state: TasksState,\r\n    modifier: Modifier = Modifier,\r\n) {\r\n    var dialog by remember { mutableStateOf<TaskDialog?>(null) }\r\n    val rows = state.visibleRows()          // se recalcula al cambiar el estado\r\n    val (done, total) = state.progress()\r\n\r\n    Box(\r\n        modifier = modifier\r\n            .fillMaxSize()\r\n            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))\r\n    ) {\r\n        Column(\r\n            Modifier\r\n                .fillMaxSize()\r\n                .statusBarsPadding()\r\n                .padding(horizontal = 20.dp)\r\n                .padding(top = 12.dp)\r\n        ) {\r\n            // Cabecera\r\n            Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {\r\n                Column(Modifier.weight(1f)) {\r\n                    Text(\"Tareas\", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)\r\n                    Text(\r\n                        if (total == 0) \"Sin tareas todavía\" else \"$done de $total completadas\",\r\n                        fontSize = 14.sp,\r\n                        color = AppColors.TextSecondary,\r\n                    )\r\n                }\r\n                Box(\r\n                    Modifier.size(42.dp).clip(CircleShape).background(AppColors.Accent)\r\n                        .clickable { dialog = TaskDialog.Add(null) },\r\n                    contentAlignment = Alignment.Center,\r\n                ) {\r\n                    Icon(Icons.Rounded.Add, \"Nueva tarea\", tint = AppColors.OnAccent, modifier = Modifier.size(22.dp))\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(14.dp))\r\n\r\n            // Progreso\r\n            LinearProgressIndicator(\r\n                progress = { if (total == 0) 0f else done / total.toFloat() },\r\n                modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),\r\n                color = AppColors.Accent,\r\n                trackColor = AppColors.SurfaceMuted,\r\n            )\r\n\r\n            Spacer(Modifier.height(14.dp))\r\n\r\n            // Modo árbol / lista simple\r\n            Surface(\r\n                shape = RoundedCornerShape(20.dp),\r\n                color = AppColors.Surface,\r\n                border = BorderStroke(1.dp, AppColors.Border),\r\n                modifier = Modifier.fillMaxWidth(),\r\n            ) {\r\n                Row(Modifier.padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {\r\n                    Column(Modifier.weight(1f)) {\r\n                        Text(\"Organizar en árbol\", fontSize = 14.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n                        Text(\r\n                            if (state.treeMode) \"Con subtareas y jerarquía\" else \"Lista simple con check\",\r\n                            fontSize = 12.sp,\r\n                            color = AppColors.TextSecondary,\r\n                        )\r\n                    }\r\n                    Switch(\r\n                        checked = state.treeMode,\r\n                        onCheckedChange = { state.enableTreeMode(it) },\r\n                        colors = SwitchDefaults.colors(\r\n                            checkedThumbColor = AppColors.OnAccent,\r\n                            checkedTrackColor = AppColors.Accent,\r\n                            uncheckedThumbColor = AppColors.TextSecondary,\r\n                            uncheckedTrackColor = AppColors.SurfaceMuted,\r\n                            uncheckedBorderColor = AppColors.Border,\r\n                        ),\r\n                    )\r\n                }\r\n            }\r\n\r\n            Spacer(Modifier.height(14.dp))\r\n\r\n            if (rows.isEmpty()) {\r\n                Column(Modifier.fillMaxWidth().padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {\r\n                    Text(\"Todo en orden\", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)\r\n                    Spacer(Modifier.height(4.dp))\r\n                    Text(\"Toca + para crear tu primera tarea\", fontSize = 13.sp, color = AppColors.TextSecondary)\r\n                }\r\n            } else {\r\n                LazyColumn(\r\n                    verticalArrangement = Arrangement.spacedBy(8.dp),\r\n                    contentPadding = PaddingValues(bottom = 104.dp),   // espacio para la barra inferior\r\n                ) {\r\n                    items(rows, key = { it.task.id }) { row ->\r\n                        TaskItem(\r\n                            row = row,\r\n                            treeMode = state.treeMode,\r\n                            onToggleDone = { state.toggleDone(row.task.id) },\r\n                            onToggleExpanded = { state.toggleExpanded(row.task.id) },\r\n                            onEdit = { dialog = TaskDialog.Edit(row.task) },\r\n                            onAddChild = { dialog = TaskDialog.Add(row.task.id) },\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n\r\n    dialog?.let { d ->\r\n        val editing = (d as? TaskDialog.Edit)?.task\r\n        TaskEditDialog(\r\n            dialog = d,\r\n            warning = if (editing != null && state.childrenOf(editing.id).isNotEmpty())\r\n                \"También se eliminarán sus subtareas.\" else null,\r\n            onSave = { text ->\r\n                when (d) {\r\n                    is TaskDialog.Add -> state.add(text, d.parentId)\r\n                    is TaskDialog.Edit -> state.rename(d.task.id, text)\r\n                }\r\n                dialog = null\r\n            },\r\n            onDelete = editing?.let { { state.delete(it.id); dialog = null } },\r\n            onDismiss = { dialog = null },\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun TaskItem(\r\n    row: TaskRow,\r\n    treeMode: Boolean,\r\n    onToggleDone: () -> Unit,\r\n    onToggleExpanded: () -> Unit,\r\n    onEdit: () -> Unit,\r\n    onAddChild: () -> Unit,\r\n) {\r\n    val task = row.task\r\n    Surface(\r\n        shape = RoundedCornerShape(18.dp),\r\n        color = AppColors.Surface,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n        modifier = Modifier\r\n            .fillMaxWidth()\r\n            .padding(start = (row.depth * 20).dp)      // sangría por nivel\r\n            .alpha(if (task.done) 0.6f else 1f),\r\n    ) {\r\n        Row(Modifier.padding(horizontal = 10.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {\r\n            // Flecha expandir / contraer (solo si tiene hijos)\r\n            Box(Modifier.size(28.dp), contentAlignment = Alignment.Center) {\r\n                if (treeMode && row.childCount > 0) {\r\n                    Icon(\r\n                        imageVector = if (task.expanded) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowRight,\r\n                        contentDescription = if (task.expanded) \"Contraer\" else \"Expandir\",\r\n                        tint = AppColors.TextSecondary,\r\n                        modifier = Modifier.size(22.dp).clickable(onClick = onToggleExpanded),\r\n                    )\r\n                }\r\n            }\r\n\r\n            CheckCircle(done = task.done, onClick = onToggleDone)\r\n\r\n            Spacer(Modifier.width(10.dp))\r\n\r\n            Column(Modifier.weight(1f).clickable(onClick = onEdit)) {\r\n                Text(\r\n                    task.title,\r\n                    fontSize = 15.sp,\r\n                    fontWeight = FontWeight.Medium,\r\n                    color = if (task.done) AppColors.TextSecondary else AppColors.TextPrimary,\r\n                    textDecoration = if (task.done) TextDecoration.LineThrough else null,\r\n                    maxLines = 2,\r\n                    overflow = TextOverflow.Ellipsis,\r\n                )\r\n            }\r\n\r\n            if (treeMode && row.childCount > 0) {\r\n                Spacer(Modifier.width(8.dp))\r\n                Box(Modifier.clip(CircleShape).background(AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {\r\n                    Text(\"${row.doneChildren}/${row.childCount}\", fontSize = 11.sp, color = AppColors.TextPrimary)\r\n                }\r\n            }\r\n\r\n            if (treeMode && row.depth < MAX_DEPTH) {\r\n                Spacer(Modifier.width(6.dp))\r\n                Box(\r\n                    Modifier.size(30.dp).clip(CircleShape).background(AppColors.SurfaceMuted).clickable(onClick = onAddChild),\r\n                    contentAlignment = Alignment.Center,\r\n                ) {\r\n                    Icon(Icons.Rounded.Add, \"Agregar subtarea\", tint = AppColors.TextPrimary, modifier = Modifier.size(16.dp))\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun CheckCircle(done: Boolean, onClick: () -> Unit) {\r\n    Box(\r\n        modifier = Modifier\r\n            .size(26.dp)\r\n            .clip(CircleShape)\r\n            .background(if (done) AppColors.Accent else AppColors.Surface)\r\n            .then(if (done) Modifier else border(1.5.dp, AppColors.TextSecondary, CircleShape))\r\n            .clickable(onClick = onClick),\r\n        contentAlignment = Alignment.Center,\r\n    ) {\r\n        if (done) Icon(Icons.Rounded.Check, \"Hecha\", tint = AppColors.OnAccent, modifier = Modifier.size(16.dp))\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun TaskEditDialog(\r\n    dialog: TaskDialog,\r\n    warning: String?,\r\n    onSave: (String) -> Unit,\r\n    onDelete: (() -> Unit)?,\r\n    onDismiss: () -> Unit,\r\n) {\r\n    var text by remember(dialog) { mutableStateOf((dialog as? TaskDialog.Edit)?.task?.title ?: \"\") }\r\n    val title = when (dialog) {\r\n        is TaskDialog.Add -> if (dialog.parentId == null) \"Nueva tarea\" else \"Nueva subtarea\"\r\n        is TaskDialog.Edit -> \"Editar tarea\"\r\n    }\r\n\r\n    AlertDialog(\r\n        onDismissRequest = onDismiss,\r\n        containerColor = AppColors.Surface,\r\n        title = { Text(title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary) },\r\n        text = {\r\n            Column {\r\n                OutlinedTextField(\r\n                    value = text,\r\n                    onValueChange = { text = it },\r\n                    label = { Text(\"Título\") },\r\n                    singleLine = true,\r\n                    shape = RoundedCornerShape(16.dp),\r\n                    colors = OutlinedTextFieldDefaults.colors(\r\n                        focusedBorderColor = AppColors.Accent,\r\n                        unfocusedBorderColor = AppColors.Border,\r\n                        focusedLabelColor = AppColors.Accent,\r\n                        cursorColor = AppColors.Accent,\r\n                    ),\r\n                )\r\n                if (warning != null) {\r\n                    Spacer(Modifier.height(8.dp))\r\n                    Text(warning, fontSize = 12.sp, color = AppColors.TextSecondary)\r\n                }\r\n            }\r\n        },\r\n        confirmButton = {\r\n            TextButton(onClick = { onSave(text) }, enabled = text.isNotBlank()) {\r\n                Text(\"Guardar\", color = if (text.isNotBlank()) AppColors.Accent else AppColors.TextSecondary)\r\n            }\r\n        },\r\n        dismissButton = {\r\n            Row {\r\n                if (onDelete != null) TextButton(onClick = onDelete) { Text(\"Eliminar\", color = AppColors.TextSecondary) }\r\n                TextButton(onClick = onDismiss) { Text(\"Cancelar\", color = AppColors.TextSecondary) }\r\n            }\r\n        },\r\n    )\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/screens/TaskScreen.kt b/app/src/main/java/com/portablenotes/domain/ui/screens/TaskScreen.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/screens/TaskScreen.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/screens/TaskScreen.kt	(date 1792989005008)
+@@ -6,6 +6,7 @@
+ import androidx.compose.foundation.clickable
+ import androidx.compose.foundation.layout.*
+ import androidx.compose.foundation.lazy.LazyColumn
++import androidx.compose.foundation.lazy.items
+ import androidx.compose.foundation.shape.CircleShape
+ import androidx.compose.foundation.shape.RoundedCornerShape
+ import androidx.compose.material.icons.Icons
+@@ -25,10 +26,10 @@
+ import androidx.compose.ui.text.style.TextOverflow
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
+-import com.example.portablenotes.ui.tasks.TasksState
+-import com.example.portablenotes.ui.tasks.Task
+-import com.example.portablenotes.ui.tasks.TaskRow
++import com.portablenotes.domain.ui.AppColors
++import com.portablenotes.domain.ui.tasks.TasksState
++import com.portablenotes.domain.ui.tasks.Task
++import com.portablenotes.domain.ui.tasks.TaskRow
+ 
+ private const val MAX_DEPTH = 3   // niveles 0..3 (4 niveles de jerarquía)
+ 
+@@ -246,7 +247,7 @@
+             .size(26.dp)
+             .clip(CircleShape)
+             .background(if (done) AppColors.Accent else AppColors.Surface)
+-            .then(if (done) Modifier else border(1.5.dp, AppColors.TextSecondary, CircleShape))
++            .then(if (done) Modifier else Modifier.border(1.5.dp, AppColors.TextSecondary, CircleShape))
+             .clickable(onClick = onClick),
+         contentAlignment = Alignment.Center,
+     ) {
+Index: app/src/main/java/com/portablenotes/domain/ui/calendar/CalendarScreen.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.calendar\r\n\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.border\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.Arrangement\r\nimport androidx.compose.foundation.layout.Box\r\nimport androidx.compose.foundation.layout.Column\r\nimport androidx.compose.foundation.layout.Row\r\nimport androidx.compose.foundation.layout.aspectRatio\r\nimport androidx.compose.foundation.layout.fillMaxSize\r\nimport androidx.compose.foundation.layout.fillMaxWidth\r\nimport androidx.compose.foundation.layout.padding\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.material3.IconButton\r\nimport androidx.compose.material3.MaterialTheme\r\nimport androidx.compose.material3.Scaffold\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.runtime.mutableStateOf\r\nimport androidx.compose.runtime.remember\r\nimport androidx.compose.runtime.setValue\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.semantics.Role\r\nimport androidx.compose.ui.semantics.contentDescription\r\nimport androidx.compose.ui.semantics.selected\r\nimport androidx.compose.ui.semantics.semantics\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.tooling.preview.Preview\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.shared.calendar.Screens.CalendarMonth\r\nimport com.portablenotes.domain.ui.theme.PortableNotesTheme\r\nimport kotlinx.datetime.LocalDate\r\n\r\nprivate val CalendarBackground = Color(0xFFF8F8F4)\r\nprivate val CalendarInk = Color(0xFF252B27)\r\nprivate val CalendarMuted = Color(0xFF7C857F)\r\nprivate val CalendarAccent = Color(0xFFB65C45)\r\nprivate val CalendarToday = Color(0xFF176B58)\r\nprivate val MonthNames = listOf(\r\n    \"Enero\", \"Febrero\", \"Marzo\", \"Abril\", \"Mayo\", \"Junio\",\r\n    \"Julio\", \"Agosto\", \"Septiembre\", \"Octubre\", \"Noviembre\", \"Diciembre\"\r\n)\r\nprivate val WeekdayNames = listOf(\"L\", \"M\", \"X\", \"J\", \"V\", \"S\", \"D\")\r\n\r\n@Composable\r\nfun CalendarScreen(modifier: Modifier = Modifier) {\r\n    val today = remember { CalendarMonth.today() }\r\n    var visibleMonth by remember { mutableStateOf(CalendarMonth.of(today.year, today.month.ordinal + 1)) }\r\n    var selectedDate by remember { mutableStateOf(today) }\r\n\r\n    Scaffold(\r\n        modifier = modifier.fillMaxSize(),\r\n        containerColor = CalendarBackground\r\n    ) { contentPadding ->\r\n        Column(\r\n            modifier = Modifier\r\n                .fillMaxSize()\r\n                .padding(contentPadding)\r\n                .padding(horizontal = 24.dp, vertical = 20.dp),\r\n            verticalArrangement = Arrangement.spacedBy(24.dp)\r\n        ) {\r\n            MonthHeader(\r\n                month = visibleMonth,\r\n                onPrevious = { visibleMonth = visibleMonth.previous() },\r\n                onNext = { visibleMonth = visibleMonth.next() }\r\n            )\r\n            CalendarGrid(\r\n                month = visibleMonth,\r\n                today = today,\r\n                selectedDate = selectedDate,\r\n                onDateSelected = { selectedDate = it }\r\n            )\r\n        }\r\n    }\r\n}\r\n@Composable\r\nprivate fun MonthHeader(\r\n    month: CalendarMonth,\r\n    onPrevious: () -> Unit,\r\n    onNext: () -> Unit\r\n) {\r\n    Row(\r\n        modifier = Modifier.fillMaxWidth(),\r\n        verticalAlignment = Alignment.CenterVertically,\r\n        horizontalArrangement = Arrangement.SpaceBetween\r\n    ) {\r\n        Text(\r\n            text = \"${MonthNames[month.month - 1]} ${month.year}\",\r\n            color = CalendarInk,\r\n            style = MaterialTheme.typography.headlineSmall,\r\n            fontWeight = FontWeight.SemiBold\r\n        )\r\n        Row(verticalAlignment = Alignment.CenterVertically) {\r\n            MonthButton(\r\n                label = \"Mes anterior\",\r\n                symbol = \"‹\",\r\n                onClick = onPrevious\r\n            )\r\n            MonthButton(\r\n                label = \"Mes siguiente\",\r\n                symbol = \"›\",\r\n                onClick = onNext\r\n            )\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun MonthButton(label: String, symbol: String, onClick: () -> Unit) {\r\n    IconButton(onClick = onClick, modifier = Modifier.semantics { contentDescription = label }) {\r\n        Text(\r\n            text = symbol,\r\n            color = CalendarInk,\r\n            fontSize = 32.sp,\r\n            lineHeight = 32.sp,\r\n            fontWeight = FontWeight.Light\r\n        )\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun CalendarGrid(\r\n    month: CalendarMonth,\r\n    today: LocalDate,\r\n    selectedDate: LocalDate,\r\n    onDateSelected: (LocalDate) -> Unit\r\n) {\r\n    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {\r\n        Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {\r\n            WeekdayNames.forEach { weekday ->\r\n                Box(\r\n                    modifier = Modifier.weight(1f).aspectRatio(1f),\r\n                    contentAlignment = Alignment.Center\r\n                ) {\r\n                    Text(\r\n                        text = weekday,\r\n                        color = CalendarMuted,\r\n                        fontSize = 13.sp,\r\n                        fontWeight = FontWeight.Medium\r\n                    )\r\n                }\r\n            }\r\n        }\r\n        month.days.chunked(7).forEach { week ->\r\n            Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {\r\n                week.forEach { date ->\r\n                    if (date == null) {\r\n                        Box(Modifier.weight(1f).aspectRatio(1f))\r\n                    } else {\r\n                        CalendarDay(\r\n                            date = date,\r\n                            isToday = date == today,\r\n                            isSelected = date == selectedDate,\r\n                            modifier = Modifier.weight(1f).aspectRatio(1f),\r\n                            onClick = { onDateSelected(date) }\r\n                        )\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun CalendarDay(\r\n    date: LocalDate,\r\n    isToday: Boolean,\r\n    isSelected: Boolean,\r\n    modifier: Modifier = Modifier,\r\n    onClick: () -> Unit\r\n) {\r\n    val background = if (isSelected) CalendarAccent else Color.Transparent\r\n    val textColor = if (isSelected) CalendarBackground else CalendarInk\r\n    val dayLabel = \"${date.day} de ${MonthNames[date.month.ordinal]} de ${date.year}\"\r\n\r\n    Box(\r\n        modifier = modifier\r\n            .clip(CircleShape)\r\n            .background(background)\r\n            .then(\r\n                if (isToday && !isSelected) border(1.dp,\r\n                    CalendarToday, CircleShape)\r\n                else Modifier\r\n            )\r\n            .clickable(role = Role.Button, onClick = onClick)\r\n            .semantics {\r\n                contentDescription = dayLabel\r\n                selected = isSelected\r\n            },\r\n        contentAlignment = Alignment.Center\r\n    ) {\r\n        Text(\r\n            text = date.day.toString(),\r\n            color = textColor,\r\n            fontSize = 14.sp,\r\n            fontWeight = if (isToday || isSelected) FontWeight.SemiBold else FontWeight.Normal\r\n        )\r\n    }\r\n}\r\n\r\n@Preview(showBackground = true)\r\n@Composable\r\nprivate fun CalendarScreenPreview() {\r\n    PortableNotesTheme {\r\n        CalendarScreen()\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/calendar/CalendarScreen.kt b/app/src/main/java/com/portablenotes/domain/ui/calendar/CalendarScreen.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/calendar/CalendarScreen.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/calendar/CalendarScreen.kt	(date 1792989004724)
+@@ -184,7 +184,7 @@
+             .clip(CircleShape)
+             .background(background)
+             .then(
+-                if (isToday && !isSelected) border(1.dp,
++                if (isToday && !isSelected) Modifier.border(1.dp,
+                     CalendarToday, CircleShape)
+                 else Modifier
+             )
+Index: app/src/main/java/com/portablenotes/domain/ui/navigation/AppBottomBar.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.portablenotes.domain.ui.navigation\r\n\r\nimport androidx.compose.animation.AnimatedVisibility\r\nimport androidx.compose.animation.animateColorAsState\r\nimport androidx.compose.animation.animateContentSize\r\nimport androidx.compose.foundation.BorderStroke\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.clickable\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.foundation.layout.Arrangement\r\nimport androidx.compose.foundation.shape.CircleShape\r\nimport androidx.compose.material3.Icon\r\nimport androidx.compose.material3.Surface\r\nimport androidx.compose.material3.Text\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.runtime.getValue\r\nimport androidx.compose.ui.Alignment\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.draw.clip\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.ui.semantics.Role\r\nimport androidx.compose.ui.text.font.FontWeight\r\nimport androidx.compose.ui.unit.dp\r\nimport androidx.compose.ui.unit.sp\r\nimport com.example.portablenotes.ui.AppColors\r\n\r\n/** Barra de navegación flotante tipo píldora. Componente independiente y reutilizable. */\r\n@Composable\r\nfun AppBottomBar(\r\n    selected: AppTab,\r\n    onSelect: (AppTab) -> Unit,\r\n    modifier: Modifier = Modifier,\r\n) {\r\n    Surface(\r\n        modifier = modifier\r\n            .fillMaxWidth()\r\n            .background(AppColors.Background),\r\n        shape = CircleShape,\r\n        color = AppColors.Surface,\r\n        shadowElevation = 14.dp,\r\n        border = BorderStroke(1.dp, AppColors.Border),\r\n    ) {\r\n        Row(\r\n            modifier = Modifier\r\n                .padding(8.dp,8.dp,8.dp,16.dp),\r\n            horizontalArrangement = Arrangement.SpaceEvenly,\r\n            verticalAlignment = Alignment.Bottom\r\n        ) {\r\n            AppTab.entries.forEach { tab ->\r\n                BarItem(tab = tab, isSelected = tab == selected, onClick = { onSelect(tab) })\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nprivate fun BarItem(tab: AppTab, isSelected: Boolean, onClick: () -> Unit) {\r\n    val background by animateColorAsState(if (isSelected) AppColors.Accent else Color.Transparent)\r\n    val tint by animateColorAsState(if (isSelected) AppColors.OnAccent else AppColors.TextSecondary)\r\n\r\n    Row(\r\n        modifier = Modifier\r\n            .clip(CircleShape)\r\n            .background(background)\r\n            .clickable(role = Role.Tab, onClick = onClick)\r\n            .padding(horizontal = 18.dp, vertical = 12.dp)\r\n            .animateContentSize(),\r\n        verticalAlignment = Alignment.CenterVertically,\r\n    ) {\r\n        Icon(tab.icon, contentDescription = tab.label, tint = tint, modifier = Modifier.size(22.dp))\r\n        AnimatedVisibility(visible = isSelected) {\r\n            Row {\r\n                Spacer(Modifier.width(8.dp))\r\n                Text(tab.label, color = tint, fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1)\r\n            }\r\n        }\r\n    }\r\n}
+===================================================================
+diff --git a/app/src/main/java/com/portablenotes/domain/ui/navigation/AppBottomBar.kt b/app/src/main/java/com/portablenotes/domain/ui/navigation/AppBottomBar.kt
+--- a/app/src/main/java/com/portablenotes/domain/ui/navigation/AppBottomBar.kt	(revision 9cac893c068ae3147a0fc82da1e97048e75b8cb6)
++++ b/app/src/main/java/com/portablenotes/domain/ui/navigation/AppBottomBar.kt	(date 1792988888185)
+@@ -22,7 +22,7 @@
+ import androidx.compose.ui.text.font.FontWeight
+ import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.unit.sp
+-import com.example.portablenotes.ui.AppColors
++import com.portablenotes.domain.ui.AppColors
+ 
+ /** Barra de navegación flotante tipo píldora. Componente independiente y reutilizable. */
+ @Composable
