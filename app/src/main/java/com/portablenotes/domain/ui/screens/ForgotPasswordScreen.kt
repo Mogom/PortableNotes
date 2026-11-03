@@ -26,7 +26,7 @@ import com.portablenotes.domain.ui.auth.AuthErrorMessage
 import com.portablenotes.domain.ui.auth.AuthLayout
 import com.portablenotes.domain.ui.auth.AuthPrimaryButton
 import com.portablenotes.domain.ui.auth.AuthTextField
-import com.portablenotes.domain.ui.auth.AuthValidation
+import com.portablenotes.domain.models.auth.AuthValidation
 
 /**
  * Pantalla para recuperar la contraseña.

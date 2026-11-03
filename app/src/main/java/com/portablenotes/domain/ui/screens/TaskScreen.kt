@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,16 +26,12 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.portablenotes.ui.AppColors
-import com.example.portablenotes.ui.tasks.TasksState
-import com.example.portablenotes.ui.tasks.Task
-import com.example.portablenotes.ui.tasks.TaskRow
 
 private const val MAX_DEPTH = 3   // niveles 0..3 (4 niveles de jerarquía)
 
 private sealed interface TaskDialog {
     data class Add(val parentId: String?) : TaskDialog
-    data class Edit(val task: Task) : TaskDialog
+    data class Edit(val task: com.portablenotes.domain.ui.tasks.Task) : TaskDialog
 }
 
 /**
@@ -44,7 +41,7 @@ private sealed interface TaskDialog {
  */
 @Composable
 fun TasksScreen(
-    state: TasksState,
+    state: com.portablenotes.domain.ui.tasks.TasksState,
     modifier: Modifier = Modifier,
 ) {
     var dialog by remember { mutableStateOf<TaskDialog?>(null) }
@@ -54,7 +51,7 @@ fun TasksScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))
+            .background(Brush.verticalGradient(listOf(_root_ide_package_.com.portablenotes.domain.ui.AppColors.BackgroundTop, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background)))
     ) {
         Column(
             Modifier
@@ -66,19 +63,19 @@ fun TasksScreen(
             // Cabecera
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Tareas", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)
+                    Text("Tareas", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
                     Text(
                         if (total == 0) "Sin tareas todavía" else "$done de $total completadas",
                         fontSize = 14.sp,
-                        color = AppColors.TextSecondary,
+                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
                     )
                 }
                 Box(
-                    Modifier.size(42.dp).clip(CircleShape).background(AppColors.Accent)
+                    Modifier.size(42.dp).clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
                         .clickable { dialog = TaskDialog.Add(null) },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Rounded.Add, "Nueva tarea", tint = AppColors.OnAccent, modifier = Modifier.size(22.dp))
+                    Icon(Icons.Rounded.Add, "Nueva tarea", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(22.dp))
                 }
             }
 
@@ -88,8 +85,8 @@ fun TasksScreen(
             LinearProgressIndicator(
                 progress = { if (total == 0) 0f else done / total.toFloat() },
                 modifier = Modifier.fillMaxWidth().height(6.dp).clip(CircleShape),
-                color = AppColors.Accent,
-                trackColor = AppColors.SurfaceMuted,
+                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
+                trackColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted,
             )
 
             Spacer(Modifier.height(14.dp))
@@ -97,28 +94,28 @@ fun TasksScreen(
             // Modo árbol / lista simple
             Surface(
                 shape = RoundedCornerShape(20.dp),
-                color = AppColors.Surface,
-                border = BorderStroke(1.dp, AppColors.Border),
+                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+                border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Row(Modifier.padding(horizontal = 16.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                     Column(Modifier.weight(1f)) {
-                        Text("Organizar en árbol", fontSize = 14.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
+                        Text("Organizar en árbol", fontSize = 14.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
                         Text(
                             if (state.treeMode) "Con subtareas y jerarquía" else "Lista simple con check",
                             fontSize = 12.sp,
-                            color = AppColors.TextSecondary,
+                            color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
                         )
                     }
                     Switch(
                         checked = state.treeMode,
                         onCheckedChange = { state.enableTreeMode(it) },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = AppColors.OnAccent,
-                            checkedTrackColor = AppColors.Accent,
-                            uncheckedThumbColor = AppColors.TextSecondary,
-                            uncheckedTrackColor = AppColors.SurfaceMuted,
-                            uncheckedBorderColor = AppColors.Border,
+                            checkedThumbColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent,
+                            checkedTrackColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
+                            uncheckedThumbColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                            uncheckedTrackColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted,
+                            uncheckedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border,
                         ),
                     )
                 }
@@ -128,9 +125,9 @@ fun TasksScreen(
 
             if (rows.isEmpty()) {
                 Column(Modifier.fillMaxWidth().padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Todo en orden", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
+                    Text("Todo en orden", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
                     Spacer(Modifier.height(4.dp))
-                    Text("Toca + para crear tu primera tarea", fontSize = 13.sp, color = AppColors.TextSecondary)
+                    Text("Toca + para crear tu primera tarea", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             } else {
                 LazyColumn(
@@ -173,7 +170,7 @@ fun TasksScreen(
 
 @Composable
 private fun TaskItem(
-    row: TaskRow,
+    row: com.portablenotes.domain.ui.tasks.TaskRow,
     treeMode: Boolean,
     onToggleDone: () -> Unit,
     onToggleExpanded: () -> Unit,
@@ -183,8 +180,8 @@ private fun TaskItem(
     val task = row.task
     Surface(
         shape = RoundedCornerShape(18.dp),
-        color = AppColors.Surface,
-        border = BorderStroke(1.dp, AppColors.Border),
+        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = (row.depth * 20).dp)      // sangría por nivel
@@ -197,7 +194,7 @@ private fun TaskItem(
                     Icon(
                         imageVector = if (task.expanded) Icons.Rounded.KeyboardArrowDown else Icons.Rounded.KeyboardArrowRight,
                         contentDescription = if (task.expanded) "Contraer" else "Expandir",
-                        tint = AppColors.TextSecondary,
+                        tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
                         modifier = Modifier.size(22.dp).clickable(onClick = onToggleExpanded),
                     )
                 }
@@ -212,7 +209,7 @@ private fun TaskItem(
                     task.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = if (task.done) AppColors.TextSecondary else AppColors.TextPrimary,
+                    color = if (task.done) _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
                     textDecoration = if (task.done) TextDecoration.LineThrough else null,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
@@ -221,18 +218,18 @@ private fun TaskItem(
 
             if (treeMode && row.childCount > 0) {
                 Spacer(Modifier.width(8.dp))
-                Box(Modifier.clip(CircleShape).background(AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {
-                    Text("${row.doneChildren}/${row.childCount}", fontSize = 11.sp, color = AppColors.TextPrimary)
+                Box(Modifier.clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                    Text("${row.doneChildren}/${row.childCount}", fontSize = 11.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
                 }
             }
 
             if (treeMode && row.depth < MAX_DEPTH) {
                 Spacer(Modifier.width(6.dp))
                 Box(
-                    Modifier.size(30.dp).clip(CircleShape).background(AppColors.SurfaceMuted).clickable(onClick = onAddChild),
+                    Modifier.size(30.dp).clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted).clickable(onClick = onAddChild),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Rounded.Add, "Agregar subtarea", tint = AppColors.TextPrimary, modifier = Modifier.size(16.dp))
+                    Icon(Icons.Rounded.Add, "Agregar subtarea", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, modifier = Modifier.size(16.dp))
                 }
             }
         }
@@ -245,12 +242,12 @@ private fun CheckCircle(done: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .size(26.dp)
             .clip(CircleShape)
-            .background(if (done) AppColors.Accent else AppColors.Surface)
-            .then(if (done) Modifier else border(1.5.dp, AppColors.TextSecondary, CircleShape))
+            .background(if (done) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface)
+            .then(if (done) Modifier else _root_ide_package_.androidx.compose.ui.Modifier.Companion.border(1.5.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, CircleShape))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        if (done) Icon(Icons.Rounded.Check, "Hecha", tint = AppColors.OnAccent, modifier = Modifier.size(16.dp))
+        if (done) Icon(Icons.Rounded.Check, "Hecha", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(16.dp))
     }
 }
 
@@ -270,8 +267,8 @@ private fun TaskEditDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        containerColor = AppColors.Surface,
-        title = { Text(title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary) },
+        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        title = { Text(title, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary) },
         text = {
             Column {
                 OutlinedTextField(
@@ -281,27 +278,27 @@ private fun TaskEditDialog(
                     singleLine = true,
                     shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = AppColors.Accent,
-                        unfocusedBorderColor = AppColors.Border,
-                        focusedLabelColor = AppColors.Accent,
-                        cursorColor = AppColors.Accent,
+                        focusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
+                        unfocusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border,
+                        focusedLabelColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
+                        cursorColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
                     ),
                 )
                 if (warning != null) {
                     Spacer(Modifier.height(8.dp))
-                    Text(warning, fontSize = 12.sp, color = AppColors.TextSecondary)
+                    Text(warning, fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             }
         },
         confirmButton = {
             TextButton(onClick = { onSave(text) }, enabled = text.isNotBlank()) {
-                Text("Guardar", color = if (text.isNotBlank()) AppColors.Accent else AppColors.TextSecondary)
+                Text("Guardar", color = if (text.isNotBlank()) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
             }
         },
         dismissButton = {
             Row {
-                if (onDelete != null) TextButton(onClick = onDelete) { Text("Eliminar", color = AppColors.TextSecondary) }
-                TextButton(onClick = onDismiss) { Text("Cancelar", color = AppColors.TextSecondary) }
+                if (onDelete != null) TextButton(onClick = onDelete) { Text("Eliminar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary) }
+                TextButton(onClick = onDismiss) { Text("Cancelar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary) }
             }
         },
     )

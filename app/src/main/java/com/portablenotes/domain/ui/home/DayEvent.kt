@@ -22,14 +22,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.portablenotes.ui.AppColors
+import com.portablenotes.domain.ui.AppColors
 
 data class DayEvent(
     val id: String,
     val title: String,
     val time: String,
     val place: String? = null,
-    val tint: Color = AppColors.Tint1,
+    val tint: Color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Tint1,
 )
 
 /** "Barra de notificaciones" con los eventos del día seleccionado. */
@@ -48,16 +48,16 @@ fun TodayEventsPanel(
                 text = "Eventos de hoy",
                 fontSize = 18.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = AppColors.TextPrimary,
+                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
                 modifier = Modifier.weight(1f),
             )
             Box(
                 Modifier
                     .clip(CircleShape)
-                    .background(AppColors.Accent)
+                    .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
                     .padding(horizontal = 10.dp, vertical = 3.dp)
             ) {
-                Text(events.size.toString(), color = AppColors.OnAccent, fontSize = 12.sp, fontWeight = FontWeight.Medium)
+                Text(events.size.toString(), color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, fontSize = 12.sp, fontWeight = FontWeight.Medium)
             }
         }
 
@@ -80,9 +80,9 @@ fun TodayEventsPanel(
 private fun EventCard(event: DayEvent) {
     Surface(
         shape = RoundedCornerShape(22.dp),
-        color = AppColors.Surface,
+        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 1.dp,
-        border = BorderStroke(1.dp, AppColors.Border),
+        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
         modifier = Modifier.fillMaxWidth(),
     ) {
         Row(
@@ -99,7 +99,7 @@ private fun EventCard(event: DayEvent) {
                 Icon(
                     Icons.Rounded.Notifications,
                     contentDescription = null,
-                    tint = AppColors.TextPrimary,
+                    tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
                     modifier = Modifier.size(20.dp),
                 )
             }
@@ -109,22 +109,22 @@ private fun EventCard(event: DayEvent) {
                     event.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = AppColors.TextPrimary,
+                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
                 event.place?.let {
-                    Text(it, fontSize = 12.sp, color = AppColors.TextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(it, fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
             }
             Spacer(Modifier.width(8.dp))
             Box(
                 Modifier
                     .clip(CircleShape)
-                    .background(AppColors.SurfaceMuted)
+                    .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
                     .padding(horizontal = 10.dp, vertical = 5.dp)
             ) {
-                Text(event.time, fontSize = 12.sp, color = AppColors.TextPrimary, fontWeight = FontWeight.Medium)
+                Text(event.time, fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, fontWeight = FontWeight.Medium)
             }
         }
     }
@@ -133,8 +133,8 @@ private fun EventCard(event: DayEvent) {
 @Composable
 private fun EmptyState(modifier: Modifier = Modifier) {
     Column(modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("Todo despejado", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
+        Text("Todo despejado", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
         Spacer(Modifier.height(4.dp))
-        Text("No tienes eventos programados", fontSize = 13.sp, color = AppColors.TextSecondary)
+        Text("No tienes eventos programados", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
     }
 }

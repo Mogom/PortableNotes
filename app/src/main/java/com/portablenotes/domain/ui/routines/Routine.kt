@@ -76,6 +76,7 @@ data class Routine(
     val category: RoutineCategory = RoutineCategory.Daily,
     /** Automático según la categoría; solo "Personalizada" permite elegirlo. */
     val iconKey: String = category.defaultIconKey,
+    val createdAt: Long = 0L,
 )
 
 class RoutinesState(initial: List<Routine> = emptyList()) {

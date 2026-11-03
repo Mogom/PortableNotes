@@ -7,12 +7,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.portablenotes.ui.AppColors
-import com.example.portablenotes.ui.calendar.WeekCalendar
-import com.example.portablenotes.ui.home.DayEvent
-import com.example.portablenotes.ui.home.TodayEventsPanel
+import com.portablenotes.domain.ui.AppColors
+import com.portablenotes.domain.ui.calendar.WeekCalendar
+import com.portablenotes.domain.ui.home.DayEvent
+import com.portablenotes.domain.ui.home.TodayEventsPanel
 import java.time.LocalDate
 
 /**
@@ -24,7 +25,7 @@ import java.time.LocalDate
 @Composable
 fun HomeScreen(
     today: LocalDate,
-    eventsFor: (LocalDate) -> List<DayEvent>,
+    eventsFor: (LocalDate) -> List<com.portablenotes.domain.ui.home.DayEvent>,
     modifier: Modifier = Modifier,
     userName: String = "Cristian",
 ) {
@@ -34,7 +35,7 @@ fun HomeScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(AppColors.BackgroundTop, AppColors.Background)))
+            .background(Brush.verticalGradient(listOf(_root_ide_package_.com.portablenotes.domain.ui.AppColors.BackgroundTop, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background)))
     ) {
         val calendarHeight = maxHeight * 0.30f   // 👈 30 % de la pantalla
         val barSpace = 100.dp                    // espacio reservado para la barra flotante
@@ -49,7 +50,7 @@ fun HomeScreen(
             Greeting(userName)
             Spacer(Modifier.height(16.dp))
 
-            WeekCalendar(
+            _root_ide_package_.com.portablenotes.domain.ui.calendar.WeekCalendar(
                 selectedDate = selectedDate,
                 today = today,
                 eventsCount = events.size,
@@ -59,7 +60,7 @@ fun HomeScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            TodayEventsPanel(
+            _root_ide_package_.com.portablenotes.domain.ui.home.TodayEventsPanel(
                 events = events,
                 bottomPadding = barSpace,
                 modifier = Modifier.weight(1f),
@@ -68,10 +69,11 @@ fun HomeScreen(
     }
 }
 
+@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun Greeting(name: String) {
     Column(Modifier.padding(horizontal = 4.dp)) {
-        Text("Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)
-        Text("Esto es lo que tienes hoy", fontSize = 14.sp, color = AppColors.TextSecondary)
+        Text("Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+        Text("Esto es lo que tienes hoy", fontSize = 14.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
     }
 }

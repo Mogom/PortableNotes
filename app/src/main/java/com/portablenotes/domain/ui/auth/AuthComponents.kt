@@ -107,7 +107,7 @@ internal fun AuthTextField(
         enabled = enabled,
         singleLine = true,
         label = { Text(label) },
-        shape = FieldShape,
+        shape = _root_ide_package_.com.portablenotes.domain.ui.auth.FieldShape,
         isError = errorText != null,
         supportingText = if (errorText != null) {
             { Text(errorText, fontSize = 12.sp) }
@@ -140,17 +140,17 @@ internal fun AuthTextField(
             focusedBorderColor = AppColors.Accent,
             unfocusedBorderColor = AppColors.Border,
             disabledBorderColor = AppColors.Border,
-            errorBorderColor = ErrorColor,
+            errorBorderColor = _root_ide_package_.com.portablenotes.domain.ui.auth.ErrorColor,
             focusedLabelColor = AppColors.Accent,
             unfocusedLabelColor = AppColors.TextSecondary,
             disabledLabelColor = AppColors.TextSecondary,
-            errorLabelColor = ErrorColor,
+            errorLabelColor = _root_ide_package_.com.portablenotes.domain.ui.auth.ErrorColor,
             cursorColor = AppColors.Accent,
-            errorCursorColor = ErrorColor,
+            errorCursorColor = _root_ide_package_.com.portablenotes.domain.ui.auth.ErrorColor,
             focusedTrailingIconColor = AppColors.TextSecondary,
             unfocusedTrailingIconColor = AppColors.TextSecondary,
             errorTrailingIconColor = AppColors.TextSecondary,
-            errorSupportingTextColor = ErrorColor,
+            errorSupportingTextColor = _root_ide_package_.com.portablenotes.domain.ui.auth.ErrorColor,
         ),
     )
 }
@@ -166,7 +166,7 @@ internal fun AuthPrimaryButton(
         onClick = onClick,
         enabled = !isLoading,
         modifier = modifier.fillMaxWidth().height(52.dp),
-        shape = FieldShape,
+        shape = _root_ide_package_.com.portablenotes.domain.ui.auth.FieldShape,
         colors = ButtonDefaults.buttonColors(
             containerColor = AppColors.Accent,
             contentColor = AppColors.OnAccent,
@@ -201,7 +201,7 @@ internal fun GoogleSignInButton(
         onClick = onClick,
         enabled = enabled,
         modifier = modifier.fillMaxWidth().height(52.dp),
-        shape = FieldShape,
+        shape = _root_ide_package_.com.portablenotes.domain.ui.auth.FieldShape,
         border = BorderStroke(1.dp, AppColors.Border),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = AppColors.Surface,
@@ -236,6 +236,6 @@ internal fun AuthErrorMessage(message: String?, modifier: Modifier = Modifier) {
         text = message,
         modifier = modifier.fillMaxWidth().padding(bottom = 12.dp),
         fontSize = 13.sp,
-        color = ErrorColor,
+        color = _root_ide_package_.com.portablenotes.domain.ui.auth.ErrorColor,
     )
 }

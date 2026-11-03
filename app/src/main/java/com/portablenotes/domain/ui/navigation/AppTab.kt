@@ -5,6 +5,7 @@ import androidx.compose.material.icons.rounded.DateRange
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material.icons.rounded.CheckCircle
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.ui.graphics.vector.ImageVector
 
 enum class AppTab(val route: String, val label: String, val icon: ImageVector) {

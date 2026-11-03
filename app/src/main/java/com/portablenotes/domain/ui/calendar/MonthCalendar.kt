@@ -21,9 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.portablenotes.domain.ui.AppColors
-import com.portablenotes.domain.ui.calendar.events.CircleIconButton
-import com.portablenotes.domain.ui.calendar.events.monthName
+import com.portablenotes.domain.models.monthName
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -50,24 +48,24 @@ fun MonthCalendar(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(28.dp),
-        color = AppColors.Surface,
+        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 3.dp,
-        border = BorderStroke(1.dp, AppColors.Border),
+        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
     ) {
         Column(Modifier.fillMaxSize().padding(horizontal = 12.dp, vertical = 14.dp)) {
             // Cabecera
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f).padding(start = 6.dp)) {
-                    Text(month.monthName(), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)
-                    Text(month.year.toString(), fontSize = 13.sp, color = AppColors.TextSecondary)
+                    Text(month.monthName(), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                    Text(month.year.toString(), fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
-                CircleIconButton(
+                _root_ide_package_.com.portablenotes.domain.ui.events.CircleIconButton(
                     Icons.Rounded.KeyboardArrowLeft,
                     "Mes anterior",
                     onPrevMonth
                 )
                 Spacer(Modifier.width(8.dp))
-                CircleIconButton(
+                _root_ide_package_.com.portablenotes.domain.ui.events.CircleIconButton(
                     Icons.Rounded.KeyboardArrowRight,
                     "Mes siguiente",
                     onNextMonth
@@ -77,13 +75,13 @@ fun MonthCalendar(
             Spacer(Modifier.height(10.dp))
 
             Row(Modifier.fillMaxWidth()) {
-                weekdayInitials.forEach {
+                _root_ide_package_.com.portablenotes.domain.ui.calendar.weekdayInitials.forEach {
                     Text(
                         it,
                         modifier = Modifier.weight(1f),
                         textAlign = TextAlign.Center,
                         fontSize = 12.sp,
-                        color = AppColors.TextSecondary,
+                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
                     )
                 }
             }
@@ -98,7 +96,7 @@ fun MonthCalendar(
                             val day = row * 7 + col - offset + 1
                             if (day in 1..length) {
                                 val date = month.atDay(day)
-                                DayCell(
+                                _root_ide_package_.com.portablenotes.domain.ui.calendar.DayCell(
                                     day = day,
                                     isSelected = date == selected,
                                     isToday = date == today,
@@ -132,8 +130,8 @@ private fun DayCell(
                 .fillMaxHeight(0.92f)
                 .aspectRatio(1f)
                 .clip(CircleShape)
-                .background(if (isSelected) AppColors.Accent else Color.Transparent)
-                .then(if (isToday && !isSelected) Modifier.border(1.dp, AppColors.Accent, CircleShape) else Modifier)
+                .background(if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else Color.Transparent)
+                .then(if (isToday && !isSelected) _root_ide_package_.androidx.compose.ui.Modifier.Companion.border(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent, CircleShape) else Modifier)
                 .clickable(onClick = onClick),
             contentAlignment = Alignment.Center,
         ) {
@@ -141,7 +139,7 @@ private fun DayCell(
                 day.toString(),
                 fontSize = 13.sp,
                 fontWeight = if (isSelected || isToday) FontWeight.SemiBold else FontWeight.Normal,
-                color = if (isSelected) AppColors.OnAccent else AppColors.TextPrimary,
+                color = if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
             )
             if (hasEvent) {
                 Box(
@@ -150,7 +148,7 @@ private fun DayCell(
                         .padding(bottom = 3.dp)
                         .size(4.dp)
                         .clip(CircleShape)
-                        .background(if (isSelected) AppColors.OnAccent else AppColors.Accent)
+                        .background(if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
                 )
             }
         }

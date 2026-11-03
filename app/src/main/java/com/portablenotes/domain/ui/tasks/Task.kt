@@ -13,6 +13,7 @@ data class Task(
     val parentId: String? = null,
     val done: Boolean = false,
     val expanded: Boolean = true,
+    val createdAt: Long = 0L,
 )
 
 /** Fila lista para pintar. */
