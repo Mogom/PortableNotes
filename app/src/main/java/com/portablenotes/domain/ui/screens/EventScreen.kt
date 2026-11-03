@@ -93,7 +93,7 @@ fun EventsScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(_root_ide_package_.com.portablenotes.domain.ui.AppColors.BackgroundTop, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background)))
+            .background(Brush.verticalGradient(listOf(com.portablenotes.domain.ui.AppColors.BackgroundTop, com.portablenotes.domain.ui.AppColors.Background)))
     ) {
         val calendarHeight = maxHeight * 0.50f   // 👈 50 % de la pantalla
         val barSpace = 104.dp
@@ -107,23 +107,23 @@ fun EventsScreen(
         ) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Eventos", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                    Text("Eventos", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
                 }
                 Box(
                     Modifier
                         .size(42.dp)
                         .clip(CircleShape)
-                        .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
+                        .background(com.portablenotes.domain.ui.AppColors.Accent)
                         .clickable { editor = EditorRequest.New(selected) },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Rounded.Add, "Nuevo evento", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(22.dp))
+                    Icon(Icons.Rounded.Add, "Nuevo evento", tint = com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(22.dp))
                 }
             }
 
             Spacer(Modifier.height(12.dp))
 
-            _root_ide_package_.com.portablenotes.domain.ui.calendar.MonthCalendar(
+            com.portablenotes.domain.ui.calendar.MonthCalendar(
                 month = month,
                 selected = selected,
                 today = today,
@@ -155,7 +155,7 @@ fun EventsScreen(
     // ----- Hojas -----
     detail?.let { req ->
         val evs = all.on(req.date).filter { req.eventId == null || it.id == req.eventId }
-        _root_ide_package_.com.portablenotes.domain.ui.events.EventDetailSheet(
+        com.portablenotes.domain.ui.events.EventDetailSheet(
             date = req.date,
             events = evs,
             onDismiss = { detail = null },
@@ -166,7 +166,7 @@ fun EventsScreen(
     }
 
     editor?.let { req ->
-        _root_ide_package_.com.portablenotes.domain.ui.events.EventEditorSheet(
+        com.portablenotes.domain.ui.events.EventEditorSheet(
             event = (req as? EditorRequest.Edit)?.event,
             initialDate = (req as? EditorRequest.New)?.date ?: today,
             onSave = { viewModel.upsert(it); editor = null },
@@ -188,9 +188,9 @@ private fun EventsList(
 ) {
     if (rows.isEmpty()) {
         Column(modifier.fillMaxWidth().padding(top = 28.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-            Text("Sin eventos este mes", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+            Text("Sin eventos este mes", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
             Spacer(Modifier.height(4.dp))
-            Text("Toca + para crear uno", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+            Text("Toca + para crear uno", fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
         }
         return
     }
@@ -232,12 +232,12 @@ private fun DateHeader(date: LocalDate, isSelected: Boolean, isToday: Boolean) {
             date.prettyLong(),
             fontSize = 14.sp,
             fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium,
-            color = if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+            color = if (isSelected) com.portablenotes.domain.ui.AppColors.TextPrimary else com.portablenotes.domain.ui.AppColors.TextSecondary,
         )
         if (isToday) {
             Spacer(Modifier.width(8.dp))
-            Box(Modifier.clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent).padding(horizontal = 8.dp, vertical = 2.dp)) {
-                Text("Hoy", fontSize = 10.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent)
+            Box(Modifier.clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.Accent).padding(horizontal = 8.dp, vertical = 2.dp)) {
+                Text("Hoy", fontSize = 10.sp, color = com.portablenotes.domain.ui.AppColors.OnAccent)
             }
         }
     }
@@ -248,9 +248,9 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(22.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        color = com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 1.dp,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
         modifier = Modifier.fillMaxWidth().alpha(if (event.done) 0.55f else 1f),
     ) {
         Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -259,10 +259,10 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
             } else {
                 // Los eventos recurrentes no se marcan como hechos
                 Box(
-                    Modifier.size(28.dp).clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted),
+                    Modifier.size(28.dp).clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.SurfaceMuted),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Rounded.Refresh, "Se repite", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, modifier = Modifier.size(16.dp))
+                    Icon(Icons.Rounded.Refresh, "Se repite", tint = com.portablenotes.domain.ui.AppColors.TextSecondary, modifier = Modifier.size(16.dp))
                 }
             }
 
@@ -273,7 +273,7 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
                     event.title,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Medium,
-                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                    color = com.portablenotes.domain.ui.AppColors.TextPrimary,
                     textDecoration = if (event.done) TextDecoration.LineThrough else null,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -281,7 +281,7 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
                 Text(
                     if (event.repeat == Repeat.None) event.type.label else "${event.type.label} · ${event.repeat.label}",
                     fontSize = 12.sp,
-                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                    color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
@@ -290,11 +290,11 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
             Spacer(Modifier.width(8.dp))
 
             Column(horizontalAlignment = Alignment.End) {
-                Box(Modifier.clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted).padding(horizontal = 10.dp, vertical = 4.dp)) {
-                    Text(event.time.hhmm(), fontSize = 12.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                Box(Modifier.clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.SurfaceMuted).padding(horizontal = 10.dp, vertical = 4.dp)) {
+                    Text(event.time.hhmm(), fontSize = 12.sp, fontWeight = FontWeight.Medium, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
                 }
                 Spacer(Modifier.height(6.dp))
-                _root_ide_package_.com.portablenotes.domain.ui.events.PriorityBars(event.priority)
+                com.portablenotes.domain.ui.events.PriorityBars(event.priority)
             }
         }
     }
@@ -306,11 +306,11 @@ private fun DoneCheck(done: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .size(28.dp)
             .clip(CircleShape)
-            .background(if (done) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface)
-            .then(if (done) Modifier else _root_ide_package_.androidx.compose.ui.Modifier.Companion.border(1.5.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, CircleShape))
+            .background(if (done) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.Surface)
+            .then(if (done) Modifier else androidx.compose.ui.Modifier.Companion.border(1.5.dp, com.portablenotes.domain.ui.AppColors.TextSecondary, CircleShape))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        if (done) Icon(Icons.Rounded.Check, "Hecho", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(16.dp))
+        if (done) Icon(Icons.Rounded.Check, "Hecho", tint = com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(16.dp))
     }
 }

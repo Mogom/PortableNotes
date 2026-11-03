@@ -35,7 +35,7 @@ fun HomeScreen(
     BoxWithConstraints(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(_root_ide_package_.com.portablenotes.domain.ui.AppColors.BackgroundTop, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background)))
+            .background(Brush.verticalGradient(listOf(com.portablenotes.domain.ui.AppColors.BackgroundTop, com.portablenotes.domain.ui.AppColors.Background)))
     ) {
         val calendarHeight = maxHeight * 0.30f   // 👈 30 % de la pantalla
         val barSpace = 100.dp                    // espacio reservado para la barra flotante
@@ -50,7 +50,7 @@ fun HomeScreen(
             Greeting(userName)
             Spacer(Modifier.height(16.dp))
 
-            _root_ide_package_.com.portablenotes.domain.ui.calendar.WeekCalendar(
+            com.portablenotes.domain.ui.calendar.WeekCalendar(
                 selectedDate = selectedDate,
                 today = today,
                 eventsCount = events.size,
@@ -60,7 +60,7 @@ fun HomeScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            _root_ide_package_.com.portablenotes.domain.ui.home.TodayEventsPanel(
+            com.portablenotes.domain.ui.home.TodayEventsPanel(
                 events = events,
                 bottomPadding = barSpace,
                 modifier = Modifier.weight(1f),
@@ -73,7 +73,7 @@ fun HomeScreen(
 @Composable
 private fun Greeting(name: String) {
     Column(Modifier.padding(horizontal = 4.dp)) {
-        Text("Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
-        Text("Esto es lo que tienes hoy", fontSize = 14.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+        Text("Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
+        Text("Esto es lo que tienes hoy", fontSize = 14.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
     }
 }

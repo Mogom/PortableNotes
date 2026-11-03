@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:app/src/main/java/com/portablenotes/domain/ui/calendar/events/EventEditorsSheet.kt
-package com.portablenotes.domain.ui.calendar.events
-========
 package com.portablenotes.domain.ui.events
->>>>>>>> c00f8606e9150b1206a788461636c275e5a41540:app/src/main/java/com/portablenotes/domain/ui/events/EventEditorsSheet.kt
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
@@ -45,7 +41,7 @@ fun EventEditorSheet(
     var repeat by remember { mutableStateOf(event?.repeat ?: Repeat.None) }
     var type by remember { mutableStateOf(event?.type ?: EventType.Other) }
     var priority by remember { mutableStateOf(event?.priority ?: Priority.Medium) }
-    val routines = _root_ide_package_.com.portablenotes.domain.ui.routines.LocalRoutines.current
+    val routines = com.portablenotes.domain.ui.routines.LocalRoutines.current
     var routineId by remember { mutableStateOf(event?.routineId) }
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
@@ -53,7 +49,7 @@ fun EventEditorSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background,
+        containerColor = com.portablenotes.domain.ui.AppColors.Background,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
     ) {
         Column(
@@ -70,7 +66,7 @@ fun EventEditorSheet(
                 if (event == null) "Nuevo evento" else "Editar evento",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                color = com.portablenotes.domain.ui.AppColors.TextPrimary,
             )
 
             OutlinedTextField(
@@ -127,8 +123,8 @@ fun EventEditorSheet(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f).height(48.dp),
                     shape = CircleShape,
-                    border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary),
+                    border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = com.portablenotes.domain.ui.AppColors.TextPrimary),
                 ) { Text("Cancelar") }
                 Button(
                     onClick = {
@@ -151,10 +147,10 @@ fun EventEditorSheet(
                     modifier = Modifier.weight(1f).height(48.dp),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-                        contentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent,
-                        disabledContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted,
-                        disabledContentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                        containerColor = com.portablenotes.domain.ui.AppColors.Accent,
+                        contentColor = com.portablenotes.domain.ui.AppColors.OnAccent,
+                        disabledContainerColor = com.portablenotes.domain.ui.AppColors.SurfaceMuted,
+                        disabledContentColor = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     ),
                 ) { Text("Guardar") }
             }
@@ -173,9 +169,9 @@ fun EventEditorSheet(
                         date = Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC).toLocalDate()
                     }
                     showDate = false
-                }) { Text("Aceptar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary) }
+                }) { Text("Aceptar", color = com.portablenotes.domain.ui.AppColors.TextPrimary) }
             },
-            dismissButton = { TextButton(onClick = { showDate = false }) { Text("Cancelar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary) } },
+            dismissButton = { TextButton(onClick = { showDate = false }) { Text("Cancelar", color = com.portablenotes.domain.ui.AppColors.TextSecondary) } },
         ) { DatePicker(state = pickerState) }
     }
 
@@ -187,9 +183,9 @@ fun EventEditorSheet(
                 TextButton(onClick = {
                     time = LocalTime.of(timeState.hour, timeState.minute)
                     showTime = false
-                }) { Text("Aceptar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary) }
+                }) { Text("Aceptar", color = com.portablenotes.domain.ui.AppColors.TextPrimary) }
             },
-            dismissButton = { TextButton(onClick = { showTime = false }) { Text("Cancelar", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary) } },
+            dismissButton = { TextButton(onClick = { showTime = false }) { Text("Cancelar", color = com.portablenotes.domain.ui.AppColors.TextSecondary) } },
             text = { TimePicker(state = timeState) },
         )
     }
@@ -197,17 +193,17 @@ fun EventEditorSheet(
 
 @Composable
 private fun fieldColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-    unfocusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border,
-    focusedLabelColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-    cursorColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-    focusedContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
-    unfocusedContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+    focusedBorderColor = com.portablenotes.domain.ui.AppColors.Accent,
+    unfocusedBorderColor = com.portablenotes.domain.ui.AppColors.Border,
+    focusedLabelColor = com.portablenotes.domain.ui.AppColors.Accent,
+    cursorColor = com.portablenotes.domain.ui.AppColors.Accent,
+    focusedContainerColor = com.portablenotes.domain.ui.AppColors.Surface,
+    unfocusedContainerColor = com.portablenotes.domain.ui.AppColors.Surface,
 )
 
 @Composable
 private fun SectionLabel(text: String) {
-    Text(text, fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
+    Text(text, fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
 }
 
 @Composable
@@ -215,12 +211,12 @@ private fun PickerField(label: String, value: String, modifier: Modifier, onClic
     Surface(
         modifier = modifier.clickable(onClick = onClick),
         shape = RoundedCornerShape(16.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        color = com.portablenotes.domain.ui.AppColors.Surface,
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
     ) {
         Column(Modifier.padding(horizontal = 14.dp, vertical = 10.dp)) {
-            Text(label, fontSize = 11.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
-            Text(value, fontSize = 14.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, fontWeight = FontWeight.Medium, maxLines = 1)
+            Text(label, fontSize = 11.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
+            Text(value, fontSize = 14.sp, color = com.portablenotes.domain.ui.AppColors.TextPrimary, fontWeight = FontWeight.Medium, maxLines = 1)
         }
     }
 }

@@ -42,7 +42,7 @@ fun EventDetailSheet(
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
-        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background,
+        containerColor = com.portablenotes.domain.ui.AppColors.Background,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
     ) {
         Column(
@@ -55,11 +55,11 @@ fun EventDetailSheet(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Column {
-                Text(date.prettyLong(), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                Text(date.prettyLong(), fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
                 Text(
                     "${events.size} ${if (events.size == 1) "evento" else "eventos"}",
                     fontSize = 13.sp,
-                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                    color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                 )
             }
             events.forEach { event ->
@@ -85,9 +85,9 @@ private fun DetailCard(
 ) {
     Surface(
         shape = RoundedCornerShape(24.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        color = com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 1.dp,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -96,17 +96,17 @@ private fun DetailCard(
                     modifier = Modifier.weight(1f),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                    color = com.portablenotes.domain.ui.AppColors.TextPrimary,
                 )
                 if (event.done) {
                     Box(
-                        Modifier.clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+                        Modifier.clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.SurfaceMuted)
                             .padding(horizontal = 10.dp, vertical = 4.dp)
-                    ) { Text("Hecho", fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary) }
+                    ) { Text("Hecho", fontSize = 12.sp, color = com.portablenotes.domain.ui.AppColors.TextPrimary) }
                 }
             }
 
-            HorizontalDivider(color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border)
+            HorizontalDivider(color = com.portablenotes.domain.ui.AppColors.Border)
 
             InfoRow("Fecha") { ValueText(date.prettyLong()) }
             InfoRow("Hora") { ValueText(event.time.hhmm()) }
@@ -127,7 +127,7 @@ private fun DetailCard(
             if (event.notes.isNotBlank()) InfoRow("Notas") { ValueText(event.notes) }
 
             // Rutina anclada: se ve al abrir la descripción del evento
-            val routine = _root_ide_package_.com.portablenotes.domain.ui.routines.LocalRoutines.current.firstOrNull { it.id == event.routineId }
+            val routine = com.portablenotes.domain.ui.routines.LocalRoutines.current.firstOrNull { it.id == event.routineId }
             if (routine != null) AnchoredRoutine(routine)
 
             Spacer(Modifier.height(2.dp))
@@ -139,8 +139,8 @@ private fun DetailCard(
                         modifier = Modifier.weight(1f).height(42.dp),
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (event.done) _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted else _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-                            contentColor = if (event.done) _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary else _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent,
+                            containerColor = if (event.done) com.portablenotes.domain.ui.AppColors.SurfaceMuted else com.portablenotes.domain.ui.AppColors.Accent,
+                            contentColor = if (event.done) com.portablenotes.domain.ui.AppColors.TextPrimary else com.portablenotes.domain.ui.AppColors.OnAccent,
                         ),
                     ) {
                         Icon(Icons.Rounded.Check, contentDescription = null, modifier = Modifier.size(18.dp))
@@ -152,7 +152,7 @@ private fun DetailCard(
                         "Evento recurrente: los cambios aplican a toda la serie",
                         modifier = Modifier.weight(1f),
                         fontSize = 12.sp,
-                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                        color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     )
                 }
                 CircleIconButton(Icons.Rounded.Edit, "Editar", onEdit)
@@ -165,21 +165,21 @@ private fun DetailCard(
 @Composable
 private fun InfoRow(label: String, content: @Composable () -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Text(label, modifier = Modifier.width(92.dp), fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+        Text(label, modifier = Modifier.width(92.dp), fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
         content()
     }
 }
 
 @Composable
 private fun ValueText(text: String) {
-    Text(text, fontSize = 14.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, fontWeight = FontWeight.Medium)
+    Text(text, fontSize = 14.sp, color = com.portablenotes.domain.ui.AppColors.TextPrimary, fontWeight = FontWeight.Medium)
 }
 
 @Composable
 private fun AnchoredRoutine(routine: com.portablenotes.domain.ui.routines.Routine) {
     Surface(
         shape = RoundedCornerShape(18.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted,
+        color = com.portablenotes.domain.ui.AppColors.SurfaceMuted,
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -188,19 +188,19 @@ private fun AnchoredRoutine(routine: com.portablenotes.domain.ui.routines.Routin
                     Modifier
                         .size(36.dp)
                         .clip(RoundedCornerShape(12.dp))
-                        .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent.copy(alpha = 0.16f)),
+                        .background(com.portablenotes.domain.ui.AppColors.Accent.copy(alpha = 0.16f)),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(_root_ide_package_.com.portablenotes.domain.ui.routines.iconFor(routine.iconKey), contentDescription = null, tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size(20.dp))
+                    Icon(com.portablenotes.domain.ui.routines.iconFor(routine.iconKey), contentDescription = null, tint = com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size(20.dp))
                 }
                 Spacer(Modifier.width(10.dp))
                 Column {
-                    Text(routine.name, fontSize = 15.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
-                    Text("Rutina · ${routine.category.label}", fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+                    Text(routine.name, fontSize = 15.sp, fontWeight = FontWeight.Medium, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
+                    Text("Rutina · ${routine.category.label}", fontSize = 12.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             }
             if (routine.description.isNotBlank()) {
-                Text(routine.description, fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                Text(routine.description, fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
             }
         }
     }

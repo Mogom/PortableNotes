@@ -45,7 +45,7 @@ fun RoutinesScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(Brush.verticalGradient(listOf(_root_ide_package_.com.portablenotes.domain.ui.AppColors.BackgroundTop, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background)))
+            .background(Brush.verticalGradient(listOf(com.portablenotes.domain.ui.AppColors.BackgroundTop, com.portablenotes.domain.ui.AppColors.Background)))
     ) {
         Column(
             Modifier
@@ -56,19 +56,19 @@ fun RoutinesScreen(
         ) {
             Row(Modifier.fillMaxWidth().padding(horizontal = 4.dp), verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f)) {
-                    Text("Rutinas", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                    Text("Rutinas", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
                     Text(
                         if (all.isEmpty()) "Crea tu primera rutina" else "${all.size} ${if (all.size == 1) "rutina" else "rutinas"}",
                         fontSize = 14.sp,
-                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                        color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     )
                 }
                 Box(
-                    Modifier.size(42.dp).clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
+                    Modifier.size(42.dp).clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.Accent)
                         .clickable { editor = RoutineEditorRequest.New },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(Icons.Rounded.Add, "Nueva rutina", tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(22.dp))
+                    Icon(Icons.Rounded.Add, "Nueva rutina", tint = com.portablenotes.domain.ui.AppColors.OnAccent, modifier = Modifier.size(22.dp))
                 }
             }
 
@@ -80,16 +80,16 @@ fun RoutinesScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Chip("Todas", filter == null) { filter = null }
-                _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.entries.forEach { c -> Chip(c.label, filter == c) { filter = c } }
+                com.portablenotes.domain.ui.routines.RoutineCategory.entries.forEach { c -> Chip(c.label, filter == c) { filter = c } }
             }
 
             Spacer(Modifier.height(14.dp))
 
             if (visible.isEmpty()) {
                 Column(Modifier.fillMaxWidth().padding(top = 32.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Sin rutinas aquí", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary)
+                    Text("Sin rutinas aquí", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
                     Spacer(Modifier.height(4.dp))
-                    Text("Toca + para crear una", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+                    Text("Toca + para crear una", fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             } else {
                 LazyVerticalGrid(
@@ -125,9 +125,9 @@ private fun RoutineCard(routine: com.portablenotes.domain.ui.routines.Routine, l
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(22.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        color = com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 1.dp,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
         modifier = Modifier.fillMaxWidth(),
     ) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
@@ -137,27 +137,27 @@ private fun RoutineCard(routine: com.portablenotes.domain.ui.routines.Routine, l
                 routine.name,
                 fontSize = 15.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                color = com.portablenotes.domain.ui.AppColors.TextPrimary,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
             )
-            Text(routine.category.label, fontSize = 12.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent)
+            Text(routine.category.label, fontSize = 12.sp, color = com.portablenotes.domain.ui.AppColors.Accent)
             if (routine.description.isNotBlank()) {
                 Text(
                     routine.description,
                     fontSize = 12.sp,
-                    color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                    color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
             if (linked > 0) {
                 Spacer(Modifier.height(4.dp))
-                Box(Modifier.clip(CircleShape).background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {
+                Box(Modifier.clip(CircleShape).background(com.portablenotes.domain.ui.AppColors.SurfaceMuted).padding(horizontal = 8.dp, vertical = 3.dp)) {
                     Text(
                         "$linked ${if (linked == 1) "evento" else "eventos"}",
                         fontSize = 11.sp,
-                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                        color = com.portablenotes.domain.ui.AppColors.TextPrimary,
                     )
                 }
             }
@@ -171,10 +171,10 @@ private fun IconBadge(iconKey: String, size: Int) {
         Modifier
             .size(size.dp)
             .clip(RoundedCornerShape((size / 3).dp))
-            .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent.copy(alpha = 0.16f)),
+            .background(com.portablenotes.domain.ui.AppColors.Accent.copy(alpha = 0.16f)),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(_root_ide_package_.com.portablenotes.domain.ui.routines.iconFor(iconKey), contentDescription = null, tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size((size / 2).dp))
+        Icon(com.portablenotes.domain.ui.routines.iconFor(iconKey), contentDescription = null, tint = com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size((size / 2).dp))
     }
 }
 
@@ -183,7 +183,7 @@ private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .clip(CircleShape)
-            .background(if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+            .background(if (selected) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.SurfaceMuted)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 8.dp),
     ) {
@@ -191,7 +191,7 @@ private fun Chip(label: String, selected: Boolean, onClick: () -> Unit) {
             label,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+            color = if (selected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary,
         )
     }
 }
@@ -207,24 +207,24 @@ private fun RoutineEditorSheet(
 ) {
     var name by remember { mutableStateOf(routine?.name ?: "") }
     var description by remember { mutableStateOf(routine?.description ?: "") }
-    var category by remember { mutableStateOf(routine?.category ?: _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.Daily) }
-    var customIcon by remember { mutableStateOf(if (routine?.category == _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.Custom) routine.iconKey else "star") }
+    var category by remember { mutableStateOf(routine?.category ?: com.portablenotes.domain.ui.routines.RoutineCategory.Daily) }
+    var customIcon by remember { mutableStateOf(if (routine?.category == com.portablenotes.domain.ui.routines.RoutineCategory.Custom) routine.iconKey else "star") }
 
     val fieldColors = OutlinedTextFieldDefaults.colors(
-        focusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-        unfocusedBorderColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border,
-        focusedLabelColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-        cursorColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-        focusedContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
-        unfocusedContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
-        focusedTextColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
-        unfocusedTextColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary
+        focusedBorderColor = com.portablenotes.domain.ui.AppColors.Accent,
+        unfocusedBorderColor = com.portablenotes.domain.ui.AppColors.Border,
+        focusedLabelColor = com.portablenotes.domain.ui.AppColors.Accent,
+        cursorColor = com.portablenotes.domain.ui.AppColors.Accent,
+        focusedContainerColor = com.portablenotes.domain.ui.AppColors.Surface,
+        unfocusedContainerColor = com.portablenotes.domain.ui.AppColors.Surface,
+        focusedTextColor = com.portablenotes.domain.ui.AppColors.TextPrimary,
+        unfocusedTextColor = com.portablenotes.domain.ui.AppColors.TextSecondary
     )
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Background,
+        containerColor = com.portablenotes.domain.ui.AppColors.Background,
         shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
     ) {
         Column(
@@ -241,7 +241,7 @@ private fun RoutineEditorSheet(
                 if (routine == null) "Nueva rutina" else "Editar rutina",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.SemiBold,
-                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                color = com.portablenotes.domain.ui.AppColors.TextPrimary,
             )
 
             OutlinedTextField(
@@ -263,25 +263,25 @@ private fun RoutineEditorSheet(
                 colors = fieldColors,
             )
 
-            Text("Categoría", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
+            Text("Categoría", fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.entries.forEach { c -> Chip(c.label, c == category) { category = c } }
+                com.portablenotes.domain.ui.routines.RoutineCategory.entries.forEach { c -> Chip(c.label, c == category) { category = c } }
             }
 
-            if (category == _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.Custom) {
-                Text("Ícono", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
+            if (category == com.portablenotes.domain.ui.routines.RoutineCategory.Custom) {
+                Text("Ícono", fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary, fontWeight = FontWeight.Medium)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineIcons.all.forEach { (key, vector) ->
+                    com.portablenotes.domain.ui.routines.RoutineIcons.all.forEach { (key, vector) ->
                         val selected = key == customIcon
                         Box(
                             Modifier
                                 .size(46.dp)
                                 .clip(RoundedCornerShape(14.dp))
-                                .background(if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+                                .background(if (selected) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.SurfaceMuted)
                                 .clickable { customIcon = key },
                             contentAlignment = Alignment.Center,
                         ) {
-                            Icon(vector, null, tint = if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, modifier = Modifier.size(22.dp))
+                            Icon(vector, null, tint = if (selected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary, modifier = Modifier.size(22.dp))
                         }
                     }
                 }
@@ -289,7 +289,7 @@ private fun RoutineEditorSheet(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     IconBadge(category.defaultIconKey, size = 40)
                     Spacer(Modifier.width(10.dp))
-                    Text("Ícono asignado automáticamente", fontSize = 13.sp, color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+                    Text("Ícono asignado automáticamente", fontSize = 13.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             }
 
@@ -300,18 +300,18 @@ private fun RoutineEditorSheet(
                     onClick = onDismiss,
                     modifier = Modifier.weight(1f).height(48.dp),
                     shape = CircleShape,
-                    border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary),
+                    border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = com.portablenotes.domain.ui.AppColors.TextPrimary),
                 ) { Text("Cancelar") }
                 Button(
                     onClick = {
                         onSave(
-                            _root_ide_package_.com.portablenotes.domain.ui.routines.Routine(
+                            com.portablenotes.domain.ui.routines.Routine(
                                 id = routine?.id ?: java.util.UUID.randomUUID().toString(),
                                 name = name.trim(),
                                 description = description.trim(),
                                 category = category,
-                                iconKey = if (category == _root_ide_package_.com.portablenotes.domain.ui.routines.RoutineCategory.Custom) customIcon else category.defaultIconKey,
+                                iconKey = if (category == com.portablenotes.domain.ui.routines.RoutineCategory.Custom) customIcon else category.defaultIconKey,
                             )
                         )
                     },
@@ -319,17 +319,17 @@ private fun RoutineEditorSheet(
                     modifier = Modifier.weight(1f).height(48.dp),
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent,
-                        contentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent,
-                        disabledContainerColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted,
-                        disabledContentColor = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                        containerColor = com.portablenotes.domain.ui.AppColors.Accent,
+                        contentColor = com.portablenotes.domain.ui.AppColors.OnAccent,
+                        disabledContainerColor = com.portablenotes.domain.ui.AppColors.SurfaceMuted,
+                        disabledContentColor = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     ),
                 ) { Text("Guardar") }
             }
 
             if (onDelete != null) {
                 TextButton(onClick = onDelete, modifier = Modifier.fillMaxWidth()) {
-                    Text("Eliminar rutina", color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+                    Text("Eliminar rutina", color = com.portablenotes.domain.ui.AppColors.TextSecondary)
                 }
             }
         }

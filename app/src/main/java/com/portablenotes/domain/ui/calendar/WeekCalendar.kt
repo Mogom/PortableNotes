@@ -48,9 +48,9 @@ fun WeekCalendar(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(28.dp),
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        color = com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 3.dp,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(horizontal = 14.dp, vertical = 16.dp),
@@ -60,24 +60,24 @@ fun WeekCalendar(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Column(Modifier.weight(1f).padding(start = 6.dp)) {
                     Text(
-                        text = _root_ide_package_.com.portablenotes.domain.ui.calendar.monthNames[selectedDate.monthValue - 1],
+                        text = com.portablenotes.domain.ui.calendar.monthNames[selectedDate.monthValue - 1],
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+                        color = com.portablenotes.domain.ui.AppColors.TextPrimary,
                     )
                     Text(
                         text = selectedDate.year.toString(),
                         fontSize = 13.sp,
-                        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                        color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                     )
                 }
-                _root_ide_package_.com.portablenotes.domain.ui.calendar.ArrowButton(left = true) {
+                com.portablenotes.domain.ui.calendar.ArrowButton(left = true) {
                     onDateSelected(
                         selectedDate.minusDays(7)
                     )
                 }
                 Spacer(Modifier.width(8.dp))
-                _root_ide_package_.com.portablenotes.domain.ui.calendar.ArrowButton(left = false) {
+                com.portablenotes.domain.ui.calendar.ArrowButton(left = false) {
                     onDateSelected(
                         selectedDate.plusDays(7)
                     )
@@ -90,7 +90,7 @@ fun WeekCalendar(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 days.forEach { date ->
-                    _root_ide_package_.com.portablenotes.domain.ui.calendar.DayCell(
+                    com.portablenotes.domain.ui.calendar.DayCell(
                         date = date,
                         isSelected = date == selectedDate,
                         isToday = date == today,
@@ -104,7 +104,7 @@ fun WeekCalendar(
                 text = if (eventsCount == 0) "Sin eventos para este día"
                 else "$eventsCount ${if (eventsCount == 1) "evento" else "eventos"} para este día",
                 fontSize = 12.sp,
-                color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+                color = com.portablenotes.domain.ui.AppColors.TextSecondary,
                 modifier = Modifier.padding(start = 6.dp),
             )
         }
@@ -122,22 +122,22 @@ private fun DayCell(
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
-            .background(if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted.copy(alpha = 0.6f))
+            .background(if (isSelected) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.SurfaceMuted.copy(alpha = 0.6f))
             .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = _root_ide_package_.com.portablenotes.domain.ui.calendar.weekdayNames[date.dayOfWeek.value - 1],
+            text = com.portablenotes.domain.ui.calendar.weekdayNames[date.dayOfWeek.value - 1],
             fontSize = 11.sp,
-            color = if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent.copy(alpha = 0.7f) else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary,
+            color = if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent.copy(alpha = 0.7f) else com.portablenotes.domain.ui.AppColors.TextSecondary,
         )
         Spacer(Modifier.height(6.dp))
         Text(
             text = date.dayOfMonth.toString(),
             fontSize = 16.sp,
             fontWeight = FontWeight.SemiBold,
-            color = if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+            color = if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary,
         )
         Spacer(Modifier.height(6.dp))
         // Punto indicador de "hoy"
@@ -148,8 +148,8 @@ private fun DayCell(
                 .background(
                     when {
                         !isToday -> androidx.compose.ui.graphics.Color.Transparent
-                        isSelected -> _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent
-                        else -> _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent
+                        isSelected -> com.portablenotes.domain.ui.AppColors.OnAccent
+                        else -> com.portablenotes.domain.ui.AppColors.Accent
                     }
                 )
         )
@@ -162,14 +162,14 @@ private fun ArrowButton(left: Boolean, onClick: () -> Unit) {
         modifier = Modifier
             .size(34.dp)
             .clip(CircleShape)
-            .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+            .background(com.portablenotes.domain.ui.AppColors.SurfaceMuted)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = if (left) Icons.Rounded.KeyboardArrowLeft else Icons.Rounded.KeyboardArrowRight,
             contentDescription = if (left) "Semana anterior" else "Semana siguiente",
-            tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+            tint = com.portablenotes.domain.ui.AppColors.TextPrimary,
             modifier = Modifier.size(20.dp),
         )
     }

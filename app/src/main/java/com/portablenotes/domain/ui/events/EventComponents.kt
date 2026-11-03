@@ -31,7 +31,7 @@ fun PriorityBars(priority: Priority, modifier: Modifier = Modifier) {
                     .width(4.dp)
                     .height((5 + i * 4).dp)
                     .clip(RoundedCornerShape(2.dp))
-                    .background(if (i <= priority.level) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border)
+                    .background(if (i <= priority.level) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.Border)
             )
         }
     }
@@ -42,7 +42,7 @@ fun SelectChip(label: String, selected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .clip(CircleShape)
-            .background(if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+            .background(if (selected) com.portablenotes.domain.ui.AppColors.Accent else com.portablenotes.domain.ui.AppColors.SurfaceMuted)
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 8.dp),
     ) {
@@ -50,7 +50,7 @@ fun SelectChip(label: String, selected: Boolean, onClick: () -> Unit) {
             label,
             fontSize = 13.sp,
             fontWeight = FontWeight.Medium,
-            color = if (selected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary,
+            color = if (selected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary,
         )
     }
 }
@@ -61,10 +61,10 @@ fun CircleIconButton(icon: ImageVector, description: String, onClick: () -> Unit
         modifier = modifier
             .size(42.dp)
             .clip(CircleShape)
-            .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.SurfaceMuted)
+            .background(com.portablenotes.domain.ui.AppColors.SurfaceMuted)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(icon, contentDescription = description, tint = _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextPrimary, modifier = Modifier.size(20.dp))
+        Icon(icon, contentDescription = description, tint = com.portablenotes.domain.ui.AppColors.TextPrimary, modifier = Modifier.size(20.dp))
     }
 }

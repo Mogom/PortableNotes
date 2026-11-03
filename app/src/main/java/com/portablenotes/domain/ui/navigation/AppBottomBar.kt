@@ -34,11 +34,11 @@ fun AppBottomBar(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .background(_root_ide_package_.com.portablenotes.domain.ui.AppColors.Background),
+            .background(com.portablenotes.domain.ui.AppColors.Background),
         shape = CircleShape,
-        color = _root_ide_package_.com.portablenotes.domain.ui.AppColors.Surface,
+        color = com.portablenotes.domain.ui.AppColors.Surface,
         shadowElevation = 14.dp,
-        border = BorderStroke(1.dp, _root_ide_package_.com.portablenotes.domain.ui.AppColors.Border),
+        border = BorderStroke(1.dp, com.portablenotes.domain.ui.AppColors.Border),
     ) {
         Row(
             modifier = Modifier
@@ -55,8 +55,8 @@ fun AppBottomBar(
 
 @Composable
 private fun BarItem(tab: AppTab, isSelected: Boolean, onClick: () -> Unit) {
-    val background by animateColorAsState(if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.Accent else androidx.compose.ui.graphics.Color.Transparent)
-    val tint by animateColorAsState(if (isSelected) _root_ide_package_.com.portablenotes.domain.ui.AppColors.OnAccent else _root_ide_package_.com.portablenotes.domain.ui.AppColors.TextSecondary)
+    val background by animateColorAsState(if (isSelected) com.portablenotes.domain.ui.AppColors.Accent else androidx.compose.ui.graphics.Color.Transparent)
+    val tint by animateColorAsState(if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextSecondary)
 
     Row(
         modifier = Modifier
