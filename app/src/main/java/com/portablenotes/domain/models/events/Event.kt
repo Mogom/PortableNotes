@@ -1,4 +1,4 @@
-package com.portablenotes.domain.models
+package com.portablenotes.domain.models.events
 
 import java.time.LocalDate
 import java.time.LocalTime

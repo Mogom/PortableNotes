@@ -24,11 +24,11 @@ import androidx.navigation.compose.rememberNavController
 import com.portablenotes.domain.models.auth.AuthViewModel
 import com.portablenotes.domain.models.auth.GoogleAuthClient
 import com.portablenotes.data.remote.CloudStore                       // ← ajusta al paquete donde lo pusiste
-import com.portablenotes.domain.models.Priority
-import com.portablenotes.domain.models.hhmm
+import com.portablenotes.domain.models.events.EventsViewModel
+import com.portablenotes.domain.models.events.Priority
+import com.portablenotes.domain.models.events.hhmm
 import com.portablenotes.domain.ui.AppColors
 import com.portablenotes.domain.ui.AppTheme
-import com.portablenotes.domain.models.EventsState
 import com.portablenotes.domain.ui.home.DayEvent
 import com.portablenotes.domain.ui.navigation.AppBottomBar
 import com.portablenotes.domain.ui.navigation.AppTab
@@ -72,7 +72,7 @@ fun App() {
     val authUi by authVm.ui.collectAsState()
 
     // ----- Estados compartidos (arrancan vacíos: los llena Firestore al iniciar sesión) -----
-    val eventsState = remember { EventsState() }
+    val eventsState = remember { EventsViewModel() }
     val routinesState = remember { RoutinesState() }
     val tasksState = remember { TasksState() }
     val cloud = remember { CloudStore() }
@@ -221,7 +221,7 @@ fun App() {
                         )
                     }
                     composable(AppTab.Events.route, enterTransition = slideLeft) {
-                        EventsScreen(state = eventsState, today = today)
+                        EventsScreen(eventsState, today = today)
                     }
                     composable(AppTab.Routines.route, enterTransition = slideLeft) {
                         RoutinesScreen(

@@ -21,7 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.portablenotes.domain.models.monthName
+import com.portablenotes.domain.models.events.monthName
 import java.time.LocalDate
 import java.time.YearMonth
 

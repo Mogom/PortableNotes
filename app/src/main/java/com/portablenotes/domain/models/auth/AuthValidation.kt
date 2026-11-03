@@ -7,7 +7,7 @@ package com.portablenotes.domain.models.auth
  */
 object AuthValidation {
     /** Firebase Authentication exige mínimo 6 caracteres. */
-    const val MIN_PASSWORD = 6
+    const val MIN_PASSWORD = 8
 
     private val EMAIL = Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
 

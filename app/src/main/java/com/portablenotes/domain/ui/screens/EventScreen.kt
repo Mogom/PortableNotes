@@ -26,17 +26,16 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.portablenotes.domain.models.Event
-import com.portablenotes.domain.models.EventsState
-import com.portablenotes.domain.models.Repeat
-import com.portablenotes.domain.models.daysWithEvents
-import com.portablenotes.domain.models.hhmm
-import com.portablenotes.domain.models.on
-import com.portablenotes.domain.models.prettyLong
+import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.models.events.EventsViewModel
+import com.portablenotes.domain.models.events.Repeat
+import com.portablenotes.domain.models.events.daysWithEvents
+import com.portablenotes.domain.models.events.hhmm
+import com.portablenotes.domain.models.events.on
+import com.portablenotes.domain.models.events.prettyLong
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -63,15 +62,10 @@ private fun buildRows(month: YearMonth, all: List<Event>): List<ListRow> = build
     }
 }
 
-/**
- * Pantalla de eventos:
- *  - Calendario mensual = 50 % de la altura de la pantalla.
- *  - Debajo, eventos del mes agrupados por fecha y ordenados por hora.
- *  - Tocar un día con punto abre su detalle; "+" crea un evento.
- */
+// * Pantalla de eventos
 @Composable
 fun EventsScreen(
-    state: EventsState,
+    viewModel: EventsViewModel,
     today: LocalDate,
     modifier: Modifier = Modifier
 ) {
@@ -80,7 +74,7 @@ fun EventsScreen(
     var detail by remember { mutableStateOf<DetailRequest?>(null) }
     var editor by remember { mutableStateOf<EditorRequest?>(null) }
 
-    val all = state.events.toList()
+    val all = viewModel.events
     val dots = remember(month, all) { all.daysWithEvents(month) }
     val rows = remember(month, all) { buildRows(month, all) }
     val listState = rememberLazyListState()
@@ -152,7 +146,7 @@ fun EventsScreen(
                 listState = listState,
                 bottomPadding = barSpace,
                 onEventClick = { e, d -> detail = DetailRequest(d, e.id) },
-                onToggleDone = { state.toggleDone(it.id) },
+                onToggleDone = { viewModel.toggleDone(it.id) },
                 modifier = Modifier.weight(1f),
             )
         }
@@ -165,9 +159,9 @@ fun EventsScreen(
             date = req.date,
             events = evs,
             onDismiss = { detail = null },
-            onToggleDone = { state.toggleDone(it.id) },
+            onToggleDone = { viewModel.toggleDone(it.id) },
             onEdit = { detail = null; editor = EditorRequest.Edit(it) },
-            onDelete = { state.delete(it.id) },
+            onDelete = { viewModel.delete(it.id) },
         )
     }
 
@@ -175,7 +169,7 @@ fun EventsScreen(
         _root_ide_package_.com.portablenotes.domain.ui.events.EventEditorSheet(
             event = (req as? EditorRequest.Edit)?.event,
             initialDate = (req as? EditorRequest.New)?.date ?: today,
-            onSave = { state.upsert(it); editor = null },
+            onSave = { viewModel.upsert(it); editor = null },
             onDismiss = { editor = null },
         )
     }
@@ -306,7 +300,6 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
 @Composable
 private fun DoneCheck(done: Boolean, onClick: () -> Unit) {
     Box(

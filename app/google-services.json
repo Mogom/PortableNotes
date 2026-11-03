@@ -14,6 +14,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "576466062528-080101ih7je8jvn8albqtj64qos14h9n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portablenotes",
+            "certificate_hash": "eb371dc4b89dad6851634229b7c84d30f38bbdb4"
+          }
+        },
+        {
+          "client_id": "576466062528-a1o24okioujoc5hrnercdteri44n5v67.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portablenotes",
+            "certificate_hash": "03349efb217c6ced1aa738dfe76c17cfdc110ebd"
+          }
+        },
+        {
           "client_id": "576466062528-eo8klk0gs0095v0eosa1nq34d2c6hgpg.apps.googleusercontent.com",
           "client_type": 3
         }

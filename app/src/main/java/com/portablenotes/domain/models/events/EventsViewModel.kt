@@ -1,14 +1,14 @@
-package com.portablenotes.domain.models
+package com.portablenotes.domain.models.events
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.compose.runtime.mutableStateListOf
+import com.portablenotes.data.repository.EventRepository
 import java.time.LocalDate
 
-/**
- * Estado de eventos. Es un holder simple; puedes moverlo a un ViewModel
- * (StateFlow + Room) sin cambiar la UI.
- */
-class EventsState(initial: List<Event> = emptyList()) {
-    val events = mutableStateListOf<Event>().apply { addAll(initial) }
+class EventsViewModel : ViewModel() {
+    private val repository = EventRepository()
+    val events = mutableStateListOf<Event>()
 
     fun occurrencesOn(day: LocalDate): List<Event> = events.toList().on(day)
 
@@ -27,5 +27,12 @@ class EventsState(initial: List<Event> = emptyList()) {
         if (i < 0) return
         val e = events[i]
         if (e.repeat == Repeat.None) events[i] = e.copy(done = !e.done)
+    }
+
+    init {
+        repository.startSync(
+            scope = viewModelScope,
+            events = events
+        )
     }
 }

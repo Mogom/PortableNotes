@@ -20,10 +20,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.portablenotes.domain.models.Event
-import com.portablenotes.domain.models.Repeat
-import com.portablenotes.domain.models.hhmm
-import com.portablenotes.domain.models.prettyLong
+import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.models.events.Repeat
+import com.portablenotes.domain.models.events.hhmm
+import com.portablenotes.domain.models.events.prettyLong
 import java.time.LocalDate
 
 /** Hoja con la información completa de los eventos de un día (o de un evento concreto). */

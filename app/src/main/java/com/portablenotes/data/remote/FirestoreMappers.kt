@@ -1,9 +1,9 @@
 package com.portablenotes.data.remote
 
-import com.portablenotes.domain.models.Event
-import com.portablenotes.domain.models.EventType
-import com.portablenotes.domain.models.Priority
-import com.portablenotes.domain.models.Repeat
+import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.models.events.EventType
+import com.portablenotes.domain.models.events.Priority
+import com.portablenotes.domain.models.events.Repeat
 import com.portablenotes.domain.ui.routines.Routine
 import com.portablenotes.domain.ui.routines.RoutineCategory
 import com.portablenotes.domain.ui.tasks.Task
@@ -38,8 +38,8 @@ fun DocumentSnapshot.toEvent(): Event? = runCatching {
     Event(
         id = id,
         title = getString("title") ?: "",
-        date = LocalDate.parse(getString("date")),
-        time = LocalTime.parse(getString("time")),
+        date = LocalDate.parse(getString("date-time")),
+        time = LocalTime.parse(getString("date-time")),
         repeat = enumOr(getString("repeat"), Repeat.None),
         type = enumOr(getString("type"), EventType.Other),
         priority = enumOr(getString("priority"), Priority.Medium),

@@ -1,7 +1,7 @@
 package com.portablenotes.data.remote
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
-import com.portablenotes.domain.models.Event
+import com.portablenotes.domain.models.events.Event
 import com.portablenotes.domain.ui.routines.Routine
 import com.portablenotes.domain.ui.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +20,7 @@ import kotlinx.coroutines.tasks.await
  */
 class CloudStore {
     private val auth = FirebaseAuth.getInstance()
-    private val db = FirebaseFirestore.getInstance()   // caché sin conexión activada por defecto
+    private val db = FirebaseFirestore.getInstance("xtrike-me")   // caché sin conexión activada por defecto
     private val syncs = mutableListOf<FirestoreSync<*>>()
 
     /** Entra de forma anónima si no hay sesión. Más adelante puedes vincular email o Google. */
