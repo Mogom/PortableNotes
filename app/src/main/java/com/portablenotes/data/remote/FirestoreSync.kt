@@ -35,7 +35,10 @@ class FirestoreSync<T : Any>(
     /** Llamar desde el hilo principal (por ejemplo dentro de un LaunchedEffect). */
     fun start(scope: CoroutineScope, list: SnapshotStateList<T>) {
         registration = query.addSnapshotListener { snap, error ->
-            if (error != null || snap == null) return@addSnapshotListener
+            if (error != null || snap == null) {
+                android.util.Log.e("FirestoreSync", "Error al leer ${collection.path}", error)
+                return@addSnapshotListener
+            }
             val items = snap.documents.mapNotNull(fromDoc)
             cloud = items.associateBy(idOf)           // primero la nube...
             if (list.toList() != items) {             // ...luego la lista local

@@ -9,10 +9,18 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,19 +41,31 @@ import com.portablenotes.domain.ui.home.DayEvent
 import com.portablenotes.domain.ui.navigation.AppBottomBar
 import com.portablenotes.domain.ui.navigation.AppTab
 import com.portablenotes.domain.ui.navigation.AuthRoutes
+import com.portablenotes.domain.ui.navigation.OnboardingRoutes
 import com.portablenotes.domain.ui.routines.LocalRoutines
 import com.portablenotes.domain.ui.routines.RoutinesState
 import com.portablenotes.domain.ui.screens.EventsScreen
 import com.portablenotes.domain.ui.screens.ForgotPasswordScreen
 import com.portablenotes.domain.ui.screens.HomeScreen
+import com.portablenotes.domain.ui.screens.NotificationSettingsSheet
+import com.portablenotes.domain.ui.events.icon
+import com.portablenotes.domain.ui.screens.PermissionsScreen
 import com.portablenotes.domain.ui.screens.LoginScreen
 import com.portablenotes.domain.ui.screens.RegisterScreen
 import com.portablenotes.domain.ui.screens.RoutinesScreen
 import com.portablenotes.domain.ui.screens.TasksScreen
 import com.portablenotes.domain.ui.tasks.TasksState
+import androidx.compose.runtime.snapshotFlow
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.awaitCancellation
 import kotlinx.coroutines.launch
+import com.portablenotes.notifications.EventAlarmScheduler
+import com.portablenotes.notifications.MotivationScheduler
+import com.portablenotes.notifications.NotificationChannels
+import com.portablenotes.notifications.NotificationPrefs
 import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
@@ -55,16 +75,71 @@ class MainActivity : ComponentActivity() {
             statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
         )
+        NotificationChannels.ensure(this)
+        MotivationScheduler.sync(this)          // mensajes motivadores (2 al día)
         setContent { App() }
     }
 }
 
-private val slideLeft: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition =
-    { slideIntoContainer(AnimatedContentTransitionScope.SlideDirection.Left) }
+/**
+ * Gesto de deslizar entre secciones. true: deslizar a la DERECHA lleva a la sección de la derecha
+ * (Inicio → Eventos → Rutinas → Tareas) y a la IZQUIERDA a la anterior. false: al revés (como un carrusel).
+ */
+private const val SWIPE_RIGHT_GOES_NEXT = false
+private val SWIPE_THRESHOLD = 72.dp
+
+/** Primer nombre de la cuenta; si no hay, la parte del correo antes de la @; si tampoco, vacío. */
+private fun firstNameOf(user: FirebaseUser?): String {
+    val name = user?.displayName?.trim().orEmpty().substringBefore(' ')
+    if (name.isNotBlank()) return name
+    return user?.email?.substringBefore('@').orEmpty()
+}
+
+// ---------- Transiciones de navegación (rápidas: ~200 ms) ----------
+private const val NAV_MS = 220
+private const val FADE_MS = 140
+
+private fun tabIndex(route: String?) = AppTab.entries.indexOfFirst { it.route == route }
+
+/** Entre pestañas desliza según su posición en la barra; en el resto de pantallas, hacia la izquierda. */
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.direction(): AnimatedContentTransitionScope.SlideDirection {
+    val from = tabIndex(initialState.destination.route)
+    val to = tabIndex(targetState.destination.route)
+    return if (from >= 0 && to >= 0 && to < from) {
+        AnimatedContentTransitionScope.SlideDirection.Right
+    } else {
+        AnimatedContentTransitionScope.SlideDirection.Left
+    }
+}
+
+private val navEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
+    slideIntoContainer(direction(), tween(NAV_MS, easing = FastOutSlowInEasing), initialOffset = { it / 5 }) +
+        fadeIn(tween(NAV_MS))
+}
+private val navExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
+    slideOutOfContainer(direction(), tween(NAV_MS, easing = FastOutSlowInEasing), targetOffset = { it / 5 }) +
+        fadeOut(tween(FADE_MS))
+}
+private val navPopEnter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> EnterTransition = {
+    slideIntoContainer(
+        AnimatedContentTransitionScope.SlideDirection.Right,
+        tween(NAV_MS, easing = FastOutSlowInEasing),
+        initialOffset = { it / 5 },
+    ) + fadeIn(tween(NAV_MS))
+}
+private val navPopExit: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
+    slideOutOfContainer(
+        AnimatedContentTransitionScope.SlideDirection.Right,
+        tween(NAV_MS, easing = FastOutSlowInEasing),
+        targetOffset = { it / 5 },
+    ) + fadeOut(tween(FADE_MS))
+}
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun App() {
     val today = remember { LocalDate.now() }
+    val context = LocalContext.current
 
     // ----- Autenticación -----
     val authVm: AuthViewModel = viewModel()
@@ -83,11 +158,18 @@ fun App() {
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = AppTab.entries.any { it.route == currentRoute }   // oculta la barra en Login/Registro
     val selectedTab = AppTab.entries.find { it.route == currentRoute } ?: AppTab.Home
-    val startDestination = remember { if (authVm.uid.value != null) AppTab.Home.route else AuthRoutes.Login }
+    val startDestination = remember {
+        when {
+            !NotificationPrefs.permissionsShown(context) -> OnboardingRoutes.Permissions   // primer arranque
+            authVm.uid.value != null -> AppTab.Home.route
+            else -> AuthRoutes.Login
+        }
+    }
 
     // Al iniciar o cerrar sesión, lleva al usuario a la pantalla correcta
     LaunchedEffect(uid) {
         val route = navController.currentBackStackEntry?.destination?.route ?: return@LaunchedEffect
+        if (route == OnboardingRoutes.Permissions) return@LaunchedEffect   // primero los permisos
         val onAuthScreen = route in AuthRoutes.all
         if (uid != null && onAuthScreen) {
             navController.navigate(AppTab.Home.route) { popUpTo(0) { inclusive = true } }
@@ -114,8 +196,21 @@ fun App() {
         }
     }
 
+    // Mantiene programados los recordatorios y alarmas de los eventos
+    LaunchedEffect(uid) {
+        if (uid == null) {
+            EventAlarmScheduler.clearAll(context)
+            return@LaunchedEffect
+        }
+        var loadedOnce = false   // evita borrar alarmas con la lista vacía previa a la sincronización
+        snapshotFlow { eventsState.events.toList() }.collect { list ->
+            if (list.isEmpty() && !loadedOnce) return@collect
+            loadedOnce = true
+            EventAlarmScheduler.sync(context, list)
+        }
+    }
+
     // Google: selector de cuentas → idToken → Firebase
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val onGoogleSignIn: () -> Unit = {
         scope.launch {
@@ -130,7 +225,35 @@ fun App() {
         }
     }
 
+    // Cambio de pestaña, usado por la barra inferior y por el gesto de deslizar
+    val navigateToTab: (AppTab) -> Unit = { tab ->
+        if (tab.route != currentRoute) {
+            navController.navigate(tab.route) {
+                popUpTo(AppTab.Home.route) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+        }
+    }
+
+    var showNotificationSettings by remember { mutableStateOf(false) }
+
+    // Nombre de pila de la cuenta (el que se escribió al registrarse o el de Google)
+    var userName by remember(uid) { mutableStateOf(firstNameOf(FirebaseAuth.getInstance().currentUser)) }
+    LaunchedEffect(uid) {
+        val user = FirebaseAuth.getInstance().currentUser ?: return@LaunchedEffect
+        try {
+            user.reload().await()          // al registrarse, el nombre se guarda un instante después de crear la cuenta
+            userName = firstNameOf(FirebaseAuth.getInstance().currentUser)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) { /* sin conexión: se queda con el nombre local */ }
+    }
+
     AppTheme {
+        if (showNotificationSettings) {
+            NotificationSettingsSheet(onDismiss = { showNotificationSettings = false })
+        }
         CompositionLocalProvider(LocalRoutines provides routinesState.routines.toList()) {
             Scaffold(
                 containerColor = AppColors.Background,
@@ -138,15 +261,7 @@ fun App() {
                     if (showBottomBar) {
                         AppBottomBar(
                             selected = selectedTab,
-                            onSelect = { tab ->
-                                if (tab.route != currentRoute) {
-                                    navController.navigate(tab.route) {
-                                        popUpTo(navController.graph.startDestinationId) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            },
+                            onSelect = navigateToTab,
                         )
                     }
                 },
@@ -154,10 +269,46 @@ fun App() {
                 NavHost(
                     navController = navController,
                     startDestination = startDestination,
-                    modifier = Modifier.padding(innerPadding),
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .pointerInput(currentRoute) {
+                            // Solo en las 4 secciones principales (no en Login/Registro/Permisos).
+                            // Los hijos que ya consumen el arrastre horizontal (listas de chips, etc.) tienen prioridad.
+                            val index = AppTab.entries.indexOfFirst { it.route == currentRoute }
+                            if (index < 0) return@pointerInput
+                            val threshold = SWIPE_THRESHOLD.toPx()
+                            var total = 0f
+                            detectHorizontalDragGestures(
+                                onDragStart = { total = 0f },
+                                onDragCancel = { total = 0f },
+                                onHorizontalDrag = { _, dragAmount -> total += dragAmount },
+                                onDragEnd = {
+                                    if (kotlin.math.abs(total) >= threshold) {
+                                        val toRight = total > 0
+                                        val step = if (toRight == SWIPE_RIGHT_GOES_NEXT) 1 else -1
+                                        AppTab.entries.getOrNull(index + step)?.let(navigateToTab)
+                                    }
+                                },
+                            )
+                        },
+                    enterTransition = navEnter,
+                    exitTransition = navExit,
+                    popEnterTransition = navPopEnter,
+                    popExitTransition = navPopExit,
                 ) {
+                    // ---------- Primer arranque ----------
+                    composable(OnboardingRoutes.Permissions) {
+                        PermissionsScreen(
+                            onFinished = {
+                                NotificationPrefs.setPermissionsShown(context)
+                                val next = if (authVm.uid.value != null) AppTab.Home.route else AuthRoutes.Login
+                                navController.navigate(next) { popUpTo(0) { inclusive = true } }
+                            },
+                        )
+                    }
+
                     // ---------- Acceso ----------
-                    composable(AuthRoutes.Login, enterTransition = slideLeft) {
+                    composable(AuthRoutes.Login) {
                         LoginScreen(
                             onLogin = { email, password -> authVm.login(email, password) },
                             onGoogleSignIn = onGoogleSignIn,
@@ -174,7 +325,7 @@ fun App() {
                         )
                     }
                     // parámetros análogos a LoginScreen; ajústalos a tus firmas reales.
-                    composable(AuthRoutes.Register, enterTransition = slideLeft) {
+                    composable(AuthRoutes.Register) {
                         RegisterScreen(
                             onRegister = { name, email, password -> authVm.register(email, password, name) },
                             onGoogleSignIn = onGoogleSignIn,
@@ -186,7 +337,7 @@ fun App() {
                             errorMessage = authUi.errorMessage,
                         )
                     }
-                    composable(AuthRoutes.ForgotPassword, enterTransition = slideLeft) {
+                    composable(AuthRoutes.ForgotPassword) {
                         ForgotPasswordScreen(
                             onSendResetLink = { email -> authVm.sendPasswordReset(email) },
                             onBackToLogin = {
@@ -200,9 +351,11 @@ fun App() {
                     }
 
                     // ---------- App ----------
-                    composable(AppTab.Home.route, enterTransition = slideLeft) {
+                    composable(AppTab.Home.route) {
                         HomeScreen(
                             today = today,
+                            onOpenSettings = { showNotificationSettings = true },
+                            userName = userName,
                             eventsFor = { date ->
                                 eventsState.occurrencesOn(date).map {
                                     DayEvent(
@@ -210,6 +363,7 @@ fun App() {
                                         title = it.title,
                                         time = it.time.hhmm(),
                                         place = it.type.label,
+                                        icon = it.type.icon,
                                         tint = when (it.priority) {
                                             Priority.High -> AppColors.Tint2
                                             Priority.Medium -> AppColors.Tint1
@@ -220,16 +374,16 @@ fun App() {
                             },
                         )
                     }
-                    composable(AppTab.Events.route, enterTransition = slideLeft) {
+                    composable(AppTab.Events.route) {
                         EventsScreen(eventsState, today = today)
                     }
-                    composable(AppTab.Routines.route, enterTransition = slideLeft) {
+                    composable(AppTab.Routines.route) {
                         RoutinesScreen(
                             state = routinesState,
                             linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } },
                         )
                     }
-                    composable(AppTab.Tasks.route, enterTransition = slideLeft) {
+                    composable(AppTab.Tasks.route) {
                         TasksScreen(tasksState)
                     }
                 }

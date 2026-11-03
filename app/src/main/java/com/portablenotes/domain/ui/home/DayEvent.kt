@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -30,6 +31,7 @@ data class DayEvent(
     val time: String,
     val place: String? = null,
     val tint: Color = com.portablenotes.domain.ui.AppColors.Tint1,
+    val icon: ImageVector = Icons.Rounded.Notifications,   // ícono de la categoría del evento
 )
 
 /** "Barra de notificaciones" con los eventos del día seleccionado. */
@@ -97,7 +99,7 @@ private fun EventCard(event: DayEvent) {
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
-                    Icons.Rounded.Notifications,
+                    event.icon,
                     contentDescription = null,
                     tint = com.portablenotes.domain.ui.AppColors.TextPrimary,
                     modifier = Modifier.size(20.dp),

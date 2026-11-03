@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import com.portablenotes.domain.ui.events.icon
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Refresh
@@ -171,6 +172,7 @@ fun EventsScreen(
             initialDate = (req as? EditorRequest.New)?.date ?: today,
             onSave = { viewModel.upsert(it); editor = null },
             onDismiss = { editor = null },
+            existingEvents = viewModel.events.toList(),
         )
     }
 }
@@ -266,6 +268,14 @@ private fun EventCard(event: Event, onClick: () -> Unit, onToggleDone: () -> Uni
                 }
             }
 
+            Spacer(Modifier.width(12.dp))
+
+            Box(
+                Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(com.portablenotes.domain.ui.AppColors.Tint2),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(event.type.icon, contentDescription = event.type.label, tint = com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size(20.dp))
+            }
             Spacer(Modifier.width(12.dp))
 
             Column(Modifier.weight(1f)) {

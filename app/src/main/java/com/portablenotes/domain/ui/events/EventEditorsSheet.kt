@@ -1,6 +1,11 @@
 package com.portablenotes.domain.ui.events
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Warning
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -14,7 +19,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.models.events.Event
+import com.portablenotes.domain.models.events.EventConflict
 import com.portablenotes.domain.models.events.EventType
+import com.portablenotes.domain.models.events.findConflicts
 import com.portablenotes.domain.models.events.Priority
 import com.portablenotes.domain.models.events.Repeat
 import com.portablenotes.domain.models.events.hhmm
@@ -33,6 +40,7 @@ fun EventEditorSheet(
     initialDate: LocalDate,
     onSave: (Event) -> Unit,
     onDismiss: () -> Unit,
+    existingEvents: List<Event> = emptyList(),   // para avisar de choques de horario
 ) {
     var title by remember { mutableStateOf(event?.title ?: "") }
     var notes by remember { mutableStateOf(event?.notes ?: "") }
@@ -45,6 +53,23 @@ fun EventEditorSheet(
     var routineId by remember { mutableStateOf(event?.routineId) }
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
+
+    // ----- Choques de horario -----
+    val draftId = remember { event?.id ?: UUID.randomUUID().toString() }
+    fun draft() = Event(
+        id = draftId,
+        title = title.trim(),
+        date = date,
+        time = time,
+        repeat = repeat,
+        type = type,
+        priority = priority,
+        notes = notes.trim(),
+        done = if (repeat == Repeat.None) event?.done ?: false else false,
+        routineId = routineId,
+    )
+    val conflicts = remember(date, time, repeat, existingEvents) { findConflicts(draft(), existingEvents) }
+    var showConflict by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -92,6 +117,7 @@ fun EventEditorSheet(
                 PickerField("Fecha", date.prettyLong(), Modifier.weight(1.6f)) { showDate = true }
                 PickerField("Hora", time.hhmm(), Modifier.weight(1f)) { showTime = true }
             }
+            if (conflicts.isNotEmpty()) ConflictWarning(conflicts)
 
             SectionLabel("Se repite")
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -100,7 +126,7 @@ fun EventEditorSheet(
 
             SectionLabel("Tipo de evento")
             FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                EventType.entries.forEach { SelectChip(it.label, it == type) { type = it } }
+                EventType.entries.forEach { SelectChip(it.label, it == type, icon = it.icon) { type = it } }
             }
 
             SectionLabel("Prioridad")
@@ -127,22 +153,7 @@ fun EventEditorSheet(
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = com.portablenotes.domain.ui.AppColors.TextPrimary),
                 ) { Text("Cancelar") }
                 Button(
-                    onClick = {
-                        onSave(
-                            Event(
-                                id = event?.id ?: UUID.randomUUID().toString(),
-                                title = title.trim(),
-                                date = date,
-                                time = time,
-                                repeat = repeat,
-                                type = type,
-                                priority = priority,
-                                notes = notes.trim(),
-                                done = if (repeat == Repeat.None) event?.done ?: false else false,
-                                routineId = routineId,
-                            )
-                        )
-                    },
+                    onClick = { if (conflicts.isNotEmpty()) showConflict = true else onSave(draft()) },
                     enabled = title.isNotBlank(),
                     modifier = Modifier.weight(1f).height(48.dp),
                     shape = CircleShape,
@@ -155,6 +166,30 @@ fun EventEditorSheet(
                 ) { Text("Guardar") }
             }
         }
+    }
+
+    if (showConflict) {
+        AlertDialog(
+            onDismissRequest = { showConflict = false },
+            containerColor = com.portablenotes.domain.ui.AppColors.Surface,
+            title = { Text("Choque de horario", color = com.portablenotes.domain.ui.AppColors.TextPrimary) },
+            text = {
+                Text(
+                    conflictLines(conflicts).joinToString("\n\n") + "\n\n¿Quieres guardarlo de todas formas?",
+                    color = com.portablenotes.domain.ui.AppColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { showConflict = false; onSave(draft()) }) {
+                    Text("Guardar de todas formas", color = com.portablenotes.domain.ui.AppColors.Accent)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showConflict = false }) {
+                    Text("Cambiar hora", color = com.portablenotes.domain.ui.AppColors.TextPrimary)
+                }
+            },
+        )
     }
 
     if (showDate) {
@@ -188,6 +223,33 @@ fun EventEditorSheet(
             dismissButton = { TextButton(onClick = { showTime = false }) { Text("Cancelar", color = com.portablenotes.domain.ui.AppColors.TextSecondary) } },
             text = { TimePicker(state = timeState) },
         )
+    }
+}
+
+private val WarningColor = Color(0xFFFFB84D)
+
+/** "Choca con «Reunión» el Lunes 3 de noviembre a las 09:00" */
+private fun conflictLines(conflicts: List<EventConflict>): List<String> =
+    conflicts.take(3).map { "Choca con «${it.other.title}» el ${it.date.prettyLong()} a las ${it.other.time.hhmm()}" } +
+        if (conflicts.size > 3) listOf("y ${conflicts.size - 3} más") else emptyList()
+
+@Composable
+private fun ConflictWarning(conflicts: List<EventConflict>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(WarningColor.copy(alpha = 0.12f), RoundedCornerShape(14.dp))
+            .padding(12.dp),
+        verticalAlignment = Alignment.Top,
+    ) {
+        Icon(Icons.Rounded.Warning, contentDescription = null, tint = WarningColor, modifier = Modifier.size(18.dp))
+        Spacer(Modifier.width(8.dp))
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text("Choque de horario", fontSize = 13.sp, fontWeight = FontWeight.SemiBold, color = WarningColor)
+            conflictLines(conflicts).forEach {
+                Text(it, fontSize = 12.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
+            }
+        }
     }
 }
 

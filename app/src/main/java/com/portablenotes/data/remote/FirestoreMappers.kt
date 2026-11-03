@@ -9,6 +9,8 @@ import com.portablenotes.domain.ui.routines.RoutineCategory
 import com.portablenotes.domain.ui.tasks.Task
 import com.google.firebase.firestore.DocumentSnapshot
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.LocalTime
 
 /*
@@ -34,12 +36,29 @@ fun Event.toFirestore(): Map<String, Any?> = mapOf(
     "routineId" to routineId,
 )
 
+/**
+ * Fecha y hora del evento. Lo normal es "date" + "time" (lo que escribe toFirestore),
+ * pero también acepta un único campo "date-time" (texto ISO o Timestamp de Firestore).
+ */
+private fun DocumentSnapshot.eventDateTime(): LocalDateTime {
+    val date = getString("date")
+    val time = getString("time")
+    if (date != null && time != null) return LocalDateTime.of(LocalDate.parse(date), LocalTime.parse(time))
+
+    return when (val raw = get("date-time")) {
+        is com.google.firebase.Timestamp ->
+            LocalDateTime.ofInstant(raw.toDate().toInstant(), ZoneId.systemDefault())
+        is String -> LocalDateTime.parse(raw)
+        else -> error("El evento no tiene fecha: faltan \"date\"/\"time\" o \"date-time\"")
+    }
+}
+
 fun DocumentSnapshot.toEvent(): Event? = runCatching {
     Event(
         id = id,
         title = getString("title") ?: "",
-        date = LocalDate.parse(getString("date-time")),
-        time = LocalTime.parse(getString("date-time")),
+        date = eventDateTime().toLocalDate(),
+        time = eventDateTime().toLocalTime(),
         repeat = enumOr(getString("repeat"), Repeat.None),
         type = enumOr(getString("type"), EventType.Other),
         priority = enumOr(getString("priority"), Priority.Medium),
@@ -47,7 +66,7 @@ fun DocumentSnapshot.toEvent(): Event? = runCatching {
         done = getBoolean("done") ?: false,
         routineId = getString("routineId"),
     )
-}.getOrNull()
+}.onFailure { android.util.Log.e("Firestore", "No se pudo leer el evento $id", it) }.getOrNull()
 
 // ---------------- Tareas ----------------
 

@@ -91,6 +91,13 @@ private fun DetailCard(
     ) {
         Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
+                Box(
+                    Modifier.size(40.dp).clip(RoundedCornerShape(12.dp)).background(com.portablenotes.domain.ui.AppColors.Tint2),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(event.type.icon, contentDescription = event.type.label, tint = com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size(22.dp))
+                }
+                Spacer(Modifier.width(12.dp))
                 Text(
                     event.title,
                     modifier = Modifier.weight(1f),
@@ -116,7 +123,13 @@ private fun DetailCard(
                     else "${event.repeat.label} (desde ${event.date.dayOfMonth}/${event.date.monthValue}/${event.date.year})"
                 )
             }
-            InfoRow("Tipo") { ValueText(event.type.label) }
+            InfoRow("Tipo") {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(event.type.icon, contentDescription = null, tint = com.portablenotes.domain.ui.AppColors.Accent, modifier = Modifier.size(16.dp))
+                    Spacer(Modifier.width(6.dp))
+                    ValueText(event.type.label)
+                }
+            }
             InfoRow("Prioridad") {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     PriorityBars(event.priority)

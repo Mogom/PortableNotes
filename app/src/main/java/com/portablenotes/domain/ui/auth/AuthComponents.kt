@@ -1,6 +1,7 @@
 package com.portablenotes.domain.ui.auth
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,6 +50,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.portablenotes.R
 import com.portablenotes.domain.ui.AppColors
 
 // AppColors todavía no define un color de error. Si lo agregas ahí (AppColors.Error),
@@ -187,9 +190,9 @@ internal fun AuthPrimaryButton(
 }
 
 /**
- * Botón "Continuar con Google".
- * La "G" es un marcador de posición: antes de publicar, reemplázala por el logotipo oficial
- * siguiendo las guías de marca de Google (developers.google.com/identity/branding-guidelines).
+ * Botón "Continuar con Google" con el logotipo oficial multicolor (res/drawable/ic_google_logo.xml).
+ * No lo recolorees ni lo deformes: las guías de marca de Google
+ * (developers.google.com/identity/branding-guidelines) piden usarlo tal cual.
  */
 @Composable
 internal fun GoogleSignInButton(
@@ -210,7 +213,7 @@ internal fun GoogleSignInButton(
             disabledContentColor = AppColors.TextSecondary,
         ),
     ) {
-        Text("G", fontSize = 18.sp, fontWeight = FontWeight.Bold)
+        Image(painterResource(R.drawable.ic_google_logo), contentDescription = null, modifier = Modifier.size(20.dp))
         Spacer(Modifier.size(12.dp))
         Text("Continuar con Google", fontSize = 15.sp, fontWeight = FontWeight.Medium)
     }

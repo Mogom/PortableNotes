@@ -38,7 +38,7 @@ fun PriorityBars(priority: Priority, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun SelectChip(label: String, selected: Boolean, onClick: () -> Unit) {
+fun SelectChip(label: String, selected: Boolean, icon: ImageVector? = null, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .clip(CircleShape)
@@ -46,12 +46,14 @@ fun SelectChip(label: String, selected: Boolean, onClick: () -> Unit) {
             .clickable(onClick = onClick)
             .padding(horizontal = 14.dp, vertical = 8.dp),
     ) {
-        Text(
-            label,
-            fontSize = 13.sp,
-            fontWeight = FontWeight.Medium,
-            color = if (selected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary,
-        )
+        val contentColor = if (selected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextPrimary
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (icon != null) {
+                Icon(icon, contentDescription = null, tint = contentColor, modifier = Modifier.size(16.dp))
+                Spacer(Modifier.width(6.dp))
+            }
+            Text(label, fontSize = 13.sp, fontWeight = FontWeight.Medium, color = contentColor)
+        }
     }
 }
 

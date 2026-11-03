@@ -2,8 +2,11 @@ package com.portablenotes.domain.ui.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
@@ -12,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.portablenotes.domain.ui.AppColors
 import com.portablenotes.domain.ui.calendar.WeekCalendar
+import com.portablenotes.domain.ui.events.CircleIconButton
 import com.portablenotes.domain.ui.home.DayEvent
 import com.portablenotes.domain.ui.home.TodayEventsPanel
 import java.time.LocalDate
@@ -27,7 +31,8 @@ fun HomeScreen(
     today: LocalDate,
     eventsFor: (LocalDate) -> List<com.portablenotes.domain.ui.home.DayEvent>,
     modifier: Modifier = Modifier,
-    userName: String = "Cristian",
+    userName: String = "",
+    onOpenSettings: () -> Unit = {},
 ) {
     var selectedDate by remember { mutableStateOf(today) }
     val events = remember(selectedDate) { eventsFor(selectedDate) }
@@ -47,7 +52,10 @@ fun HomeScreen(
                 .padding(horizontal = 20.dp)
                 .padding(top = 12.dp)
         ) {
-            Greeting(userName)
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Box(Modifier.weight(1f)) { Greeting(userName) }
+                CircleIconButton(Icons.Rounded.Settings, "Ajustes de notificaciones", onOpenSettings)
+            }
             Spacer(Modifier.height(16.dp))
 
             com.portablenotes.domain.ui.calendar.WeekCalendar(
@@ -73,7 +81,7 @@ fun HomeScreen(
 @Composable
 private fun Greeting(name: String) {
     Column(Modifier.padding(horizontal = 4.dp)) {
-        Text("Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
+        Text(if (name.isBlank()) "Hola" else "Hola, $name", fontSize = 26.sp, fontWeight = FontWeight.SemiBold, color = com.portablenotes.domain.ui.AppColors.TextPrimary)
         Text("Esto es lo que tienes hoy", fontSize = 14.sp, color = com.portablenotes.domain.ui.AppColors.TextSecondary)
     }
 }

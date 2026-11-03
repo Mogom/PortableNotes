@@ -62,9 +62,9 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1") // para usar Flow/suspend
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:<versión>")
-    implementation("androidx.credentials:credentials:<versión>")
-    implementation("androidx.credentials:credentials-play-services-auth:<versión>")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.11.0")
+    implementation("androidx.credentials:credentials:1.3.0")
+    implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
 
     //    Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
@@ -73,6 +73,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("com.google.firebase:firebase-analytics")
-    22
     //    ksp("androidx.room:room-compiler:2.6.1")       // procesador de anotaciones
 }

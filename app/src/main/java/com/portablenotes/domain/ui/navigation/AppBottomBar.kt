@@ -4,6 +4,11 @@ import android.graphics.Paint
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandHorizontally
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -55,8 +60,14 @@ fun AppBottomBar(
 
 @Composable
 private fun BarItem(tab: AppTab, isSelected: Boolean, onClick: () -> Unit) {
-    val background by animateColorAsState(if (isSelected) com.portablenotes.domain.ui.AppColors.Accent else androidx.compose.ui.graphics.Color.Transparent)
-    val tint by animateColorAsState(if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextSecondary)
+    val background by animateColorAsState(
+        if (isSelected) com.portablenotes.domain.ui.AppColors.Accent else androidx.compose.ui.graphics.Color.Transparent,
+        animationSpec = tween(150),
+    )
+    val tint by animateColorAsState(
+        if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.TextSecondary,
+        animationSpec = tween(150),
+    )
 
     Row(
         modifier = Modifier
@@ -64,11 +75,15 @@ private fun BarItem(tab: AppTab, isSelected: Boolean, onClick: () -> Unit) {
             .background(background)
             .clickable(role = Role.Tab, onClick = onClick)
             .padding(horizontal = 18.dp, vertical = 12.dp)
-            .animateContentSize(),
+            .animateContentSize(tween(180)),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Icon(tab.icon, contentDescription = tab.label, tint = tint, modifier = Modifier.size(22.dp))
-        AnimatedVisibility(visible = isSelected) {
+        AnimatedVisibility(
+            visible = isSelected,
+            enter = fadeIn(tween(150)) + expandHorizontally(tween(180)),
+            exit = fadeOut(tween(100)) + shrinkHorizontally(tween(180)),
+        ) {
             Row {
                 Spacer(Modifier.width(8.dp))
                 Text(tab.label, color = tint, fontSize = 14.sp, fontWeight = FontWeight.Medium, maxLines = 1)
