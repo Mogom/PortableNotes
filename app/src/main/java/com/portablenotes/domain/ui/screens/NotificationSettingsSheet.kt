@@ -1,6 +1,21 @@
 package com.portablenotes.domain.ui.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Logout
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
+import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
@@ -36,10 +51,15 @@ import com.portablenotes.notifications.NotificationPrefs
 /** Ajustes de notificaciones: antelación del recordatorio y mensajes motivadores. */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
-fun NotificationSettingsSheet(onDismiss: () -> Unit) {
+fun NotificationSettingsSheet(
+    onDismiss: () -> Unit,
+    accountEmail: String? = null,
+    onSignOut: () -> Unit = {},
+) {
     val context = LocalContext.current
     var lead by remember { mutableStateOf(NotificationPrefs.leadMinutes(context)) }
     var motivation by remember { mutableStateOf(NotificationPrefs.motivationEnabled(context)) }
+    var confirmSignOut by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -55,7 +75,9 @@ fun NotificationSettingsSheet(onDismiss: () -> Unit) {
                 .padding(bottom = 20.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp),
         ) {
-            Text("Notificaciones", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)
+            Text("Ajustes", fontSize = 20.sp, fontWeight = FontWeight.SemiBold, color = AppColors.TextPrimary)
+
+            Text("Notificaciones", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = AppColors.TextSecondary)
 
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text("Antelación del recordatorio", fontSize = 15.sp, fontWeight = FontWeight.Medium, color = AppColors.TextPrimary)
@@ -96,6 +118,50 @@ fun NotificationSettingsSheet(onDismiss: () -> Unit) {
                     ),
                 )
             }
+
+            HorizontalDivider(color = AppColors.Border)
+
+            Text("Cuenta", fontSize = 13.sp, fontWeight = FontWeight.Medium, color = AppColors.TextSecondary)
+            if (!accountEmail.isNullOrBlank()) {
+                Text(accountEmail, fontSize = 14.sp, color = AppColors.TextPrimary)
+            }
+            OutlinedButton(
+                onClick = { confirmSignOut = true },
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                shape = CircleShape,
+                border = BorderStroke(1.dp, SignOutColor),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = SignOutColor),
+            ) {
+                Icon(Icons.AutoMirrored.Rounded.Logout, contentDescription = null, modifier = Modifier.size(18.dp))
+                Spacer(Modifier.width(8.dp))
+                Text("Cerrar sesión", fontWeight = FontWeight.SemiBold)
+            }
         }
     }
+
+    if (confirmSignOut) {
+        AlertDialog(
+            onDismissRequest = { confirmSignOut = false },
+            containerColor = AppColors.Surface,
+            title = { Text("¿Cerrar sesión?", color = AppColors.TextPrimary) },
+            text = {
+                Text(
+                    "Tus eventos siguen guardados en tu cuenta. Dejarás de recibir sus recordatorios en este dispositivo hasta que vuelvas a iniciar sesión.",
+                    color = AppColors.TextSecondary,
+                )
+            },
+            confirmButton = {
+                TextButton(onClick = { confirmSignOut = false; onSignOut() }) {
+                    Text("Cerrar sesión", color = SignOutColor)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmSignOut = false }) {
+                    Text("Cancelar", color = AppColors.TextPrimary)
+                }
+            },
+        )
+    }
 }
+
+private val SignOutColor = Color(0xFFFF6B6B)

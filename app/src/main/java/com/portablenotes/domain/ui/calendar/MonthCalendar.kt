@@ -144,9 +144,9 @@ private fun DayCell(
             if (hasEvent) {
                 Box(
                     Modifier
-                        .align(Alignment.BottomCenter)
-                        .padding(bottom = 3.dp)
-                        .size(4.dp)
+                        .align(Alignment.TopEnd)          // arriba a la derecha: no se encima con el número
+                        .padding(top = 3.dp, end = 3.dp)
+                        .size(5.dp)
                         .clip(CircleShape)
                         .background(if (isSelected) com.portablenotes.domain.ui.AppColors.OnAccent else com.portablenotes.domain.ui.AppColors.Accent)
                 )

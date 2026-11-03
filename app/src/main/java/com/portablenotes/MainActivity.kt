@@ -15,11 +15,18 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +45,7 @@ import com.portablenotes.domain.models.events.hhmm
 import com.portablenotes.domain.ui.AppColors
 import com.portablenotes.domain.ui.AppTheme
 import com.portablenotes.domain.ui.home.DayEvent
+import com.portablenotes.domain.ui.home.computeMetrics
 import com.portablenotes.domain.ui.navigation.AppBottomBar
 import com.portablenotes.domain.ui.navigation.AppTab
 import com.portablenotes.domain.ui.navigation.AuthRoutes
@@ -93,6 +101,14 @@ private fun firstNameOf(user: FirebaseUser?): String {
     val name = user?.displayName?.trim().orEmpty().substringBefore(' ')
     if (name.isNotBlank()) return name
     return user?.email?.substringBefore('@').orEmpty()
+}
+
+/** Listas simples (Rutinas, Tareas): en pantallas anchas se centran con un ancho máximo cómodo de leer. */
+@Composable
+private fun CenteredContent(maxWidth: Dp = 720.dp, content: @Composable () -> Unit) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+        Box(Modifier.widthIn(max = maxWidth).fillMaxHeight()) { content() }
+    }
 }
 
 // ---------- Transiciones de navegación (rápidas: ~200 ms) ----------
@@ -252,17 +268,31 @@ fun App() {
 
     AppTheme {
         if (showNotificationSettings) {
-            NotificationSettingsSheet(onDismiss = { showNotificationSettings = false })
+            NotificationSettingsSheet(
+                onDismiss = { showNotificationSettings = false },
+                accountEmail = FirebaseAuth.getInstance().currentUser?.email,
+                onSignOut = {
+                    showNotificationSettings = false
+                    scope.launch {
+                        GoogleAuthClient.clearState(context)
+                        authVm.signOut()          // uid pasa a null: la app vuelve sola al Login y limpia los datos locales
+                    }
+                },
+            )
         }
         CompositionLocalProvider(LocalRoutines provides routinesState.routines.toList()) {
             Scaffold(
                 containerColor = AppColors.Background,
                 bottomBar = {
                     if (showBottomBar) {
-                        AppBottomBar(
-                            selected = selectedTab,
-                            onSelect = navigateToTab,
-                        )
+                        // En tablets la barra no se estira a todo el ancho: queda centrada y compacta
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            AppBottomBar(
+                                selected = selectedTab,
+                                onSelect = navigateToTab,
+                                modifier = Modifier.padding(horizontal = 12.dp).widthIn(max = 560.dp),
+                            )
+                        }
                     }
                 },
             ) { innerPadding ->
@@ -356,6 +386,7 @@ fun App() {
                             today = today,
                             onOpenSettings = { showNotificationSettings = true },
                             userName = userName,
+                            metrics = computeMetrics(eventsState.events.toList(), tasksState.tasks.toList()),
                             eventsFor = { date ->
                                 eventsState.occurrencesOn(date).map {
                                     DayEvent(
@@ -378,13 +409,15 @@ fun App() {
                         EventsScreen(eventsState, today = today)
                     }
                     composable(AppTab.Routines.route) {
-                        RoutinesScreen(
-                            state = routinesState,
-                            linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } },
-                        )
+                        CenteredContent {
+                            RoutinesScreen(
+                                state = routinesState,
+                                linkedEvents = { r -> eventsState.events.count { it.routineId == r.id } },
+                            )
+                        }
                     }
                     composable(AppTab.Tasks.route) {
-                        TasksScreen(tasksState)
+                        CenteredContent { TasksScreen(tasksState) }
                     }
                 }
             }

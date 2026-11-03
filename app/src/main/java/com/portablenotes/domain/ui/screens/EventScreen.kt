@@ -96,7 +96,8 @@ fun EventsScreen(
             .fillMaxSize()
             .background(Brush.verticalGradient(listOf(com.portablenotes.domain.ui.AppColors.BackgroundTop, com.portablenotes.domain.ui.AppColors.Background)))
     ) {
-        val calendarHeight = maxHeight * 0.50f   // 👈 50 % de la pantalla
+        val wide = maxWidth >= 720.dp            // tablet o teléfono en horizontal
+        val calendarHeight = maxHeight * 0.50f   // 👈 50 % de la pantalla (vertical)
         val barSpace = 104.dp
 
         Column(
@@ -124,32 +125,48 @@ fun EventsScreen(
 
             Spacer(Modifier.height(12.dp))
 
-            com.portablenotes.domain.ui.calendar.MonthCalendar(
-                month = month,
-                selected = selected,
-                today = today,
-                daysWithEvents = dots,
-                onPrevMonth = { goTo(month.minusMonths(1)) },
-                onNextMonth = { goTo(month.plusMonths(1)) },
-                onDayClick = { d ->
-                    selected = d
-                    if (d in dots) detail = DetailRequest(d, null)
-                },
-                modifier = Modifier.fillMaxWidth().height(calendarHeight),
-            )
+            val calendar: @Composable (Modifier) -> Unit = { m ->
+                com.portablenotes.domain.ui.calendar.MonthCalendar(
+                    month = month,
+                    selected = selected,
+                    today = today,
+                    daysWithEvents = dots,
+                    onPrevMonth = { goTo(month.minusMonths(1)) },
+                    onNextMonth = { goTo(month.plusMonths(1)) },
+                    onDayClick = { d ->
+                        selected = d
+                        if (d in dots) detail = DetailRequest(d, null)
+                    },
+                    modifier = m,
+                )
+            }
+            val list: @Composable (Modifier, androidx.compose.ui.unit.Dp) -> Unit = { m, bottom ->
+                EventsList(
+                    rows = rows,
+                    selected = selected,
+                    today = today,
+                    listState = listState,
+                    bottomPadding = bottom,
+                    onEventClick = { e, d -> detail = DetailRequest(d, e.id) },
+                    onToggleDone = { viewModel.toggleDone(it.id) },
+                    modifier = m,
+                )
+            }
 
-            Spacer(Modifier.height(16.dp))
-
-            EventsList(
-                rows = rows,
-                selected = selected,
-                today = today,
-                listState = listState,
-                bottomPadding = barSpace,
-                onEventClick = { e, d -> detail = DetailRequest(d, e.id) },
-                onToggleDone = { viewModel.toggleDone(it.id) },
-                modifier = Modifier.weight(1f),
-            )
+            if (wide) {
+                // Tablet / horizontal: calendario a la izquierda, lista a la derecha
+                Row(
+                    Modifier.weight(1f).fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(20.dp),
+                ) {
+                    calendar(Modifier.weight(1f).fillMaxHeight().padding(bottom = 12.dp))
+                    list(Modifier.weight(1f).fillMaxHeight(), 12.dp)
+                }
+            } else {
+                calendar(Modifier.fillMaxWidth().height(calendarHeight))
+                Spacer(Modifier.height(16.dp))
+                list(Modifier.weight(1f), barSpace)
+            }
         }
     }
 

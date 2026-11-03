@@ -1,6 +1,7 @@
 package com.portablenotes.domain.models.auth
 
 import android.content.Context
+import androidx.credentials.ClearCredentialStateRequest
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -29,6 +30,15 @@ object GoogleAuthClient {
             return GoogleIdTokenCredential.createFrom(credential.data).idToken
         }
         throw IllegalStateException("Credencial de Google inesperada")
+    }
+
+    /** Olvida la cuenta de Google elegida en este dispositivo (se llama al cerrar sesión). */
+    suspend fun clearState(context: Context) {
+        try {
+            CredentialManager.create(context).clearCredentialState(ClearCredentialStateRequest())
+        } catch (_: Exception) {
+            // Si falla, igual se cierra la sesión de Firebase
+        }
     }
 
     /** null = el usuario canceló: no se muestra ningún error. */
